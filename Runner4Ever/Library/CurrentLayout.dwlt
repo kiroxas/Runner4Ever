@@ -20,7 +20,7 @@ MonoBehaviour:
   m_ShowMode: 4
   m_Title: 
   m_RootView: {fileID: 6}
-  m_MinSize: {x: 950, y: 542}
+  m_MinSize: {x: 950, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &2
 MonoBehaviour:
@@ -362,7 +362,7 @@ MonoBehaviour:
   m_LastFolders:
   - Assets
   m_LastFoldersGridSize: -1
-  m_LastProjectPath: C:\Boulot\Runner4Ever\Runner Source\Runner4Ever
+  m_LastProjectPath: C:\Boulot\Runner4Ever\Runner4Ever
   m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
