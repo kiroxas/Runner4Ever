@@ -11,3 +11,7 @@ Runner4Ever/Library/metadata/
 
 *.meta
 *.log
+
+APK/
+
+Runner4Ever/Library/ShaderCache/
