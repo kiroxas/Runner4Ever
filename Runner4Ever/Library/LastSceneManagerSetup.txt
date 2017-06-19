@@ -1,1 +1,4 @@
-sceneSetups: []
+sceneSetups:
+- path: Assets/LeanTouch/Examples/SwipeDirection4.unity
+  isLoaded: 1
+  isActive: 1

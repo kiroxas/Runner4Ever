@@ -89,6 +89,7 @@
      <Compile Include="Assets\LeanTouch\Scripts\LeanSelectable.cs" />
      <Compile Include="Assets\LeanTouch\Scripts\LeanSnapshot.cs" />
      <Compile Include="Assets\LeanTouch\Scripts\LeanTouch.cs" />
+     <Compile Include="Assets\Scripts\CharacterController2D.cs" />
      <None Include="Assets\LeanTouch\Examples\Fonts\OFL.txt" />
      <None Include="Assets\LeanTouch\Examples\Shaders\Skybox.shader" />
      <None Include="Assets\LeanTouch\Examples\Shaders\Smooth.shader" />
