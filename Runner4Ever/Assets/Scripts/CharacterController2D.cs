@@ -11,7 +11,9 @@ public class CharacterController2D : MonoBehaviour
 		Accelerate,
 		Decelerate,
 		Dash,
-		Slide
+		Slide,
+		Stop,
+		Start
 	}
 
 	public Action onTap;
@@ -20,15 +22,23 @@ public class CharacterController2D : MonoBehaviour
 	public Action onSwipeDown;
 	public Action onSwipeUp;
 	public Action onDoubleTap;
-
+	public Action onHoldDown;
+	public Action onHoldUp;
 
 	public float runSpeed = 0.1f;
+	private float _runSpeedBeforeStop;
+	private float _runSpeed;
 	public float jumpMagnitude = 0.1f;
 	private float upSpeed = 0;
 
+	public void Start()
+	{
+		_runSpeed = runSpeed;
+	}
+
 	public void LateUpdate()
 	{
-		transform.Translate(new Vector2(runSpeed, upSpeed), Space.World);
+		transform.Translate(new Vector2(_runSpeed, upSpeed), Space.World);
 		upSpeed = 0;
 	}
 
@@ -37,6 +47,9 @@ public class CharacterController2D : MonoBehaviour
 			// Hook into the events we need
 			LeanTouch.OnFingerTap   += OnFingerTap;
 			LeanTouch.OnFingerSwipe += OnFingerSwipe;
+
+			LeanFingerHeld.OnFingerHeldDown += OnHoldDown;
+			LeanFingerHeld.OnFingerHeldUp += OnHoldUp;
 	}
 		
 	protected virtual void OnDisable()
@@ -45,6 +58,19 @@ public class CharacterController2D : MonoBehaviour
 			
 			LeanTouch.OnFingerTap   -= OnFingerTap;
 			LeanTouch.OnFingerSwipe -= OnFingerSwipe;
+
+			LeanFingerHeld.OnFingerHeldDown -= OnHoldDown;
+			LeanFingerHeld.OnFingerHeldUp -= OnHoldUp;
+	}
+
+	public void OnHoldDown(LeanFinger finger)
+	{
+		doAction(onHoldDown);
+	}
+
+	public void OnHoldUp(LeanFinger finger)
+	{
+		doAction(onHoldUp);
 	}
 
 	public void OnFingerTap(LeanFinger finger)
@@ -64,8 +90,21 @@ public class CharacterController2D : MonoBehaviour
 			case Action.Decelerate : decelerate(); return;
 			case Action.Dash : dash(); return;
 			case Action.Slide : slide(); return;
+			case Action.Start : run(); return;
+			case Action.Stop : stop(); return;
 			default : return;
 		}
+	}
+
+	public void run()
+	{
+		_runSpeed = _runSpeedBeforeStop;
+	}
+
+	public void stop()
+	{
+		_runSpeedBeforeStop = _runSpeed;
+		_runSpeed = 0;
 	}
 
 	public void dash()
@@ -85,12 +124,12 @@ public class CharacterController2D : MonoBehaviour
 
 	public void accelerate()
 	{
-		runSpeed *= 2;
+		_runSpeed *= 2;
 	}
 
 	public void decelerate()
 	{
-		runSpeed /= 2;
+		_runSpeed /= 2;
 	}
 
 	public void OnFingerSwipe(LeanFinger finger)
