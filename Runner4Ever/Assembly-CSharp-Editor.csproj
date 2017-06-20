@@ -49,8 +49,12 @@
      <Compile Include="Assets\LeanTouch\Editor\LeanSelectable_Editor.cs" />
      <Compile Include="Assets\LeanTouch\Editor\LeanTouch_Editor.cs" />
      <None Include="Assets\LeanTouch\Examples\Fonts\OFL.txt" />
+     <None Include="Assets\Level Generation\file_list.xml" />
+     <None Include="Assets\Level Generation\two.txt" />
+     <None Include="Assets\Level Generation\one.txt" />
      <None Include="Assets\LeanTouch\Examples\Shaders\Skybox.shader" />
      <None Include="Assets\LeanTouch\Examples\Shaders\Smooth.shader" />
+     <None Include="Assets\Level Generation\three.txt" />
      <None Include="Assets\dummy.txt" />
  <Reference Include="UnityEditor.Advertisements">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Advertisements/Editor/UnityEditor.Advertisements.dll</HintPath>
