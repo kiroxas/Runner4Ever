@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/LeanTouch/Examples/SwipeDirection4.unity
+- path: Assets/LeanTouch/Examples/FingerDoubleTap.unity
   isLoaded: 1
   isActive: 1
