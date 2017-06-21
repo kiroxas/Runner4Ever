@@ -89,11 +89,21 @@ public class BasicLevelGenerator : MonoBehaviour
 
 				if(tileType == 1) // ground tile
 				{
+					if(landTiles.Length == 0)
+					{
+						Debug.LogError("Do not have any prefabs set in landTiles");
+						return;
+					}
 					GameObject instance = landTiles[Random.Range(0, landTiles.Length)];
 					UnityEngine.Object.Instantiate(instance, new Vector3(xStart + x * tileWidth, yStart - y * tileHeight, 0),  Quaternion.identity);
 				} 
 				else if (tileType == 2) // random object
 				{
+					if(objectTiles.Length == 0)
+					{
+						Debug.LogError("Do not have any prefabs set in objectTiles");
+						return;
+					}
 					GameObject instance = objectTiles[Random.Range(0, objectTiles.Length)];
 					UnityEngine.Object.Instantiate(instance, new Vector3(xStart + x * tileWidth, yStart - y * tileHeight, 0),  Quaternion.identity);
 				}

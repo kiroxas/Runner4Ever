@@ -45,7 +45,7 @@ MonoBehaviour:
   m_MinSize: {x: 683, y: 492}
   m_MaxSize: {x: 14004, y: 14042}
   vertical: 0
-  controlID: 92
+  controlID: 23
 --- !u!114 &3
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -210,7 +210,7 @@ MonoBehaviour:
   m_MinSize: {x: 406, y: 492}
   m_MaxSize: {x: 10002, y: 14042}
   vertical: 1
-  controlID: 93
+  controlID: 24
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -234,7 +234,7 @@ MonoBehaviour:
   m_MinSize: {x: 406, y: 221}
   m_MaxSize: {x: 8006, y: 4021}
   vertical: 0
-  controlID: 94
+  controlID: 25
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -356,19 +356,19 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets/Standard Assets/Tiles
+    - Assets/Prefabs/Effects
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Standard Assets/Tiles
+  - Assets/Prefabs/Effects
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\mouto_000\Documents\Projects\Runner4Ever\Runner4Ever
   m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 69}
-    m_SelectedIDs: 84250000
-    m_LastClickedID: 9604
-    m_ExpandedIDs: 00000000142500008025000086250000a8250000d025000066260000482700004a27000000ca9a3bffffff7f
+    scrollPos: {x: 0, y: 0}
+    m_SelectedIDs: 0a480000
+    m_LastClickedID: 18442
+    m_ExpandedIDs: 00000000142500008025000086250000d025000066260000482700004a27000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -424,7 +424,7 @@ MonoBehaviour:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
     m_HadKeyboardFocusLastEvent: 1
-    m_ExpandedInstanceIDs: c6230000b42900001c2700006a2a00002026000008260000
+    m_ExpandedInstanceIDs: c6230000b42900001c2700006a2a000020260000082600005e450000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -480,7 +480,7 @@ MonoBehaviour:
   m_ScrollPosition: {x: 0, y: 0}
   m_InspectorMode: 0
   m_PreviewResizer:
-    m_CachedPref: 256
+    m_CachedPref: 141
     m_ControlHash: -371814159
     m_PrefName: Preview_InspectorPreview
   m_PreviewWindow: {fileID: 0}
@@ -512,9 +512,9 @@ MonoBehaviour:
     height: 489
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 
-    m_LastClickedID: 0
-    m_ExpandedIDs: 44dbfffffedbffff1cddffffe2fbffff00000000
+    m_SelectedIDs: 08430000
+    m_LastClickedID: 17160
+    m_ExpandedIDs: c8e2fcff76e3fcff92e4fcffe2fbffff00000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -559,8 +559,8 @@ MonoBehaviour:
   m_DepthBufferBits: 32
   m_Pos:
     serializedVersion: 2
-    x: 371
-    y: 92
+    x: -31629
+    y: -31951
     width: 1104
     height: 489
   m_SceneLighting: 1
@@ -569,9 +569,9 @@ MonoBehaviour:
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 24.544432, y: -1.5150893, z: 0}
+    m_Target: {x: -42.574753, y: -0.8508947, z: 0}
     speed: 2
-    m_Value: {x: 24.544432, y: -1.5150893, z: 0}
+    m_Value: {x: -42.574753, y: -0.8508947, z: 0}
   m_RenderMode: 0
   m_ValidateTrueMetals: 0
   m_SceneViewState:
@@ -598,9 +598,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 15.141763
+    m_Target: 77.694115
     speed: 2
-    m_Value: 15.141763
+    m_Value: 77.694115
   m_Ortho:
     m_Target: 1
     speed: 2
