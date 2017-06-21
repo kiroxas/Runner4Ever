@@ -144,30 +144,33 @@ public class CharacterController2D : MonoBehaviour
 
     public void OnCollisionEnter2D(Collision2D collision) 
     {
-    	Collider2D myCollider = GetComponent<Collider2D>();
-    	Bounds character = myCollider.bounds;
-    	Debug.DrawLine(character.center, character.min, Color.blue, 20);
-    	Debug.DrawLine(character.center, character.max, Color.grey, 20);
-
-    	foreach (ContactPoint2D contacts in collision.contacts) 
+    	if(collision.gameObject.tag == "Platform")
     	{
-    		Collider2D otherCollider = collision.otherCollider == myCollider ? collision.collider : collision.otherCollider;
-    		Bounds center = otherCollider.bounds;
+    		Collider2D myCollider = GetComponent<Collider2D>();
+    		Bounds character = myCollider.bounds;
+    		Debug.DrawLine(character.center, character.min, Color.blue, 20);
+    		Debug.DrawLine(character.center, character.max, Color.grey, 20);
 
-    		Debug.DrawLine(character.center, center.center, Color.red, 20);	
-    		Debug.DrawLine(center.center, center.min, Color.blue, 20);
-    		Debug.DrawLine(center.center, center.max, Color.grey, 20);
+    		foreach (ContactPoint2D contacts in collision.contacts) 
+    		{
+    			Collider2D otherCollider = collision.otherCollider == myCollider ? collision.collider : collision.otherCollider;
+    			Bounds center = otherCollider.bounds;
+
+    			Debug.DrawLine(character.center, center.center, Color.red, 20);	
+    			Debug.DrawLine(center.center, center.min, Color.blue, 20);
+    			Debug.DrawLine(center.center, center.max, Color.grey, 20);
     		
-			bool xCondition = contacts.point.x >= character.max.x;
-			bool yCondition = contacts.point.y - yRightColDetDelta> character.min.y && contacts.point.y + yRightColDetDelta< character.max.y;
+				bool xCondition = contacts.point.x >= character.max.x;
+				bool yCondition = contacts.point.y - yRightColDetDelta> character.min.y && contacts.point.y + yRightColDetDelta< character.max.y;
 
-            if(xCondition && yCondition)
-            {
-            	doAction(onRightCollision);
-            	return;
-            }
+           		if(xCondition && yCondition)
+           	 	{
+            		doAction(onRightCollision);
+            		return;
+            	}
 
-        }
+        	}
+    	}
     }
 
 	public void OnFingerSwipe(LeanFinger finger)

@@ -39,6 +39,7 @@ public class BasicLevelGenerator : MonoBehaviour
 
 	public GameObject instancePlayer;
 	public GameObject[] landTiles;
+	public GameObject[] objectTiles;
 
 	FileUtils.FileList loadFileList(string folder)
 	{
@@ -91,6 +92,11 @@ public class BasicLevelGenerator : MonoBehaviour
 					GameObject instance = landTiles[Random.Range(0, landTiles.Length)];
 					UnityEngine.Object.Instantiate(instance, new Vector3(xStart + x * tileWidth, yStart - y * tileHeight, 0),  Quaternion.identity);
 				} 
+				else if (tileType == 2) // random object
+				{
+					GameObject instance = objectTiles[Random.Range(0, objectTiles.Length)];
+					UnityEngine.Object.Instantiate(instance, new Vector3(xStart + x * tileWidth, yStart - y * tileHeight, 0),  Quaternion.identity);
+				}
 
 				++index;
 			}
