@@ -25,6 +25,8 @@ public class CharacterController2D : MonoBehaviour
 	public Action onHoldDown;
 	public Action onHoldUp;
 
+	public Action onRightCollision;
+
 	public float runSpeed = 0.1f;
 	private float _runSpeedBeforeStop;
 	private float _runSpeed;
@@ -141,22 +143,25 @@ public class CharacterController2D : MonoBehaviour
     public void OnCollisionEnter2D(Collision2D collision) 
     {
     	Collider2D myCollider = GetComponent<Collider2D>();
-    	Bounds myCenter = myCollider.bounds;
-    	Debug.DrawLine(myCenter.center, myCenter.min, Color.blue, 20);
-    	Debug.DrawLine(myCenter.center, myCenter.max, Color.grey, 20);
+    	Bounds character = myCollider.bounds;
+    	Debug.DrawLine(character.center, character.min, Color.blue, 20);
+    	Debug.DrawLine(character.center, character.max, Color.grey, 20);
 
     	foreach (ContactPoint2D contacts in collision.contacts) 
     	{
     		Collider2D otherCollider = collision.otherCollider == myCollider ? collision.collider : collision.otherCollider;
     		Bounds center = otherCollider.bounds;
 
-    		Debug.DrawLine(myCenter.center, center.center, Color.red, 20);	
+    		Debug.DrawLine(character.center, center.center, Color.red, 20);	
     		Debug.DrawLine(center.center, center.min, Color.blue, 20);
     		Debug.DrawLine(center.center, center.max, Color.grey, 20);
     		
-            if(myCenter.center.x < center.center.x && myCenter.center.y >= center.center.y)
+			bool xCondition = contacts.point.x >= character.max.x;
+			bool yCondition = contacts.point.y > character.min.y && contacts.point.y < character.max.y;
+
+            if(xCondition && yCondition)
             {
-            	//stop();
+            	doAction(onRightCollision);
             	return;
             }
 
