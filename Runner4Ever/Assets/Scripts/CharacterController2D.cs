@@ -33,6 +33,8 @@ public class CharacterController2D : MonoBehaviour
 	public float jumpMagnitude = 0.1f;
 	private float upSpeed = 0;
 
+	public float yRightColDetDelta = 0.02f;
+
 	public void Start()
 	{
 		_runSpeed = runSpeed;
@@ -157,7 +159,7 @@ public class CharacterController2D : MonoBehaviour
     		Debug.DrawLine(center.center, center.max, Color.grey, 20);
     		
 			bool xCondition = contacts.point.x >= character.max.x;
-			bool yCondition = contacts.point.y > character.min.y && contacts.point.y < character.max.y;
+			bool yCondition = contacts.point.y - yRightColDetDelta> character.min.y && contacts.point.y + yRightColDetDelta< character.max.y;
 
             if(xCondition && yCondition)
             {
