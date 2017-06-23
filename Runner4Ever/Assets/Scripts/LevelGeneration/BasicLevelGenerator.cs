@@ -95,6 +95,12 @@ public class BasicLevelGenerator : MonoBehaviour
 						return;
 					}
 					GameObject instance = landTiles[Random.Range(0, landTiles.Length)];
+
+					if(instance == null)
+					{
+						Debug.LogError("You have a null instance in landTiles");
+						return;
+					}
 					UnityEngine.Object.Instantiate(instance, new Vector3(xStart + x * tileWidth, yStart - y * tileHeight, 0),  Quaternion.identity);
 				} 
 				else if (tileType == 2) // random object
@@ -105,6 +111,13 @@ public class BasicLevelGenerator : MonoBehaviour
 						return;
 					}
 					GameObject instance = objectTiles[Random.Range(0, objectTiles.Length)];
+
+					
+					if(instance == null)
+					{
+						Debug.LogError("You have a null instance in objectTiles");
+						return;
+					}
 					UnityEngine.Object.Instantiate(instance, new Vector3(xStart + x * tileWidth, yStart - y * tileHeight, 0),  Quaternion.identity);
 				}
 
