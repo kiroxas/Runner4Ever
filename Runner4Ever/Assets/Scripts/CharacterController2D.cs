@@ -26,10 +26,11 @@ public class CharacterController2D : MonoBehaviour
 	public Action onHoldUp;
 
 	public Action onRightCollision;
+	public Animator animator;
 
 	public float runSpeed = 0.1f;
 	private float _runSpeedBeforeStop;
-	private float _runSpeed;
+	private float _runSpeed, _lastSpeed;
 	public float jumpMagnitude = 0.1f;
 	private float upSpeed = 0;
 
@@ -42,6 +43,14 @@ public class CharacterController2D : MonoBehaviour
 
 	public void LateUpdate()
 	{
+		if(_lastSpeed != _runSpeed && animator)
+		{
+			bool isRunning = _runSpeed > 0;
+			Debug.Log("isRunning : " + isRunning);
+			animator.SetBool("isRunning", isRunning);
+			_lastSpeed = _runSpeed;
+		}
+
 		transform.Translate(new Vector2(_runSpeed, upSpeed), Space.World);
 		upSpeed = 0;
 	}
