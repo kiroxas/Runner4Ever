@@ -7,10 +7,8 @@ using System.Collections.Generic;
 using Random = UnityEngine.Random;
 
 
-public class ProgressionDisplay : MonoBehaviour 
+public class LoopLevel : MonoBehaviour 
 {
-	public GameObject cursor;
-
 	private GameObject player;
 
 	private float xStart = 0;
@@ -47,10 +45,9 @@ public class ProgressionDisplay : MonoBehaviour
 		int maxDistance = (int)xEnd - (int)xStart;
 		float percent = (float)distance / (float)maxDistance;
 
-	
-		Vector2 pos = cursor.GetComponent<RectTransform>().anchorMin;
-		pos.x = percent;
-		cursor.GetComponent<RectTransform>().anchorMin = pos;
-		cursor.GetComponent<RectTransform>().anchorMax = pos;
+		if(percent > 1.05f)
+		{
+			player.GetComponent<Transform>().position = new Vector2(xStart, 0);
+		}
 	}
 }
