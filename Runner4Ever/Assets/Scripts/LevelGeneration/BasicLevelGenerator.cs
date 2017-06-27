@@ -112,7 +112,7 @@ public class BasicLevelGenerator : MonoBehaviour
 					}
 					GameObject instance = objectTiles[Random.Range(0, objectTiles.Length)];
 
-					
+
 					if(instance == null)
 					{
 						Debug.LogError("You have a null instance in objectTiles");
@@ -133,7 +133,7 @@ public class BasicLevelGenerator : MonoBehaviour
 	}
 
 	// Use this for initialization
-	void Start () 
+	void Awake () 
 	{
 		FileUtils.FileList block = new FileUtils.FileList();
 		

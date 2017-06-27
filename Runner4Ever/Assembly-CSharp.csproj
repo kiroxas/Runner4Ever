@@ -93,6 +93,7 @@
      <Compile Include="Assets\Scripts\CharacterController2D.cs" />
      <Compile Include="Assets\Scripts\GoldCollectible.cs" />
      <Compile Include="Assets\Scripts\LevelGeneration\BasicLevelGenerator.cs" />
+     <Compile Include="Assets\Scripts\ProgressionDisplay.cs" />
      <None Include="Assets\LeanTouch\Examples\Fonts\OFL.txt" />
      <None Include="Assets\Level Generation\file_list.xml" />
      <None Include="Assets\Level Generation\two.txt" />
