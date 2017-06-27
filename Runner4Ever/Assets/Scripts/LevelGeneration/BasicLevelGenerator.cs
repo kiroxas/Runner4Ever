@@ -38,6 +38,7 @@ public class BasicLevelGenerator : MonoBehaviour
 	public float topLeftYPos = 0;
 
 	public GameObject instancePlayer;
+	public GameObject checkpoint;
 	public GameObject[] landTiles;
 	public GameObject[] objectTiles;
 
@@ -132,6 +133,12 @@ public class BasicLevelGenerator : MonoBehaviour
 		FindObjectOfType<CameraFollow>().target = player.GetComponent<Transform>();
 	}
 
+	void createCheckpoints()
+	{
+		UnityEngine.Object.Instantiate(checkpoint, new Vector3(topLeftXPos , topLeftYPos , 0),  Quaternion.identity);
+		UnityEngine.Object.Instantiate(checkpoint, new Vector3(topLeftXPos + (tileGroupsNumber * xTilePerSection * tileWidth), topLeftYPos , 0),  Quaternion.identity);
+	}
+
 	// Use this for initialization
 	void Awake () 
 	{
@@ -149,7 +156,7 @@ public class BasicLevelGenerator : MonoBehaviour
 		}
 
 		createPlayer();
-		
+		createCheckpoints();
 	}
 	
 	// Update is called once per frame

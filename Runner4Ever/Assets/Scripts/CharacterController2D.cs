@@ -46,7 +46,7 @@ public class CharacterController2D : MonoBehaviour
 		if(_lastSpeed != _runSpeed && animator)
 		{
 			bool isRunning = _runSpeed > 0;
-			Debug.Log("isRunning : " + isRunning);
+			
 			animator.SetBool("isRunning", isRunning);
 			_lastSpeed = _runSpeed;
 		}

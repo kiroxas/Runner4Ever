@@ -12,25 +12,46 @@ public class ProgressionDisplay : MonoBehaviour
 	public GameObject path;
 	public GameObject cursor;
 
-	public int pathXSize;
+	private GameObject player;
 
-	public float xStart;
-	public float xEnd;
+	private float xStart = 0;
+	private float xEnd = 0;
 
 	public void Start()
 	{
 		GameObject[] checkpoints = GameObject.FindGameObjectsWithTag("CheckPoint");
+		player =  GameObject.FindGameObjectWithTag("Player");
 
 		if(checkpoints == null || checkpoints.Length == 0)
 			return;
 
-		xStart = xEnd = checkpoints[0].GetComponent<Transform>().position.x;
+		xEnd = checkpoints[0].GetComponent<Transform>().position.x;
+		xStart = xEnd;
 
 		foreach(GameObject obj in checkpoints)
 		{
 			xStart = Math.Min(xStart, obj.GetComponent<Transform>().position.x);
-			xEnd = Math.Max(xStart, obj.GetComponent<Transform>().position.x);
+			xEnd = Math.Max(xEnd, obj.GetComponent<Transform>().position.x);
 		}
 
+		
+	}
+
+	public void Update()
+	{
+		if(xStart == xEnd)
+			return;
+
+		int xPlayer = (int)player.GetComponent<Transform>().position.x;
+
+		int distance = (int)(xPlayer - xStart);
+		int maxDistance = (int)xEnd - (int)xStart;
+		float percent = (float)distance / (float)maxDistance;
+
+	
+		Vector2 pos = cursor.GetComponent<RectTransform>().anchorMin;
+		pos.x = percent;
+		cursor.GetComponent<RectTransform>().anchorMin = pos;
+		cursor.GetComponent<RectTransform>().anchorMax = pos;
 	}
 }
