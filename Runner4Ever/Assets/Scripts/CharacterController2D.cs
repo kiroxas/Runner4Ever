@@ -28,6 +28,8 @@ public class CharacterController2D : MonoBehaviour
 	public Action onRightCollision;
 	public Animator animator;
 
+	private Rigidbody2D rb;
+
 	public float runSpeed = 0.1f;
 	private float _runSpeedBeforeStop;
 	private float _runSpeed, _lastSpeed;
@@ -39,6 +41,7 @@ public class CharacterController2D : MonoBehaviour
 	public void Start()
 	{
 		_runSpeed = runSpeed;
+		rb = GetComponent<Rigidbody2D>();
 	}
 
 	public void LateUpdate()
@@ -51,8 +54,20 @@ public class CharacterController2D : MonoBehaviour
 			_lastSpeed = _runSpeed;
 		}
 
-		transform.Translate(new Vector2(_runSpeed, upSpeed), Space.World);
-		upSpeed = 0;
+		float step = 0.01f;
+
+		if(upSpeed > 0)
+		{
+			rb.velocity = new Vector2(_runSpeed, upSpeed);
+			upSpeed = 0;
+		}
+		else
+		{
+			rb.velocity = new Vector2(_runSpeed, rb.velocity.y);
+		}
+
+		
+	
 	}
 
 	protected virtual void OnEnable()
