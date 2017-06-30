@@ -137,12 +137,10 @@ public class CharacterController2D : MonoBehaviour
 
 	public void dash()
 	{
-
 	}
 
 	public void slide()
 	{
-
 	}
 
 	public void jump()

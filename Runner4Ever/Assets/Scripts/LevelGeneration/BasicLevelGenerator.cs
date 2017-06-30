@@ -14,19 +14,36 @@ namespace FileUtils
 		[XmlArray("files")]
 		[XmlArrayItem("file")]
 		public List<string> files{ get; set;}
+
+		public int index = 0;
 		
 		public List<List<int>> loaded{ get; set;}
 		
 		public List<int> getOneRandom()
 		{
-			int index = Random.Range(0, loaded.Count);
+			index = Random.Range(0, loaded.Count);
 			return loaded[index];
+		}
+
+		public List<int> getNextOne()
+		{
+			index++;
+			if(index >= loaded.Count)
+				index =0;
+
+			return loaded[index];	
 		}
 	}
 }
 
 public class BasicLevelGenerator : MonoBehaviour 
 {
+	public enum GenerationStyle
+	{
+		Random,
+		InOrder
+	}
+
 	public int tileGroupsNumber = 4;
 	public int xTilePerSection = 6;
 	public int yTilePerSection = 6;
@@ -37,9 +54,12 @@ public class BasicLevelGenerator : MonoBehaviour
 	public float topLeftXPos = 0;
 	public float topLeftYPos = 0;
 
+	public GenerationStyle genStyle = GenerationStyle.Random;
+
 	public GameObject instancePlayer;
 	public GameObject checkpoint;
 	public GameObject[] landTiles;
+	public GameObject[] waterTiles;
 	public GameObject[] objectTiles;
 
 	FileUtils.FileList loadFileList(string folder)
@@ -104,7 +124,7 @@ public class BasicLevelGenerator : MonoBehaviour
 					}
 					UnityEngine.Object.Instantiate(instance, new Vector3(xStart + x * tileWidth, yStart - y * tileHeight, 0),  Quaternion.identity);
 				} 
-				else if (tileType == 2) // random object
+				else if (tileType == 3) // random object
 				{
 					if(objectTiles.Length == 0)
 					{
@@ -117,6 +137,23 @@ public class BasicLevelGenerator : MonoBehaviour
 					if(instance == null)
 					{
 						Debug.LogError("You have a null instance in objectTiles");
+						return;
+					}
+					UnityEngine.Object.Instantiate(instance, new Vector3(xStart + x * tileWidth, yStart - y * tileHeight, 0),  Quaternion.identity);
+				}
+				else if (tileType == 2) // water tile
+				{
+					if(waterTiles.Length == 0)
+					{
+						Debug.LogError("Do not have any prefabs set in waterTiles");
+						return;
+					}
+					GameObject instance = waterTiles[Random.Range(0, waterTiles.Length)];
+
+
+					if(instance == null)
+					{
+						Debug.LogError("You have a null instance in waterTiles");
 						return;
 					}
 					UnityEngine.Object.Instantiate(instance, new Vector3(xStart + x * tileWidth, yStart - y * tileHeight, 0),  Quaternion.identity);
@@ -149,8 +186,16 @@ public class BasicLevelGenerator : MonoBehaviour
 		for(int x = 0; x < tileGroupsNumber; ++x)
 		{
 			List<int> layout;
-				
-			layout = block.getOneRandom();
+			
+			if(genStyle == GenerationStyle.Random)
+			{
+				layout = block.getOneRandom();
+			}
+			else //if(genStyle == GenerationStyle.InOrder)
+			{
+				layout = block.getNextOne();
+			}
+
 			int xStart = (int)(topLeftXPos + x * tileWidth * xTilePerSection);
 			createSection(layout, xStart, (int)topLeftYPos);
 		}
