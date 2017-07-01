@@ -1,9 +1,5 @@
 <FileList>
 	<files>
-		<file>one.txt</file>
-		<file>two.txt</file>
-		<file>three.txt</file>
-		<file>four.txt</file>
-		<file>five.txt</file>
+		<file>level_test_01.txt</file>
 	</files>
 </FileList>

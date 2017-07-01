@@ -24,8 +24,18 @@ public class CharacterController2D : MonoBehaviour
 	public Action onDoubleTap;
 	public Action onHoldDown;
 	public Action onHoldUp;
-
 	public Action onRightCollision;
+
+	public Action onTapGrounded;
+	public Action onSwipeLeftGrounded;
+	public Action onSwipeRightGrounded;
+	public Action onSwipeDownGrounded;
+	public Action onSwipeUpGrounded;
+	public Action onDoubleTapGrounded;
+	public Action onHoldDownGrounded;
+	public Action onHoldUpGrounded;
+	public Action onRightCollisionGrounded;
+
 	public Animator animator;
 
 	private Rigidbody2D rb;
@@ -38,10 +48,45 @@ public class CharacterController2D : MonoBehaviour
 
 	public float yRightColDetDelta = 0.02f;
 
+	public float groundedCastDistance = 0.01f;
+	private bool isGrounded = false;
+	private RaycastHit2D[] hits = new RaycastHit2D[16];
+	public int groundedRayCasts = 8;
+	public LayerMask PlatformMask;
+
 	public void Start()
 	{
 		_runSpeed = runSpeed;
 		rb = GetComponent<Rigidbody2D>();
+	}
+
+	public bool updateGrounded()
+	{
+		/* // Method 1, cast the rigid body
+		int colliderHitted = rb.Cast(new Vector2(0, -1), hits, groundedCastDistance);
+
+		isGrounded = colliderHitted > 0;
+		
+		*/
+
+		Collider2D myCollider = GetComponent<Collider2D>();
+		float step = (float)myCollider.bounds.size.x / (float)groundedRayCasts;
+		isGrounded = false;
+
+		Vector2 rayDirection = Vector2.down;
+		for(int i = 0; i < groundedRayCasts; ++i)
+		{
+			Vector2 rayVector = new Vector2(myCollider.bounds.min.x + i * step, myCollider.bounds.min.y);
+			var raycastHit = Physics2D.Raycast(rayVector, rayDirection, groundedCastDistance, PlatformMask);
+			Debug.DrawRay(rayVector, rayDirection * groundedCastDistance, Color.green);
+			if (raycastHit)
+			{
+				isGrounded = true;
+				break;
+			}
+		}
+
+		return isGrounded;
 	}
 
 	public void LateUpdate()
@@ -66,8 +111,15 @@ public class CharacterController2D : MonoBehaviour
 			rb.velocity = new Vector2(_runSpeed, rb.velocity.y);
 		}
 
+		updateGrounded();
+
+		if(isGrounded)
+		{
+			Collider2D myCollider = GetComponent<Collider2D>();
+			Vector2 point = new Vector2(myCollider.bounds.center.x, myCollider.bounds.center.y + 2);
+			Debug.DrawLine(myCollider.bounds.center, point, Color.black, 20);
+		}
 		
-	
 	}
 
 	protected virtual void OnEnable()
@@ -93,24 +145,39 @@ public class CharacterController2D : MonoBehaviour
 
 	public void OnHoldDown(LeanFinger finger)
 	{
-		doAction(onHoldDown);
+		updateGrounded();
+		Action action = isGrounded ? onHoldDownGrounded : onHoldDown;
+		doAction(action);
 	}
 
 	public void OnHoldUp(LeanFinger finger)
 	{
-		doAction(onHoldUp);
+		updateGrounded();
+		Action action = isGrounded ? onHoldUpGrounded : onHoldUp;
+		doAction(action);
 	}
 
 	public void OnFingerTap(LeanFinger finger)
 	{
+		updateGrounded();
+		
 		if(finger.TapCount == 1)
-			doAction(onTap);
+		{
+			doAction(isGrounded ? onTapGrounded : onTap);
+		}
 		else if(finger.TapCount == 2)
-			doAction(onDoubleTap);
+		{
+			doAction(isGrounded ? onDoubleTapGrounded : onDoubleTap);
+		}
 	}
 
 	public void doAction(Action action)
 	{
+		if(_runSpeed == 0) // Stopped
+		{
+			run();
+		}
+
 		switch(action)
 		{
 			case Action.Jump : jump(); return;
@@ -187,7 +254,9 @@ public class CharacterController2D : MonoBehaviour
 
            		if(xCondition && yCondition)
            	 	{
-            		doAction(onRightCollision);
+           	 		updateGrounded();
+
+            		doAction(isGrounded ? onRightCollisionGrounded : onRightCollision);
             		return;
             	}
 
@@ -195,29 +264,31 @@ public class CharacterController2D : MonoBehaviour
     	}
     }
 
+
 	public void OnFingerSwipe(LeanFinger finger)
 	{		
 		// Store the swipe delta in a temp variable
 		var swipe = finger.SwipeScreenDelta;
+		updateGrounded();
 			
 		if (swipe.x < -Mathf.Abs(swipe.y)) // Left
 		{
-			doAction(onSwipeLeft);
+			doAction(isGrounded ? onSwipeLeftGrounded : onSwipeLeft);
 		}
 			
 		if (swipe.x > Mathf.Abs(swipe.y)) // Rigth
 		{
-			doAction(onSwipeRight);
+			doAction(isGrounded ? onSwipeRightGrounded :onSwipeRight);
 		}
 			
 		if (swipe.y < -Mathf.Abs(swipe.x)) // Down
 		{
-			doAction(onSwipeDown);		
+			doAction(isGrounded ? onSwipeDownGrounded :onSwipeDown);		
 		}
 			
 		if (swipe.y > Mathf.Abs(swipe.x)) // Up
 		{
-			doAction(onSwipeUp);
+			doAction(isGrounded ? onSwipeUpGrounded : onSwipeUp);
 		}
 	}
 

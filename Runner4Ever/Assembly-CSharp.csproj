@@ -105,6 +105,7 @@
      <None Include="Assets\Level Generation\three.txt" />
      <None Include="Assets\Level Generation\five.txt" />
      <None Include="Assets\dummy.txt" />
+     <None Include="Assets\Level Generation\level_test_01.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
