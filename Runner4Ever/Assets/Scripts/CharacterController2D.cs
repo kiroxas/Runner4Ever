@@ -50,7 +50,6 @@ public class CharacterController2D : MonoBehaviour
 
 	public float groundedCastDistance = 0.01f;
 	private bool isGrounded = false;
-	private RaycastHit2D[] hits = new RaycastHit2D[16];
 	public int groundedRayCasts = 8;
 	public LayerMask PlatformMask;
 
@@ -98,8 +97,6 @@ public class CharacterController2D : MonoBehaviour
 			animator.SetBool("isRunning", isRunning);
 			_lastSpeed = _runSpeed;
 		}
-
-		float step = 0.01f;
 
 		if(upSpeed > 0)
 		{
