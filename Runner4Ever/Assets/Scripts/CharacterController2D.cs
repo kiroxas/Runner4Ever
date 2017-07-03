@@ -89,6 +89,11 @@ public class CharacterController2D : MonoBehaviour
 		return isGrounded;
 	}
 
+	public float runspeed()
+	{
+		return _runSpeed;
+	}
+
 	public void Start()
 	{
 		_runSpeed = runSpeed;
@@ -209,13 +214,13 @@ public class CharacterController2D : MonoBehaviour
 		updateRightCollision();
 		updateEdgeGrabing();
 
-		float xSpeed = collidingRight ? 0.0f : _runSpeed;
-		float yVelocity = rb.velocity.y;
-
-		if(collidingRight)
+		/*if(collidingRight)
         {
         	doAction(isGrounded ? onRightCollisionGrounded : onRightCollision); 
-        }
+        }*/
+
+		float xSpeed = collidingRight ? 0.0f : _runSpeed;
+		float yVelocity = rb.velocity.y;
 
         //rb.constraints = RigidbodyConstraints2D.FreezeRotation;
 
@@ -369,14 +374,10 @@ public class CharacterController2D : MonoBehaviour
 		_runSpeed /= 2;
 	}
 
-	//public void OnTriggerEnter2D(Collider2D other) 
-	//{
-      // stop();
-   // }
-
 
     public void OnCollisionEnter2D(Collision2D collision) 
     {
+    	/*
     	if(collision.gameObject.tag == "Platform")
     	{
     		Collider2D myCollider = GetComponent<Collider2D>();
@@ -405,7 +406,7 @@ public class CharacterController2D : MonoBehaviour
             	}
 
         	}
-    	}
+    	}*/
     }
 
 

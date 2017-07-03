@@ -95,13 +95,14 @@ public class CharacterController2DEditor : Editor
         	EditorGUI.indentLevel--;
         }
 
-        infosFold = EditorGUILayout.Foldout(infosFold, "infosFold");
+        infosFold = EditorGUILayout.Foldout(infosFold, "Infos");
 		if (infosFold)
         {
         	EditorGUI.indentLevel++;
         	EditorGUILayout.LabelField("CollidingRight ", myScript.isCollidingRight() ? "true" : "false");
         	EditorGUILayout.LabelField("Grounded ", myScript.grounded() ? "true" : "false");
         	EditorGUILayout.LabelField("isGrabingEdge ", myScript.grabingEdge() ? "true" : "false");
+        	EditorGUILayout.LabelField("runSpeed ", myScript.runspeed().ToString());
         	EditorGUI.indentLevel--;
         }
        
