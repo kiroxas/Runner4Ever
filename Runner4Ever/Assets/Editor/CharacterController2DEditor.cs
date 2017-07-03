@@ -9,6 +9,7 @@ public class CharacterController2DEditor : Editor
 	public static bool actionFold = false;
 	public static bool actionGroundedFold = false;
 	public static bool collisionsFold = false;
+	public static bool infosFold = false;
 
 	static LayerMask LayerMaskField( string label, LayerMask layerMask) {
      List<string> layers = new List<string>();
@@ -77,7 +78,8 @@ public class CharacterController2DEditor : Editor
        
         myScript.runSpeed = EditorGUILayout.FloatField("runSpeed", myScript.runSpeed);
         myScript.jumpMagnitude = EditorGUILayout.FloatField("jumpMagnitude", myScript.jumpMagnitude);
-         myScript.jumpRes = (CharacterController2D.JumpRestrictions)EditorGUILayout.EnumPopup("JumpRestrictions", myScript.jumpRes);
+        myScript.jumpRes = (CharacterController2D.JumpRestrictions)EditorGUILayout.EnumPopup("JumpRestrictions", myScript.jumpRes);
+        myScript.edgeStrategy = (CharacterController2D.EdgeGrabingStrategy)EditorGUILayout.EnumPopup("EdgeGrabingStrategy", myScript.edgeStrategy);
 
         collisionsFold = EditorGUILayout.Foldout(collisionsFold, "Collisions");
 		if (collisionsFold)
@@ -90,6 +92,16 @@ public class CharacterController2DEditor : Editor
         	myScript.groundedRayCasts = EditorGUILayout.IntField("groundedRayCasts", myScript.groundedRayCasts);
        		myScript.PlatformMask = LayerMaskField("PlatformMask", myScript.PlatformMask);
        		myScript.rightCollisionRayCasts = EditorGUILayout.IntField("rightCollisionRayCasts", myScript.rightCollisionRayCasts);
+        	EditorGUI.indentLevel--;
+        }
+
+        infosFold = EditorGUILayout.Foldout(infosFold, "infosFold");
+		if (infosFold)
+        {
+        	EditorGUI.indentLevel++;
+        	EditorGUILayout.LabelField("CollidingRight ", myScript.isCollidingRight() ? "true" : "false");
+        	EditorGUILayout.LabelField("Grounded ", myScript.grounded() ? "true" : "false");
+        	EditorGUILayout.LabelField("isGrabingEdge ", myScript.grabingEdge() ? "true" : "false");
         	EditorGUI.indentLevel--;
         }
        

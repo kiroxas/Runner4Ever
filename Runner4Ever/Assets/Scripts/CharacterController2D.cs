@@ -23,6 +23,14 @@ public class CharacterController2D : MonoBehaviour
 		Never
 	}
 
+	public enum EdgeGrabingStrategy
+	{
+		GoingUpOnly,
+		GoingDownOnly,
+		Both,
+		None
+	}
+
 	public Action onTap;
 	public Action onSwipeLeft;
 	public Action onSwipeRight;
@@ -44,6 +52,7 @@ public class CharacterController2D : MonoBehaviour
 	public Action onRightCollisionGrounded;
 
 	public JumpRestrictions jumpRes = JumpRestrictions.OnGround;
+	public EdgeGrabingStrategy edgeStrategy = EdgeGrabingStrategy.None;
 	public Animator animator;
 
 	private Rigidbody2D rb;
@@ -60,9 +69,25 @@ public class CharacterController2D : MonoBehaviour
 	public float rcCastDistance = 0.01f;
 	private bool isGrounded = false;
 	private bool collidingRight = false;
+	private bool isGrabingEdge = false;
 	public int groundedRayCasts = 8;
 	public int rightCollisionRayCasts = 16;
 	public LayerMask PlatformMask;
+
+	public bool isCollidingRight()
+	{
+		return collidingRight;
+	}
+
+	public bool grabingEdge()
+	{
+		return isGrabingEdge;
+	}
+
+	public bool grounded()
+	{
+		return isGrounded;
+	}
 
 	public void Start()
 	{
@@ -99,6 +124,45 @@ public class CharacterController2D : MonoBehaviour
 		return isGrounded;
 	}
 
+	public bool updateEdgeGrabing()
+	{
+		float yVelocity = rb.velocity.y;
+
+		if((isGrounded || !collidingRight)
+			|| (edgeStrategy == EdgeGrabingStrategy.GoingUpOnly && yVelocity < 0)
+			|| (edgeStrategy == EdgeGrabingStrategy.GoingDownOnly && yVelocity > 0)
+			|| (edgeStrategy == EdgeGrabingStrategy.None))
+		{
+			isGrabingEdge = false;
+			return isGrabingEdge;
+		}
+
+		Collider2D myCollider = GetComponent<Collider2D>();
+		float step = (float)myCollider.bounds.size.y / (float)rightCollisionRayCasts;
+		isGrabingEdge = false;
+
+		bool collided = false; // make sure we already had a collision, maybe it's a collision with a thin platform
+		Vector2 rayDirection = Vector2.right;
+		for(int i = 0; i < rightCollisionRayCasts + 1; ++i) // +1 to throw one above the character head
+		{
+			Vector2 rayVector = new Vector2(myCollider.bounds.max.x , myCollider.bounds.min.y + yRightColDetDelta + i * step);
+			var raycastHit = Physics2D.Raycast(rayVector, rayDirection, rcCastDistance, PlatformMask);
+			Debug.DrawRay(rayVector, rayDirection * rcCastDistance, Color.green);
+
+			collided |= raycastHit;
+
+			if (!raycastHit && collided)
+			{
+				isGrabingEdge = true;
+				break;
+			}
+		}
+
+		return isGrabingEdge;
+	}
+
+
+
 	public bool updateRightCollision()
 	{
 		/* // Method 1, cast the rigid body
@@ -115,7 +179,7 @@ public class CharacterController2D : MonoBehaviour
 		Vector2 rayDirection = Vector2.right;
 		for(int i = 0; i < rightCollisionRayCasts; ++i)
 		{
-			Vector2 rayVector = new Vector2(myCollider.bounds.max.x , myCollider.bounds.min.y + i * step);
+			Vector2 rayVector = new Vector2(myCollider.bounds.max.x , myCollider.bounds.min.y + yRightColDetDelta + i * step);
 			var raycastHit = Physics2D.Raycast(rayVector, rayDirection, rcCastDistance, PlatformMask);
 			Debug.DrawRay(rayVector, rayDirection * rcCastDistance, Color.red);
 			if (raycastHit)
@@ -128,20 +192,46 @@ public class CharacterController2D : MonoBehaviour
 		return collidingRight;
 	}
 
+	private void lockYPosition()
+	{
+		rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
+	}
+
+	private void unlockYPosition()
+	{
+		rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+	}
+
+
 	public void LateUpdate()
 	{
+		updateGrounded();
 		updateRightCollision();
+		updateEdgeGrabing();
+
 		float xSpeed = collidingRight ? 0.0f : _runSpeed;
+		float yVelocity = rb.velocity.y;
+
+		if(collidingRight)
+        {
+        	doAction(isGrounded ? onRightCollisionGrounded : onRightCollision); 
+        }
+
+        //rb.constraints = RigidbodyConstraints2D.FreezeRotation;
 
 		if(upSpeed > 0)
 		{
-			rb.velocity = new Vector2(xSpeed, upSpeed);
+			yVelocity = upSpeed;
 			upSpeed = 0;
+			unlockYPosition();
 		}
-		else
+		else if (isGrabingEdge)
 		{
-			rb.velocity = new Vector2(xSpeed, rb.velocity.y);
+			yVelocity = 0;
+			lockYPosition();
 		}
+
+		rb.velocity = new Vector2(xSpeed, yVelocity);
 
 		if(_lastSpeed != xSpeed && animator)
 		{
@@ -150,8 +240,6 @@ public class CharacterController2D : MonoBehaviour
 			animator.SetBool("isRunning", isRunning);
 			_lastSpeed = xSpeed;
 		}
-
-		updateGrounded();
 
 		if(isGrounded)
 		{
@@ -252,6 +340,8 @@ public class CharacterController2D : MonoBehaviour
 
 	public void jump()
 	{
+		if(isGrabingEdge == false)
+		{
 		switch(jumpRes)
 		{
 			case JumpRestrictions.OnGround :
@@ -263,6 +353,7 @@ public class CharacterController2D : MonoBehaviour
 				break;
 			case JumpRestrictions.Never : return;
 			case JumpRestrictions.Anywhere : break;
+		}
 		}
 
 		upSpeed = jumpMagnitude;
