@@ -8,6 +8,7 @@ public class CharacterController2DEditor : Editor
 {
 	public static bool actionFold = false;
 	public static bool actionGroundedFold = false;
+	public static bool collisionsFold = false;
 
 	static LayerMask LayerMaskField( string label, LayerMask layerMask) {
      List<string> layers = new List<string>();
@@ -76,11 +77,22 @@ public class CharacterController2DEditor : Editor
        
         myScript.runSpeed = EditorGUILayout.FloatField("runSpeed", myScript.runSpeed);
         myScript.jumpMagnitude = EditorGUILayout.FloatField("jumpMagnitude", myScript.jumpMagnitude);
-        myScript.yRightColDetDelta = EditorGUILayout.FloatField("yRightColDetDelta", myScript.yRightColDetDelta);
-        myScript.groundedCastDistance = EditorGUILayout.FloatField("groundedCastDistance", myScript.groundedCastDistance);
+         myScript.jumpRes = (CharacterController2D.JumpRestrictions)EditorGUILayout.EnumPopup("JumpRestrictions", myScript.jumpRes);
 
-        myScript.groundedRayCasts = EditorGUILayout.IntField("groundedRayCasts", myScript.groundedRayCasts);
-        myScript.PlatformMask = LayerMaskField("PlatformMask", myScript.PlatformMask);
-        myScript.jumpRes = (CharacterController2D.JumpRestrictions)EditorGUILayout.EnumPopup("JumpRestrictions", myScript.jumpRes);
+        collisionsFold = EditorGUILayout.Foldout(collisionsFold, "Collisions");
+		if (collisionsFold)
+        {
+        	EditorGUI.indentLevel++;
+        	 myScript.yRightColDetDelta = EditorGUILayout.FloatField("yRightColDetDelta", myScript.yRightColDetDelta);
+       		 myScript.groundedCastDistance = EditorGUILayout.FloatField("groundedCastDistance", myScript.groundedCastDistance);
+       		 myScript.rcCastDistance = EditorGUILayout.FloatField("rightCollisionCastDistance", myScript.rcCastDistance);
+
+        	myScript.groundedRayCasts = EditorGUILayout.IntField("groundedRayCasts", myScript.groundedRayCasts);
+       		myScript.PlatformMask = LayerMaskField("PlatformMask", myScript.PlatformMask);
+       		myScript.rightCollisionRayCasts = EditorGUILayout.IntField("rightCollisionRayCasts", myScript.rightCollisionRayCasts);
+        	EditorGUI.indentLevel--;
+        }
+       
+       
 	}
 }

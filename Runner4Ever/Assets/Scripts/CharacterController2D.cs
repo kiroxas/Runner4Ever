@@ -57,8 +57,11 @@ public class CharacterController2D : MonoBehaviour
 	public float yRightColDetDelta = 0.02f;
 
 	public float groundedCastDistance = 0.01f;
+	public float rcCastDistance = 0.01f;
 	private bool isGrounded = false;
+	private bool collidingRight = false;
 	public int groundedRayCasts = 8;
+	public int rightCollisionRayCasts = 16;
 	public LayerMask PlatformMask;
 
 	public void Start()
@@ -96,24 +99,56 @@ public class CharacterController2D : MonoBehaviour
 		return isGrounded;
 	}
 
+	public bool updateRightCollision()
+	{
+		/* // Method 1, cast the rigid body
+		int colliderHitted = rb.Cast(new Vector2(0, -1), hits, groundedCastDistance);
+
+		isGrounded = colliderHitted > 0;
+		
+		*/
+
+		Collider2D myCollider = GetComponent<Collider2D>();
+		float step = (float)myCollider.bounds.size.y / (float)rightCollisionRayCasts;
+		collidingRight = false;
+
+		Vector2 rayDirection = Vector2.right;
+		for(int i = 0; i < rightCollisionRayCasts; ++i)
+		{
+			Vector2 rayVector = new Vector2(myCollider.bounds.max.x , myCollider.bounds.min.y + i * step);
+			var raycastHit = Physics2D.Raycast(rayVector, rayDirection, rcCastDistance, PlatformMask);
+			Debug.DrawRay(rayVector, rayDirection * rcCastDistance, Color.red);
+			if (raycastHit)
+			{
+				collidingRight = true;
+				break;
+			}
+		}
+
+		return collidingRight;
+	}
+
 	public void LateUpdate()
 	{
-		if(_lastSpeed != _runSpeed && animator)
-		{
-			bool isRunning = _runSpeed > 0;
-			
-			animator.SetBool("isRunning", isRunning);
-			_lastSpeed = _runSpeed;
-		}
+		updateRightCollision();
+		float xSpeed = collidingRight ? 0.0f : _runSpeed;
 
 		if(upSpeed > 0)
 		{
-			rb.velocity = new Vector2(_runSpeed, upSpeed);
+			rb.velocity = new Vector2(xSpeed, upSpeed);
 			upSpeed = 0;
 		}
 		else
 		{
-			rb.velocity = new Vector2(_runSpeed, rb.velocity.y);
+			rb.velocity = new Vector2(xSpeed, rb.velocity.y);
+		}
+
+		if(_lastSpeed != xSpeed && animator)
+		{
+			bool isRunning = xSpeed > 0;
+			
+			animator.SetBool("isRunning", isRunning);
+			_lastSpeed = xSpeed;
 		}
 
 		updateGrounded();
@@ -255,17 +290,17 @@ public class CharacterController2D : MonoBehaviour
     	{
     		Collider2D myCollider = GetComponent<Collider2D>();
     		Bounds character = myCollider.bounds;
-    		Debug.DrawLine(character.center, character.min, Color.blue, 20);
-    		Debug.DrawLine(character.center, character.max, Color.grey, 20);
+    		//Debug.DrawLine(character.center, character.min, Color.blue, 20);
+    		//Debug.DrawLine(character.center, character.max, Color.grey, 20);
 
     		foreach (ContactPoint2D contacts in collision.contacts) 
     		{
     			Collider2D otherCollider = collision.otherCollider == myCollider ? collision.collider : collision.otherCollider;
     			Bounds center = otherCollider.bounds;
 
-    			Debug.DrawLine(character.center, center.center, Color.red, 20);	
-    			Debug.DrawLine(center.center, center.min, Color.blue, 20);
-    			Debug.DrawLine(center.center, center.max, Color.grey, 20);
+    			//Debug.DrawLine(character.center, center.center, Color.red, 20);	
+    			//Debug.DrawLine(center.center, center.min, Color.blue, 20);
+    			//Debug.DrawLine(center.center, center.max, Color.grey, 20);
     		
 				bool xCondition = contacts.point.x >= character.max.x;
 				bool yCondition = contacts.point.y - yRightColDetDelta> character.min.y && contacts.point.y + yRightColDetDelta< character.max.y;
