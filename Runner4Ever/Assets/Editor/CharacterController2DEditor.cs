@@ -81,5 +81,6 @@ public class CharacterController2DEditor : Editor
 
         myScript.groundedRayCasts = EditorGUILayout.IntField("groundedRayCasts", myScript.groundedRayCasts);
         myScript.PlatformMask = LayerMaskField("PlatformMask", myScript.PlatformMask);
+        myScript.jumpRes = (CharacterController2D.JumpRestrictions)EditorGUILayout.EnumPopup("JumpRestrictions", myScript.jumpRes);
 	}
 }

@@ -16,6 +16,13 @@ public class CharacterController2D : MonoBehaviour
 		Start
 	}
 
+	public enum JumpRestrictions
+	{
+		Anywhere,
+		OnGround,
+		Never
+	}
+
 	public Action onTap;
 	public Action onSwipeLeft;
 	public Action onSwipeRight;
@@ -36,6 +43,7 @@ public class CharacterController2D : MonoBehaviour
 	public Action onHoldUpGrounded;
 	public Action onRightCollisionGrounded;
 
+	public JumpRestrictions jumpRes = JumpRestrictions.OnGround;
 	public Animator animator;
 
 	private Rigidbody2D rb;
@@ -209,6 +217,19 @@ public class CharacterController2D : MonoBehaviour
 
 	public void jump()
 	{
+		switch(jumpRes)
+		{
+			case JumpRestrictions.OnGround :
+				updateGrounded();
+				if(!isGrounded)
+				{
+					return;
+				}
+				break;
+			case JumpRestrictions.Never : return;
+			case JumpRestrictions.Anywhere : break;
+		}
+
 		upSpeed = jumpMagnitude;
 	}
 
