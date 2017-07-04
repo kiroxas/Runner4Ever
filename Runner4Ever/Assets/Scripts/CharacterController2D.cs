@@ -62,6 +62,8 @@ public class CharacterController2D : MonoBehaviour
 	public JumpDirectionOnWallOrEdge jumpWall = JumpDirectionOnWallOrEdge.KeepTheSame;
 	public RunDirectionOnGround runDir = RunDirectionOnGround.KeepTheAirOne;
 
+	public Stack jumpState;
+
 	public Animator animator;
 
 	private Rigidbody2D rb;
@@ -73,6 +75,8 @@ public class CharacterController2D : MonoBehaviour
 	public float jumpMagnitude = 0.1f;
 	private float upSpeed = 0;
 	private float gravityScale = 0;
+	public float timeBetweenJumps = 0.25f;
+	private float jumpIn = 0.0f;
 
 	public bool collidingRight()
 	{
@@ -115,6 +119,8 @@ public class CharacterController2D : MonoBehaviour
 		rb = GetComponent<Rigidbody2D>();
 		state = GetComponent<CharacterState>();
 		gravityScale = rb.gravityScale;
+		jumpState = new Stack();
+		jumpState.Push(jumpRes);
 	}
 
 	private void lockYPosition()
@@ -176,6 +182,8 @@ public class CharacterController2D : MonoBehaviour
 			Vector2 point = new Vector2(myCollider.bounds.center.x, myCollider.bounds.center.y + 2);
 			Debug.DrawLine(myCollider.bounds.center, point, Color.black, 20);
 		}
+
+		updateJumpIn();
 		
 	}
 
@@ -187,6 +195,18 @@ public class CharacterController2D : MonoBehaviour
 
 			LeanFingerHeld.OnFingerHeldDown += OnHoldDown;
 			LeanFingerHeld.OnFingerHeldUp += OnHoldUp;
+	}
+
+	private void updateJumpIn()
+	{
+		if(jumpIn > 0)
+		{
+			jumpIn -= Time.deltaTime;
+			if(jumpIn < 0)
+			{
+				jumpIn = 0;
+			}
+		}
 	}
 		
 	protected virtual void OnDisable()
@@ -270,9 +290,14 @@ public class CharacterController2D : MonoBehaviour
 
 	public void jump()
 	{
+		if(jumpIn > 0)
+		{
+			return;
+		}
+
 		if(grabingEdge() == false)
 		{
-		switch(jumpRes)
+		switch((JumpRestrictions)jumpState.Peek())
 		{
 			case JumpRestrictions.OnGround :
 				state.updateState();
@@ -292,6 +317,7 @@ public class CharacterController2D : MonoBehaviour
 		}
 
 		upSpeed = jumpMagnitude;
+		jumpIn = timeBetweenJumps;
 	}
 
 	public void accelerate()

@@ -78,6 +78,7 @@ public class CharacterController2DEditor : Editor
        // myScript.state = (CharacterState)EditorGUILayout.ObjectField("CharacterState", myScript.state, typeof(CharacterState), true);
        
         myScript.runSpeed = EditorGUILayout.FloatField("runSpeed", myScript.runSpeed);
+        myScript.timeBetweenJumps = EditorGUILayout.FloatField("timeBetweenJumps", myScript.timeBetweenJumps);
         myScript.jumpMagnitude = EditorGUILayout.FloatField("jumpMagnitude", myScript.jumpMagnitude);
         myScript.jumpRes = (CharacterController2D.JumpRestrictions)EditorGUILayout.EnumPopup("JumpRestrictions", myScript.jumpRes);
         myScript.jumpWall = (CharacterController2D.JumpDirectionOnWallOrEdge)EditorGUILayout.EnumPopup("JumpDirectionOnWallOrEdge", myScript.jumpWall);
