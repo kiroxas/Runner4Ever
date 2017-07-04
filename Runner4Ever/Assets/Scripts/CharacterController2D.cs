@@ -23,14 +23,6 @@ public class CharacterController2D : MonoBehaviour
 		Never
 	}
 
-	public enum EdgeGrabingStrategy
-	{
-		GoingUpOnly,
-		GoingDownOnly,
-		Both,
-		None
-	}
-
 	public Action onTap;
 	public Action onSwipeLeft;
 	public Action onSwipeRight;
@@ -51,8 +43,10 @@ public class CharacterController2D : MonoBehaviour
 	public Action onHoldUpGrounded;
 	public Action onRightCollisionGrounded;
 
+	public CharacterState state;
+
 	public JumpRestrictions jumpRes = JumpRestrictions.OnGround;
-	public EdgeGrabingStrategy edgeStrategy = EdgeGrabingStrategy.None;
+	
 	public Animator animator;
 
 	private Rigidbody2D rb;
@@ -63,30 +57,19 @@ public class CharacterController2D : MonoBehaviour
 	public float jumpMagnitude = 0.1f;
 	private float upSpeed = 0;
 
-	public float yRightColDetDelta = 0.02f;
-
-	public float groundedCastDistance = 0.01f;
-	public float rcCastDistance = 0.01f;
-	private bool isGrounded = false;
-	private bool collidingRight = false;
-	private bool isGrabingEdge = false;
-	public int groundedRayCasts = 8;
-	public int rightCollisionRayCasts = 16;
-	public LayerMask PlatformMask;
-
-	public bool isCollidingRight()
+	public bool collidingRight()
 	{
-		return collidingRight;
+		return state.isCollidingRight;
 	}
 
 	public bool grabingEdge()
 	{
-		return isGrabingEdge;
+		return state.isGrabingEdge;
 	}
 
 	public bool grounded()
 	{
-		return isGrounded;
+		return state.isGrounded;
 	}
 
 	public float runspeed()
@@ -98,103 +81,6 @@ public class CharacterController2D : MonoBehaviour
 	{
 		_runSpeed = runSpeed;
 		rb = GetComponent<Rigidbody2D>();
-	}
-
-	public bool updateGrounded()
-	{
-		/* // Method 1, cast the rigid body
-		int colliderHitted = rb.Cast(new Vector2(0, -1), hits, groundedCastDistance);
-
-		isGrounded = colliderHitted > 0;
-		
-		*/
-
-		Collider2D myCollider = GetComponent<Collider2D>();
-		float step = (float)myCollider.bounds.size.x / (float)groundedRayCasts;
-		isGrounded = false;
-
-		Vector2 rayDirection = Vector2.down;
-		for(int i = 0; i < groundedRayCasts; ++i)
-		{
-			Vector2 rayVector = new Vector2(myCollider.bounds.min.x + i * step, myCollider.bounds.min.y);
-			var raycastHit = Physics2D.Raycast(rayVector, rayDirection, groundedCastDistance, PlatformMask);
-			Debug.DrawRay(rayVector, rayDirection * groundedCastDistance, Color.green);
-			if (raycastHit)
-			{
-				isGrounded = true;
-				break;
-			}
-		}
-
-		return isGrounded;
-	}
-
-	public bool updateEdgeGrabing()
-	{
-		float yVelocity = rb.velocity.y;
-
-		if((isGrounded || !collidingRight)
-			|| (edgeStrategy == EdgeGrabingStrategy.GoingUpOnly && yVelocity < 0)
-			|| (edgeStrategy == EdgeGrabingStrategy.GoingDownOnly && yVelocity > 0)
-			|| (edgeStrategy == EdgeGrabingStrategy.None))
-		{
-			isGrabingEdge = false;
-			return isGrabingEdge;
-		}
-
-		Collider2D myCollider = GetComponent<Collider2D>();
-		float step = (float)myCollider.bounds.size.y / (float)rightCollisionRayCasts;
-		isGrabingEdge = false;
-
-		bool collided = false; // make sure we already had a collision, maybe it's a collision with a thin platform
-		Vector2 rayDirection = Vector2.right;
-		for(int i = 0; i < rightCollisionRayCasts + 1; ++i) // +1 to throw one above the character head
-		{
-			Vector2 rayVector = new Vector2(myCollider.bounds.max.x , myCollider.bounds.min.y + yRightColDetDelta + i * step);
-			var raycastHit = Physics2D.Raycast(rayVector, rayDirection, rcCastDistance, PlatformMask);
-			Debug.DrawRay(rayVector, rayDirection * rcCastDistance, Color.green);
-
-			collided |= raycastHit;
-
-			if (!raycastHit && collided)
-			{
-				isGrabingEdge = true;
-				break;
-			}
-		}
-
-		return isGrabingEdge;
-	}
-
-
-
-	public bool updateRightCollision()
-	{
-		/* // Method 1, cast the rigid body
-		int colliderHitted = rb.Cast(new Vector2(0, -1), hits, groundedCastDistance);
-
-		isGrounded = colliderHitted > 0;
-		
-		*/
-
-		Collider2D myCollider = GetComponent<Collider2D>();
-		float step = (float)myCollider.bounds.size.y / (float)rightCollisionRayCasts;
-		collidingRight = false;
-
-		Vector2 rayDirection = Vector2.right;
-		for(int i = 0; i < rightCollisionRayCasts; ++i)
-		{
-			Vector2 rayVector = new Vector2(myCollider.bounds.max.x , myCollider.bounds.min.y + yRightColDetDelta + i * step);
-			var raycastHit = Physics2D.Raycast(rayVector, rayDirection, rcCastDistance, PlatformMask);
-			Debug.DrawRay(rayVector, rayDirection * rcCastDistance, Color.red);
-			if (raycastHit)
-			{
-				collidingRight = true;
-				break;
-			}
-		}
-
-		return collidingRight;
 	}
 
 	private void lockYPosition()
@@ -210,16 +96,14 @@ public class CharacterController2D : MonoBehaviour
 
 	public void LateUpdate()
 	{
-		updateGrounded();
-		updateRightCollision();
-		updateEdgeGrabing();
+		state.updateState();
 
-		/*if(collidingRight)
+		/*if(isCollidingRight)
         {
         	doAction(isGrounded ? onRightCollisionGrounded : onRightCollision); 
         }*/
 
-		float xSpeed = collidingRight ? 0.0f : _runSpeed;
+		float xSpeed = collidingRight() ? 0.0f : _runSpeed;
 		float yVelocity = rb.velocity.y;
 
         //rb.constraints = RigidbodyConstraints2D.FreezeRotation;
@@ -230,7 +114,7 @@ public class CharacterController2D : MonoBehaviour
 			upSpeed = 0;
 			unlockYPosition();
 		}
-		else if (isGrabingEdge)
+		else if (grabingEdge())
 		{
 			yVelocity = 0;
 			lockYPosition();
@@ -246,7 +130,7 @@ public class CharacterController2D : MonoBehaviour
 			_lastSpeed = xSpeed;
 		}
 
-		if(isGrounded)
+		if(grounded())
 		{
 			Collider2D myCollider = GetComponent<Collider2D>();
 			Vector2 point = new Vector2(myCollider.bounds.center.x, myCollider.bounds.center.y + 2);
@@ -278,29 +162,29 @@ public class CharacterController2D : MonoBehaviour
 
 	public void OnHoldDown(LeanFinger finger)
 	{
-		updateGrounded();
-		Action action = isGrounded ? onHoldDownGrounded : onHoldDown;
+		state.updateGrounded();
+		Action action = grounded() ? onHoldDownGrounded : onHoldDown;
 		doAction(action);
 	}
 
 	public void OnHoldUp(LeanFinger finger)
 	{
-		updateGrounded();
-		Action action = isGrounded ? onHoldUpGrounded : onHoldUp;
+		state.updateGrounded();
+		Action action = grounded() ? onHoldUpGrounded : onHoldUp;
 		doAction(action);
 	}
 
 	public void OnFingerTap(LeanFinger finger)
 	{
-		updateGrounded();
+		state.updateGrounded();
 		
 		if(finger.TapCount == 1)
 		{
-			doAction(isGrounded ? onTapGrounded : onTap);
+			doAction(grounded() ? onTapGrounded : onTap);
 		}
 		else if(finger.TapCount == 2)
 		{
-			doAction(isGrounded ? onDoubleTapGrounded : onDoubleTap);
+			doAction(grounded() ? onDoubleTapGrounded : onDoubleTap);
 		}
 	}
 
@@ -345,13 +229,13 @@ public class CharacterController2D : MonoBehaviour
 
 	public void jump()
 	{
-		if(isGrabingEdge == false)
+		if(grabingEdge() == false)
 		{
 		switch(jumpRes)
 		{
 			case JumpRestrictions.OnGround :
-				updateGrounded();
-				if(!isGrounded)
+				state.updateGrounded();
+				if(!grounded())
 				{
 					return;
 				}
@@ -375,65 +259,30 @@ public class CharacterController2D : MonoBehaviour
 	}
 
 
-    public void OnCollisionEnter2D(Collision2D collision) 
-    {
-    	/*
-    	if(collision.gameObject.tag == "Platform")
-    	{
-    		Collider2D myCollider = GetComponent<Collider2D>();
-    		Bounds character = myCollider.bounds;
-    		//Debug.DrawLine(character.center, character.min, Color.blue, 20);
-    		//Debug.DrawLine(character.center, character.max, Color.grey, 20);
-
-    		foreach (ContactPoint2D contacts in collision.contacts) 
-    		{
-    			Collider2D otherCollider = collision.otherCollider == myCollider ? collision.collider : collision.otherCollider;
-    			Bounds center = otherCollider.bounds;
-
-    			//Debug.DrawLine(character.center, center.center, Color.red, 20);	
-    			//Debug.DrawLine(center.center, center.min, Color.blue, 20);
-    			//Debug.DrawLine(center.center, center.max, Color.grey, 20);
-    		
-				bool xCondition = contacts.point.x >= character.max.x;
-				bool yCondition = contacts.point.y - yRightColDetDelta> character.min.y && contacts.point.y + yRightColDetDelta< character.max.y;
-
-           		if(xCondition && yCondition)
-           	 	{
-           	 		updateGrounded();
-
-            		doAction(isGrounded ? onRightCollisionGrounded : onRightCollision);
-            		return;
-            	}
-
-        	}
-    	}*/
-    }
-
-
 	public void OnFingerSwipe(LeanFinger finger)
 	{		
 		// Store the swipe delta in a temp variable
 		var swipe = finger.SwipeScreenDelta;
-		updateGrounded();
+		state.updateGrounded();
 			
 		if (swipe.x < -Mathf.Abs(swipe.y)) // Left
 		{
-			doAction(isGrounded ? onSwipeLeftGrounded : onSwipeLeft);
+			doAction(grounded() ? onSwipeLeftGrounded : onSwipeLeft);
 		}
 			
 		if (swipe.x > Mathf.Abs(swipe.y)) // Rigth
 		{
-			doAction(isGrounded ? onSwipeRightGrounded :onSwipeRight);
+			doAction(grounded() ? onSwipeRightGrounded :onSwipeRight);
 		}
 			
 		if (swipe.y < -Mathf.Abs(swipe.x)) // Down
 		{
-			doAction(isGrounded ? onSwipeDownGrounded :onSwipeDown);		
+			doAction(grounded() ? onSwipeDownGrounded :onSwipeDown);		
 		}
 			
 		if (swipe.y > Mathf.Abs(swipe.x)) // Up
 		{
-			doAction(isGrounded ? onSwipeUpGrounded : onSwipeUp);
+			doAction(grounded() ? onSwipeUpGrounded : onSwipeUp);
 		}
 	}
 

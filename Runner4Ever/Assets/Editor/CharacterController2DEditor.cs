@@ -75,31 +75,17 @@ public class CharacterController2DEditor : Editor
         }
 
         myScript.animator = (Animator)EditorGUILayout.ObjectField("Animator", myScript.animator, typeof(Animator), true);
+        myScript.state = (CharacterState)EditorGUILayout.ObjectField("CharacterState", myScript.state, typeof(CharacterState), true);
        
         myScript.runSpeed = EditorGUILayout.FloatField("runSpeed", myScript.runSpeed);
         myScript.jumpMagnitude = EditorGUILayout.FloatField("jumpMagnitude", myScript.jumpMagnitude);
         myScript.jumpRes = (CharacterController2D.JumpRestrictions)EditorGUILayout.EnumPopup("JumpRestrictions", myScript.jumpRes);
-        myScript.edgeStrategy = (CharacterController2D.EdgeGrabingStrategy)EditorGUILayout.EnumPopup("EdgeGrabingStrategy", myScript.edgeStrategy);
-
-        collisionsFold = EditorGUILayout.Foldout(collisionsFold, "Collisions");
-		if (collisionsFold)
-        {
-        	EditorGUI.indentLevel++;
-        	 myScript.yRightColDetDelta = EditorGUILayout.FloatField("yRightColDetDelta", myScript.yRightColDetDelta);
-       		 myScript.groundedCastDistance = EditorGUILayout.FloatField("groundedCastDistance", myScript.groundedCastDistance);
-       		 myScript.rcCastDistance = EditorGUILayout.FloatField("rightCollisionCastDistance", myScript.rcCastDistance);
-
-        	myScript.groundedRayCasts = EditorGUILayout.IntField("groundedRayCasts", myScript.groundedRayCasts);
-       		myScript.PlatformMask = LayerMaskField("PlatformMask", myScript.PlatformMask);
-       		myScript.rightCollisionRayCasts = EditorGUILayout.IntField("rightCollisionRayCasts", myScript.rightCollisionRayCasts);
-        	EditorGUI.indentLevel--;
-        }
 
         infosFold = EditorGUILayout.Foldout(infosFold, "Infos");
 		if (infosFold)
         {
         	EditorGUI.indentLevel++;
-        	EditorGUILayout.LabelField("CollidingRight ", myScript.isCollidingRight() ? "true" : "false");
+        	EditorGUILayout.LabelField("CollidingRight ", myScript.collidingRight() ? "true" : "false");
         	EditorGUILayout.LabelField("Grounded ", myScript.grounded() ? "true" : "false");
         	EditorGUILayout.LabelField("isGrabingEdge ", myScript.grabingEdge() ? "true" : "false");
         	EditorGUILayout.LabelField("runSpeed ", myScript.runspeed().ToString());
