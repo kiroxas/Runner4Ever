@@ -56,7 +56,7 @@ public class CharacterController2D : MonoBehaviour
 	public Action onHoldUpGrounded;
 	public Action onRightCollisionGrounded;
 
-	public CharacterState state;
+	private CharacterState state;
 
 	public JumpRestrictions jumpRes = JumpRestrictions.OnGround;
 	public JumpDirectionOnWallOrEdge jumpWall = JumpDirectionOnWallOrEdge.KeepTheSame;
@@ -113,6 +113,7 @@ public class CharacterController2D : MonoBehaviour
 	{
 		_runSpeed = runSpeed;
 		rb = GetComponent<Rigidbody2D>();
+		state = GetComponent<CharacterState>();
 		gravityScale = rb.gravityScale;
 	}
 
