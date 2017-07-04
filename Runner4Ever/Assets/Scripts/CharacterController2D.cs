@@ -23,6 +23,12 @@ public class CharacterController2D : MonoBehaviour
 		Never
 	}
 
+	public enum JumpDirectionOnWallOrEdge
+	{
+		KeepTheSame,
+		Inverse
+	}
+
 	public Action onTap;
 	public Action onSwipeLeft;
 	public Action onSwipeRight;
@@ -46,10 +52,12 @@ public class CharacterController2D : MonoBehaviour
 	public CharacterState state;
 
 	public JumpRestrictions jumpRes = JumpRestrictions.OnGround;
+	public JumpDirectionOnWallOrEdge jumpWall = JumpDirectionOnWallOrEdge.KeepTheSame;
 	
 	public Animator animator;
 
 	private Rigidbody2D rb;
+	private bool facingRight = true;
 
 	public float runSpeed = 0.1f;
 	private float _runSpeedBeforeStop;
@@ -65,6 +73,11 @@ public class CharacterController2D : MonoBehaviour
 	public bool grabingEdge()
 	{
 		return state.isGrabingEdge;
+	}
+
+	public bool wallSticking()
+	{
+		return state.isWallSticking;
 	}
 
 	public bool grounded()
@@ -97,6 +110,7 @@ public class CharacterController2D : MonoBehaviour
 	public void LateUpdate()
 	{
 		state.updateState();
+		makeItRunRightOnGround();
 
 		/*if(isCollidingRight)
         {
@@ -124,7 +138,7 @@ public class CharacterController2D : MonoBehaviour
 
 		if(_lastSpeed != xSpeed && animator)
 		{
-			bool isRunning = xSpeed > 0;
+			bool isRunning = xSpeed != 0;
 			
 			animator.SetBool("isRunning", isRunning);
 			_lastSpeed = xSpeed;
@@ -221,6 +235,7 @@ public class CharacterController2D : MonoBehaviour
 
 	public void dash()
 	{
+		
 	}
 
 	public void slide()
@@ -243,6 +258,11 @@ public class CharacterController2D : MonoBehaviour
 			case JumpRestrictions.Never : return;
 			case JumpRestrictions.Anywhere : break;
 		}
+		}
+
+		if(jumpWall == JumpDirectionOnWallOrEdge.Inverse && (grabingEdge() || wallSticking()))
+		{
+			changeDirection();
 		}
 
 		upSpeed = jumpMagnitude;
@@ -284,6 +304,29 @@ public class CharacterController2D : MonoBehaviour
 		{
 			doAction(grounded() ? onSwipeUpGrounded : onSwipeUp);
 		}
+	}
+
+	private void changeDirection()
+	{
+		Flip(); // display
+
+		_runSpeed *= -1;
+	}
+
+	private void makeItRunRightOnGround()
+	{
+		if(grounded() && _runSpeed < 0)
+		{
+			changeDirection();
+		}
+	}
+
+	private void Flip()
+	{
+		facingRight = !facingRight;
+		Vector3 theScale = transform.localScale;
+		theScale.x *= -1;
+		transform.localScale = theScale;
 	}
 
 }

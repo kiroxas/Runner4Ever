@@ -18,6 +18,7 @@ public class CharacterState : MonoBehaviour
 	public bool isGrounded { get; private set; }
 	public bool isCollidingRight { get; private set; }
 	public bool isGrabingEdge { get; private set; }
+	public bool isWallSticking { get{ return isCollidingRight && ! isGrounded && !isGrabingEdge;} }
 
 	public float yRightColDetDelta = 0.02f;
 

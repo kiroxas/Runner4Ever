@@ -80,6 +80,7 @@ public class CharacterController2DEditor : Editor
         myScript.runSpeed = EditorGUILayout.FloatField("runSpeed", myScript.runSpeed);
         myScript.jumpMagnitude = EditorGUILayout.FloatField("jumpMagnitude", myScript.jumpMagnitude);
         myScript.jumpRes = (CharacterController2D.JumpRestrictions)EditorGUILayout.EnumPopup("JumpRestrictions", myScript.jumpRes);
+        myScript.jumpWall = (CharacterController2D.JumpDirectionOnWallOrEdge)EditorGUILayout.EnumPopup("JumpDirectionOnWallOrEdge", myScript.jumpWall);
 
         infosFold = EditorGUILayout.Foldout(infosFold, "Infos");
 		if (infosFold)
@@ -88,6 +89,7 @@ public class CharacterController2DEditor : Editor
         	EditorGUILayout.LabelField("CollidingRight ", myScript.collidingRight() ? "true" : "false");
         	EditorGUILayout.LabelField("Grounded ", myScript.grounded() ? "true" : "false");
         	EditorGUILayout.LabelField("isGrabingEdge ", myScript.grabingEdge() ? "true" : "false");
+        	EditorGUILayout.LabelField("isWallSticking ", myScript.wallSticking() ? "true" : "false");
         	EditorGUILayout.LabelField("runSpeed ", myScript.runspeed().ToString());
         	EditorGUI.indentLevel--;
         }
