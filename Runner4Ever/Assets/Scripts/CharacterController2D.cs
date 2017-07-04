@@ -29,6 +29,13 @@ public class CharacterController2D : MonoBehaviour
 		Inverse
 	}
 
+	public enum RunDirectionOnGround
+	{
+		AlwaysRight,
+		AlwaysLeft,
+		KeepTheAirOne
+	}
+
 	public Action onTap;
 	public Action onSwipeLeft;
 	public Action onSwipeRight;
@@ -53,7 +60,8 @@ public class CharacterController2D : MonoBehaviour
 
 	public JumpRestrictions jumpRes = JumpRestrictions.OnGround;
 	public JumpDirectionOnWallOrEdge jumpWall = JumpDirectionOnWallOrEdge.KeepTheSame;
-	
+	public RunDirectionOnGround runDir = RunDirectionOnGround.KeepTheAirOne;
+
 	public Animator animator;
 
 	private Rigidbody2D rb;
@@ -64,10 +72,21 @@ public class CharacterController2D : MonoBehaviour
 	private float _runSpeed, _lastSpeed;
 	public float jumpMagnitude = 0.1f;
 	private float upSpeed = 0;
+	private float gravityScale = 0;
 
 	public bool collidingRight()
 	{
 		return state.isCollidingRight;
+	}
+
+	public bool collidingLeft()
+	{
+		return state.isCollidingLeft;
+	}
+
+	public bool collidingSide()
+	{
+		return state.isCollidingSide;
 	}
 
 	public bool grabingEdge()
@@ -94,6 +113,7 @@ public class CharacterController2D : MonoBehaviour
 	{
 		_runSpeed = runSpeed;
 		rb = GetComponent<Rigidbody2D>();
+		gravityScale = rb.gravityScale;
 	}
 
 	private void lockYPosition()
@@ -106,21 +126,26 @@ public class CharacterController2D : MonoBehaviour
 		rb.constraints = RigidbodyConstraints2D.FreezeRotation;
 	}
 
+	private void putCorrectGravityScale()
+	{
+		bool conditions = rb.velocity.y < 0 && wallSticking();
+		rb.gravityScale = conditions ? 0.25f : gravityScale;
+	}
+
+	private bool shallNullifySpeed()
+	{
+		return (_runSpeed > 0 && collidingRight()) || (_runSpeed < 0 && collidingLeft());
+	}
+
 
 	public void LateUpdate()
 	{
 		state.updateState();
 		makeItRunRightOnGround();
+		putCorrectGravityScale();
 
-		/*if(isCollidingRight)
-        {
-        	doAction(isGrounded ? onRightCollisionGrounded : onRightCollision); 
-        }*/
-
-		float xSpeed = collidingRight() ? 0.0f : _runSpeed;
+		float xSpeed = shallNullifySpeed() ? 0.0f : _runSpeed;
 		float yVelocity = rb.velocity.y;
-
-        //rb.constraints = RigidbodyConstraints2D.FreezeRotation;
 
 		if(upSpeed > 0)
 		{
@@ -249,8 +274,8 @@ public class CharacterController2D : MonoBehaviour
 		switch(jumpRes)
 		{
 			case JumpRestrictions.OnGround :
-				state.updateGrounded();
-				if(!grounded())
+				state.updateState();
+				if(!grounded() && !wallSticking())
 				{
 					return;
 				}
@@ -315,7 +340,8 @@ public class CharacterController2D : MonoBehaviour
 
 	private void makeItRunRightOnGround()
 	{
-		if(grounded() && _runSpeed < 0)
+		if((runDir == RunDirectionOnGround.AlwaysRight && grounded() && _runSpeed < 0)
+		|| (runDir == RunDirectionOnGround.AlwaysLeft && grounded() && _runSpeed > 0))
 		{
 			changeDirection();
 		}

@@ -81,6 +81,7 @@ public class CharacterController2DEditor : Editor
         myScript.jumpMagnitude = EditorGUILayout.FloatField("jumpMagnitude", myScript.jumpMagnitude);
         myScript.jumpRes = (CharacterController2D.JumpRestrictions)EditorGUILayout.EnumPopup("JumpRestrictions", myScript.jumpRes);
         myScript.jumpWall = (CharacterController2D.JumpDirectionOnWallOrEdge)EditorGUILayout.EnumPopup("JumpDirectionOnWallOrEdge", myScript.jumpWall);
+        myScript.runDir = (CharacterController2D.RunDirectionOnGround)EditorGUILayout.EnumPopup("Direction when hitting ground", myScript.runDir);
 
         infosFold = EditorGUILayout.Foldout(infosFold, "Infos");
 		if (infosFold)
