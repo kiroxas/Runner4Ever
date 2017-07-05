@@ -12,6 +12,7 @@ public class LoopLevel : MonoBehaviour
 	private GameObject player;
 
 	private float xStart = 0;
+	private float yStart = 0;
 	private float xEnd = 0;
 
 	public void Start()
@@ -22,6 +23,7 @@ public class LoopLevel : MonoBehaviour
 		if(checkpoints == null || checkpoints.Length == 0)
 			return;
 
+		yStart = checkpoints[0].GetComponent<Transform>().position.y;
 		xEnd = checkpoints[0].GetComponent<Transform>().position.x;
 		xStart = xEnd;
 
@@ -45,9 +47,9 @@ public class LoopLevel : MonoBehaviour
 		int maxDistance = (int)xEnd - (int)xStart;
 		float percent = (float)distance / (float)maxDistance;
 
-		if(percent > 1.05f)
+		if(percent > 1.0f)
 		{
-			player.GetComponent<Transform>().position = new Vector2(xStart, 0);
+			player.GetComponent<Transform>().position = new Vector2(xStart, yStart);
 		}
 	}
 }

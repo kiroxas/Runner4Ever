@@ -51,8 +51,8 @@ public class BasicLevelGenerator : MonoBehaviour
 	public float tileWidth = 1.28f;
 	public float tileHeight = 1.28f;
 
-	public float topLeftXPos = 0;
-	public float topLeftYPos = 0;
+	public float bottomLeftXPos = 0;
+	public float bottomLeftYPos = 0;
 
 	public GenerationStyle genStyle = GenerationStyle.Random;
 
@@ -107,6 +107,8 @@ public class BasicLevelGenerator : MonoBehaviour
 			for(int x = 0; x < xTilePerSection; ++x)
 			{
 				int tileType = toCreate[index];
+				float yPos = yStart + (yTilePerSection - y) * tileHeight;
+				float xPos = xStart + x * tileWidth;
 
 				if(tileType == 1) // ground tile
 				{
@@ -122,7 +124,7 @@ public class BasicLevelGenerator : MonoBehaviour
 						Debug.LogError("You have a null instance in landTiles");
 						return;
 					}
-					UnityEngine.Object.Instantiate(instance, new Vector3(xStart + x * tileWidth, yStart - y * tileHeight, 0),  Quaternion.identity);
+					UnityEngine.Object.Instantiate(instance, new Vector3(xPos, yPos, 0),  Quaternion.identity);
 				} 
 				else if (tileType == 3) // random object
 				{
@@ -139,7 +141,7 @@ public class BasicLevelGenerator : MonoBehaviour
 						Debug.LogError("You have a null instance in objectTiles");
 						return;
 					}
-					UnityEngine.Object.Instantiate(instance, new Vector3(xStart + x * tileWidth, yStart - y * tileHeight, 0),  Quaternion.identity);
+					UnityEngine.Object.Instantiate(instance, new Vector3(xPos, yPos, 0),  Quaternion.identity);
 				}
 				else if (tileType == 2) // water tile
 				{
@@ -156,7 +158,16 @@ public class BasicLevelGenerator : MonoBehaviour
 						Debug.LogError("You have a null instance in waterTiles");
 						return;
 					}
-					UnityEngine.Object.Instantiate(instance, new Vector3(xStart + x * tileWidth, yStart - y * tileHeight, 0),  Quaternion.identity);
+					UnityEngine.Object.Instantiate(instance, new Vector3(xPos, yPos, 0),  Quaternion.identity);
+				}
+				else if(tileType == 4) // spawn player
+				{
+					createPlayer(xPos, yPos);
+					createCheckpoint(xPos, yPos);
+				}
+				else if(tileType == 5)
+				{
+					createCheckpoint(xPos, yPos);
 				}
 
 				++index;
@@ -164,16 +175,15 @@ public class BasicLevelGenerator : MonoBehaviour
 		}
 	}
 
-	void createPlayer()
+	void createPlayer(float x, float y)
 	{
-		GameObject player = UnityEngine.Object.Instantiate(instancePlayer, new Vector3(topLeftXPos , topLeftYPos , 0),  Quaternion.identity);
+		GameObject player = UnityEngine.Object.Instantiate(instancePlayer, new Vector3(x , y , 0),  Quaternion.identity);
 		FindObjectOfType<CameraFollow>().target = player.GetComponent<Transform>();
 	}
 
-	void createCheckpoints()
+	void createCheckpoint(float x, float y)
 	{
-		UnityEngine.Object.Instantiate(checkpoint, new Vector3(topLeftXPos , topLeftYPos , 0),  Quaternion.identity);
-		UnityEngine.Object.Instantiate(checkpoint, new Vector3(topLeftXPos + (tileGroupsNumber * xTilePerSection * tileWidth), topLeftYPos , 0),  Quaternion.identity);
+		UnityEngine.Object.Instantiate(checkpoint, new Vector3(x , y , 0),  Quaternion.identity);
 	}
 
 	// Use this for initialization
@@ -196,12 +206,9 @@ public class BasicLevelGenerator : MonoBehaviour
 				layout = block.getNextOne();
 			}
 
-			int xStart = (int)(topLeftXPos + x * tileWidth * xTilePerSection);
-			createSection(layout, xStart, (int)topLeftYPos);
+			int xStart = (int)(bottomLeftXPos + x * tileWidth * xTilePerSection);
+			createSection(layout, xStart, (int)bottomLeftYPos);
 		}
-
-		createPlayer();
-		createCheckpoints();
 	}
 	
 	// Update is called once per frame

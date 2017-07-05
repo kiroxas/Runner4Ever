@@ -15,6 +15,7 @@ public class ProgressionDisplay : MonoBehaviour
 
 	private float xStart = 0;
 	private float xEnd = 0;
+	public float smoothing = 5;
 
 	public void Start()
 	{
@@ -46,9 +47,9 @@ public class ProgressionDisplay : MonoBehaviour
 		int distance = (int)(xPlayer - xStart);
 		int maxDistance = (int)xEnd - (int)xStart;
 		float percent = (float)distance / (float)maxDistance;
-
-	
 		Vector2 pos = cursor.GetComponent<RectTransform>().anchorMin;
+		percent = Mathf.Lerp(pos.x, percent, Time.deltaTime * smoothing);
+	
 		pos.x = percent;
 		cursor.GetComponent<RectTransform>().anchorMin = pos;
 		cursor.GetComponent<RectTransform>().anchorMax = pos;
