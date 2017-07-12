@@ -191,6 +191,7 @@ public class CharacterController2D : MonoBehaviour
 		}
 
 		updateJumpIn();
+		animator.SetBool("isJumping", jumpIn > 0);
 		
 	}
 
