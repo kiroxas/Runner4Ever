@@ -256,12 +256,13 @@ public class CharacterController2D : MonoBehaviour
 		state.updateGrounded();
 		int index = grounded() ? (stopped() ? groundedAndStopped : groundedIndex ) : airBorn;
 		
+		Debug.Log(finger.TapCount);
 		if(finger.TapCount == 1)
 		{
 			Action action = actions[index].action[(int)Inputs.Tap];
 			doAction(action);
 		}
-		else if(finger.TapCount == 2)
+		else if(finger.TapCount > 1)
 		{
 			Action action = actions[index].action[(int)Inputs.DoubleTap];
 			doAction(action);

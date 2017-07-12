@@ -291,7 +291,6 @@ public class Reporter : MonoBehaviour
 			Initialize();
 
 		SceneManager.sceneLoaded += onLevelWasLoaded;
-		Debug.Log("Reporter Loaded");
 	}
 
 	void OnEnable()
