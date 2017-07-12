@@ -193,6 +193,8 @@ public class BasicLevelGenerator : MonoBehaviour
 		
 		block = loadFileList("Assets/Level Generation/");
 
+		//Debug.LogError("blocks loaded " + block.loaded.Count);
+
 		for(int x = 0; x < tileGroupsNumber; ++x)
 		{
 			List<int> layout;

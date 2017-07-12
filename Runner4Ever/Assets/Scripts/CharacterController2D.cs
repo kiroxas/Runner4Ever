@@ -9,6 +9,7 @@ public class CharacterController2D : MonoBehaviour
 	{
 		None,
 		Jump,
+		HighJump,
 		Accelerate,
 		Decelerate,
 		Dash,
@@ -80,6 +81,7 @@ public class CharacterController2D : MonoBehaviour
 	private float _runSpeedBeforeStop;
 	private float _runSpeed, _lastSpeed;
 	public float jumpMagnitude = 0.1f;
+	public float highJumpMagnitude = 0.2f;
 	private float upSpeed = 0;
 	private float gravityScale = 0;
 	public float timeBetweenJumps = 0.25f;
@@ -275,7 +277,8 @@ public class CharacterController2D : MonoBehaviour
 
 		switch(action)
 		{
-			case Action.Jump : jump(); break;
+			case Action.Jump : jump(jumpMagnitude); break;
+			case Action.HighJump : jump(highJumpMagnitude); break;
 			case Action.Accelerate : accelerate(); break;
 			case Action.Decelerate : decelerate(); break;
 			case Action.Dash : dash(); break;
@@ -307,7 +310,7 @@ public class CharacterController2D : MonoBehaviour
 	{
 	}
 
-	public void jump()
+	public void jump(float magnitude)
 	{
 		if(jumpIn > 0)
 		{
@@ -335,7 +338,7 @@ public class CharacterController2D : MonoBehaviour
 			changeDirection();
 		}
 
-		upSpeed = jumpMagnitude;
+		upSpeed = magnitude;
 		jumpIn = timeBetweenJumps;
 	}
 

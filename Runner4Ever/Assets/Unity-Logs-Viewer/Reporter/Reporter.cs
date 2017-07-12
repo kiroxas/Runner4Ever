@@ -289,6 +289,9 @@ public class Reporter : MonoBehaviour
 	{
 		if (!Initialized)
 			Initialize();
+
+		SceneManager.sceneLoaded += onLevelWasLoaded;
+		Debug.Log("Reporter Loaded");
 	}
 
 	void OnEnable()
@@ -1955,10 +1958,12 @@ public class Reporter : MonoBehaviour
 	}
 
 	//new scene is loaded
-	void OnLevelWasLoaded()
+	void onLevelWasLoaded(Scene scene, LoadSceneMode mode)
 	{
 		if (clearOnNewSceneLoaded)
 			clear();
+
+        Debug.Log(mode);
 
 #if UNITY_CHANGE3
 		currentScene = SceneManager.GetActiveScene().name ;
