@@ -60,6 +60,7 @@ public class BasicLevelGenerator : MonoBehaviour
 	public GameObject instancePlayer;
 	public GameObject checkpoint;
 	public GameObject[] landTiles;
+	public GameObject[] inverseLandTiles;
 	public GameObject[] waterTiles;
 	public GameObject[] objectTiles;
 
@@ -183,6 +184,23 @@ public class BasicLevelGenerator : MonoBehaviour
 				else if(tileType == 5)
 				{
 					createCheckpoint(xPos, yPos);
+				}
+				else if(tileType == 6) // tile that inverse wall jump
+				{
+					if(inverseLandTiles.Length == 0)
+					{
+						Debug.LogError("Do not have any prefabs set in inverseLandTiles");
+						return;
+					}
+					GameObject instance = inverseLandTiles[Random.Range(0, inverseLandTiles.Length)];
+
+
+					if(instance == null)
+					{
+						Debug.LogError("You have a null instance in inverseLandTiles");
+						return;
+					}
+					UnityEngine.Object.Instantiate(instance, new Vector3(xPos, yPos, 0),  Quaternion.identity);
 				}
 
 				++index;

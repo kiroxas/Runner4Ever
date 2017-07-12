@@ -44,12 +44,6 @@ public class CharacterController2D : MonoBehaviour
 		Never
 	}
 
-	public enum JumpDirectionOnWallOrEdge
-	{
-		KeepTheSame,
-		Inverse
-	}
-
 	public enum RunDirectionOnGround
 	{
 		AlwaysRight,
@@ -75,7 +69,7 @@ public class CharacterController2D : MonoBehaviour
 	private int consecutiveJumps = 0;
 
 	public JumpRestrictions jumpRes = JumpRestrictions.OnGround;
-	public JumpDirectionOnWallOrEdge jumpWall = JumpDirectionOnWallOrEdge.KeepTheSame;
+	
 	public RunDirectionOnGround runDir = RunDirectionOnGround.KeepTheAirOne;
 
 	public Stack jumpState;
@@ -362,7 +356,7 @@ public class CharacterController2D : MonoBehaviour
 		}
 		}
 
-		if(jumpWall == JumpDirectionOnWallOrEdge.Inverse && (grabingEdge() || wallSticking()))
+		if(state.jumpWall == CharacterState.JumpDirectionOnWallOrEdge.Inverse && (grabingEdge() || wallSticking()))
 		{
 			changeDirection();
 		}

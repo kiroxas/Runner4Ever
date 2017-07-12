@@ -13,6 +13,12 @@ public class CharacterState : MonoBehaviour
 		None
 	}
 
+	public enum JumpDirectionOnWallOrEdge
+	{
+		KeepTheSame,
+		Inverse
+	}
+
 	private Rigidbody2D rb;
 
 	public bool isGrounded { get; private set; }
@@ -31,6 +37,7 @@ public class CharacterState : MonoBehaviour
 	public LayerMask PlatformMask;
 
 	public EdgeGrabingStrategy edgeStrategy = EdgeGrabingStrategy.None;
+	public JumpDirectionOnWallOrEdge jumpWall = JumpDirectionOnWallOrEdge.KeepTheSame;
 
 	public void Start()
 	{
@@ -154,6 +161,7 @@ public class CharacterState : MonoBehaviour
 			Debug.DrawRay(rayVector, dir * rcCastDistance, Color.red);
 			if (raycastHit)
 			{
+				jumpWall = raycastHit.collider.tag == "InversePlatform" ? JumpDirectionOnWallOrEdge.Inverse : JumpDirectionOnWallOrEdge.KeepTheSame;
 				isCollidingRight = true;
 				return isCollidingRight;
 			}
@@ -166,6 +174,7 @@ public class CharacterState : MonoBehaviour
 			Debug.DrawRay(rayVector, rayDirection * rcCastDistance, Color.red);
 			if (raycastHit)
 			{
+				jumpWall = raycastHit.collider.tag == "InversePlatform" ? JumpDirectionOnWallOrEdge.Inverse : JumpDirectionOnWallOrEdge.KeepTheSame;
 				isCollidingLeft = true;
 				break;
 			}
@@ -190,6 +199,7 @@ public class CharacterState : MonoBehaviour
 			Debug.DrawRay(rayVector, dir * rcCastDistance, Color.red);
 			if (raycastHit)
 			{
+				jumpWall = raycastHit.collider.tag == "InversePlatform" ? JumpDirectionOnWallOrEdge.Inverse : JumpDirectionOnWallOrEdge.KeepTheSame;
 				isCollidingRight = true;
 				return isCollidingRight;
 			}
@@ -202,6 +212,7 @@ public class CharacterState : MonoBehaviour
 			Debug.DrawRay(rayVector, rayDirection * rcCastDistance, Color.red);
 			if (raycastHit)
 			{
+				jumpWall = raycastHit.collider.tag == "InversePlatform" ? JumpDirectionOnWallOrEdge.Inverse : JumpDirectionOnWallOrEdge.KeepTheSame;
 				isCollidingRight = true;
 				break;
 			}
