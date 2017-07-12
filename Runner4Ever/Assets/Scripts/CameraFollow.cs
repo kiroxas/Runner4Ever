@@ -8,7 +8,7 @@ public class CameraFollow : MonoBehaviour {
 	public Vector3 offset;
 	public Vector2 smoothing;
 
-	private Bounds containingBox;
+	public Bounds containingBox;
 	private Vector3 upLeft, downRight;
 
 	public void LateUpdate()

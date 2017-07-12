@@ -420,6 +420,14 @@ public class CharacterController2D : MonoBehaviour
 		}
 	}
 
+	public void reinit()
+	{
+		if(transform.localScale.x == -1)
+			Flip();
+
+		_runSpeed = runSpeed;
+	}
+
 	private bool flipped()
 	{
 		return transform.localScale.x < 0 ;

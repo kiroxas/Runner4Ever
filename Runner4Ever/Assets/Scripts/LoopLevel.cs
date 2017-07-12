@@ -15,6 +15,8 @@ public class LoopLevel : MonoBehaviour
 	private float yStart = 0;
 	private float xEnd = 0;
 
+	private CameraFollow cam;
+
 	public void Start()
 	{
 		GameObject[] checkpoints = GameObject.FindGameObjectsWithTag("CheckPoint");
@@ -33,23 +35,24 @@ public class LoopLevel : MonoBehaviour
 			xEnd = Math.Max(xEnd, obj.GetComponent<Transform>().position.x);
 		}
 
-		
+		cam = FindObjectOfType<CameraFollow>();
 	}
 
 	public void Update()
 	{
-		if(xStart == xEnd)
-			return;
-
+	
 		int xPlayer = (int)player.GetComponent<Transform>().position.x;
+		int yPlayer = (int)player.GetComponent<Transform>().position.y;
 
 		int distance = (int)(xPlayer - xStart);
 		int maxDistance = (int)xEnd - (int)xStart;
-		float percent = (float)distance / (float)maxDistance;
+		float percent =  xStart == xEnd ? 1.0f : (float)distance / (float)maxDistance;
 
-		if(percent > 1.0f)
+		if(percent > 1.0f || yPlayer < cam.containingBox.min.y || xPlayer < (cam.containingBox.min.x)|| xPlayer > cam.containingBox.max.x)
 		{
+			Debug.Log("Min y : " + cam.containingBox.min.y + " actual y : " + yPlayer);
 			player.GetComponent<Transform>().position = new Vector2(xStart, yStart);
+			player.GetComponent<CharacterController2D>().reinit();
 		}
 	}
 }
