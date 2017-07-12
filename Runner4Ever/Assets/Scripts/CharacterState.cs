@@ -145,6 +145,20 @@ public class CharacterState : MonoBehaviour
 		isCollidingLeft = false;
 
 		Vector2 rayDirection = Vector2.left;
+
+		{
+			Vector2 dir = rayDirection;
+			dir.y = -1;
+			Vector2 rayVector = new Vector2(myCollider.bounds.min.x , myCollider.bounds.min.y + yRightColDetDelta);
+			var raycastHit = Physics2D.Raycast(rayVector, dir, rcCastDistance, PlatformMask);
+			Debug.DrawRay(rayVector, dir * rcCastDistance, Color.red);
+			if (raycastHit)
+			{
+				isCollidingRight = true;
+				return isCollidingRight;
+			}
+		}
+
 		for(int i = 0; i < rightCollisionRayCasts; ++i)
 		{
 			Vector2 rayVector = new Vector2(myCollider.bounds.min.x , myCollider.bounds.min.y + yRightColDetDelta + i * step);
@@ -167,6 +181,20 @@ public class CharacterState : MonoBehaviour
 		isCollidingRight = false;
 
 		Vector2 rayDirection = Vector2.right;
+		
+		{
+			Vector2 dir = rayDirection;
+			dir.y = -1;
+			Vector2 rayVector = new Vector2(myCollider.bounds.max.x , myCollider.bounds.min.y + yRightColDetDelta);
+			var raycastHit = Physics2D.Raycast(rayVector, dir, rcCastDistance, PlatformMask);
+			Debug.DrawRay(rayVector, dir * rcCastDistance, Color.red);
+			if (raycastHit)
+			{
+				isCollidingRight = true;
+				return isCollidingRight;
+			}
+		}
+
 		for(int i = 0; i < rightCollisionRayCasts; ++i)
 		{
 			Vector2 rayVector = new Vector2(myCollider.bounds.max.x , myCollider.bounds.min.y + yRightColDetDelta + i * step);
