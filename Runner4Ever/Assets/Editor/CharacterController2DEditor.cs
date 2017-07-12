@@ -111,6 +111,11 @@ public class CharacterController2DEditor : Editor
         	EditorGUI.indentLevel--;
         }
        
+       if (GUI.changed)
+        {
+        	EditorUtility.SetDirty(target);
+            UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(((GameObject)myScript.gameObject).scene);
+        }
        
 	}
 }
