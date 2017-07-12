@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using Lean.Touch;
+using System;
 
 public class CharacterController2D : MonoBehaviour
 {
@@ -13,7 +14,20 @@ public class CharacterController2D : MonoBehaviour
 		Dash,
 		Slide,
 		Stop,
-		Start
+		StartSame,
+		StartOpposite
+	}
+
+	public enum Inputs
+	{
+		Tap,
+		DoubleTap,
+		SwipeSameDir,
+		SwipeOppDir,
+		SwipeUp,
+		SwipeDown,
+		Hold,
+		HoldUp
 	}
 
 	public enum JumpRestrictions
@@ -36,25 +50,18 @@ public class CharacterController2D : MonoBehaviour
 		KeepTheAirOne
 	}
 
-	public Action onTap;
-	public Action onSwipeLeft;
-	public Action onSwipeRight;
-	public Action onSwipeDown;
-	public Action onSwipeUp;
-	public Action onDoubleTap;
-	public Action onHoldDown;
-	public Action onHoldUp;
-	public Action onRightCollision;
+	[Serializable]
+ 	public class Row
+ 	{
+     	public Action[] action = new Action[System.Enum.GetNames(typeof(Inputs)).Length];
+ 	}
 
-	public Action onTapGrounded;
-	public Action onSwipeLeftGrounded;
-	public Action onSwipeRightGrounded;
-	public Action onSwipeDownGrounded;
-	public Action onSwipeUpGrounded;
-	public Action onDoubleTapGrounded;
-	public Action onHoldDownGrounded;
-	public Action onHoldUpGrounded;
-	public Action onRightCollisionGrounded;
+	static public int states = 3;
+	public int airBorn = 0;
+	public int groundedIndex = 1;
+	public int groundedAndStopped = 2;
+
+	public Row[] actions = new Row[states];
 
 	private CharacterState state;
 
@@ -220,31 +227,41 @@ public class CharacterController2D : MonoBehaviour
 			LeanFingerHeld.OnFingerHeldUp -= OnHoldUp;
 	}
 
+	private bool stopped()
+	{
+		return _runSpeed == 0 ;
+	}
+
 	public void OnHoldDown(LeanFinger finger)
 	{
 		state.updateGrounded();
-		Action action = grounded() ? onHoldDownGrounded : onHoldDown;
+		int index = grounded() ? (stopped() ? groundedAndStopped : groundedIndex ) : airBorn;
+		Action action = actions[index].action[(int)Inputs.Hold];
 		doAction(action);
 	}
 
 	public void OnHoldUp(LeanFinger finger)
 	{
 		state.updateGrounded();
-		Action action = grounded() ? onHoldUpGrounded : onHoldUp;
+		int index = grounded() ? (stopped() ? groundedAndStopped : groundedIndex ) : airBorn;
+		Action action = actions[index].action[(int)Inputs.HoldUp];
 		doAction(action);
 	}
 
 	public void OnFingerTap(LeanFinger finger)
 	{
 		state.updateGrounded();
+		int index = grounded() ? (stopped() ? groundedAndStopped : groundedIndex ) : airBorn;
 		
 		if(finger.TapCount == 1)
 		{
-			doAction(grounded() ? onTapGrounded : onTap);
+			Action action = actions[index].action[(int)Inputs.Tap];
+			doAction(action);
 		}
 		else if(finger.TapCount == 2)
 		{
-			doAction(grounded() ? onDoubleTapGrounded : onDoubleTap);
+			Action action = actions[index].action[(int)Inputs.DoubleTap];
+			doAction(action);
 		}
 	}
 
@@ -257,14 +274,15 @@ public class CharacterController2D : MonoBehaviour
 
 		switch(action)
 		{
-			case Action.Jump : jump(); return;
-			case Action.Accelerate : accelerate(); return;
-			case Action.Decelerate : decelerate(); return;
-			case Action.Dash : dash(); return;
-			case Action.Slide : slide(); return;
-			case Action.Start : run(); return;
-			case Action.Stop : stop(); return;
-			default : return;
+			case Action.Jump : jump(); break;
+			case Action.Accelerate : accelerate(); break;
+			case Action.Decelerate : decelerate(); break;
+			case Action.Dash : dash(); break;
+			case Action.Slide : slide(); break;
+			case Action.StartSame : run(); break;
+			case Action.StartOpposite : run(); changeDirection(); break;
+			case Action.Stop : stop(); break;
+			default : break;
 		}
 	}
 
@@ -336,25 +354,48 @@ public class CharacterController2D : MonoBehaviour
 		// Store the swipe delta in a temp variable
 		var swipe = finger.SwipeScreenDelta;
 		state.updateGrounded();
+
+		int index = grounded() ? (stopped() ? groundedAndStopped : groundedIndex ) : airBorn;
+		
 			
 		if (swipe.x < -Mathf.Abs(swipe.y)) // Left
 		{
-			doAction(grounded() ? onSwipeLeftGrounded : onSwipeLeft);
+			bool goingRight = _runSpeed >= 0;
+			if(index == groundedAndStopped)
+			{
+				doAction(flipped() ? Action.StartSame : Action.StartOpposite);
+			}
+			else
+			{
+				Action action = actions[index].action[goingRight ? (int)Inputs.SwipeOppDir : (int)Inputs.SwipeSameDir];
+				doAction(action);
+			}
 		}
 			
 		if (swipe.x > Mathf.Abs(swipe.y)) // Rigth
 		{
-			doAction(grounded() ? onSwipeRightGrounded :onSwipeRight);
+			bool goingRight = _runSpeed >= 0;
+			if(index == groundedAndStopped)
+			{
+				doAction(flipped() ? Action.StartOpposite : Action.StartSame);
+			}
+			else
+			{
+				Action action = actions[index].action[goingRight ? (int)Inputs.SwipeSameDir : (int)Inputs.SwipeOppDir];
+				doAction(action);
+			}
 		}
 			
 		if (swipe.y < -Mathf.Abs(swipe.x)) // Down
 		{
-			doAction(grounded() ? onSwipeDownGrounded :onSwipeDown);		
+			Action action = actions[index].action[(int)Inputs.SwipeDown];
+			doAction(action);		
 		}
 			
 		if (swipe.y > Mathf.Abs(swipe.x)) // Up
 		{
-			doAction(grounded() ? onSwipeUpGrounded : onSwipeUp);
+			Action action = actions[index].action[(int)Inputs.SwipeUp];
+			doAction(action);
 		}
 	}
 
@@ -372,6 +413,11 @@ public class CharacterController2D : MonoBehaviour
 		{
 			changeDirection();
 		}
+	}
+
+	private bool flipped()
+	{
+		return transform.localScale.x < 0 ;
 	}
 
 	private void Flip()

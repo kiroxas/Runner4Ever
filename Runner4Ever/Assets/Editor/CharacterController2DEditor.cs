@@ -8,6 +8,7 @@ public class CharacterController2DEditor : Editor
 {
 	public static bool actionFold = false;
 	public static bool actionGroundedFold = false;
+	public static bool actionStoppedFold = false;
 	public static bool collisionsFold = false;
 	public static bool infosFold = false;
 
@@ -46,15 +47,14 @@ public class CharacterController2DEditor : Editor
 		if (actionFold)
         {
         	EditorGUI.indentLevel++;
-        	myScript.onTap = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onTap", myScript.onTap);
-        	myScript.onSwipeLeft = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onSwipeLeft", myScript.onSwipeLeft);
-        	myScript.onSwipeRight = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onSwipeRight", myScript.onSwipeRight);
-        	myScript.onSwipeDown = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onSwipeDown", myScript.onSwipeDown);
-        	myScript.onSwipeUp = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onSwipeUp", myScript.onSwipeUp);
-        	myScript.onDoubleTap = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onDoubleTap", myScript.onDoubleTap);
-        	myScript.onHoldDown = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onHoldDown", myScript.onHoldDown);
-        	myScript.onHoldUp = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onHoldUp", myScript.onHoldUp);
-        	myScript.onRightCollision = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onRightCollision", myScript.onRightCollision);
+        	myScript.actions[myScript.airBorn].action[(int)CharacterController2D.Inputs.Tap] = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onTap", myScript.actions[myScript.airBorn].action[(int)CharacterController2D.Inputs.Tap]);
+        	myScript.actions[myScript.airBorn].action[(int)CharacterController2D.Inputs.SwipeSameDir] = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onSwipeSameDir", myScript.actions[myScript.airBorn].action[(int)CharacterController2D.Inputs.SwipeSameDir]);
+        	myScript.actions[myScript.airBorn].action[(int)CharacterController2D.Inputs.SwipeOppDir] = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onSwipeOppDir", myScript.actions[myScript.airBorn].action[(int)CharacterController2D.Inputs.SwipeOppDir]);
+        	myScript.actions[myScript.airBorn].action[(int)CharacterController2D.Inputs.SwipeDown] = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onSwipeDown", myScript.actions[myScript.airBorn].action[(int)CharacterController2D.Inputs.SwipeDown]);
+        	myScript.actions[myScript.airBorn].action[(int)CharacterController2D.Inputs.SwipeUp] = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onSwipeUp", myScript.actions[myScript.airBorn].action[(int)CharacterController2D.Inputs.SwipeUp]);
+        	myScript.actions[myScript.airBorn].action[(int)CharacterController2D.Inputs.DoubleTap] = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onDoubleTap", myScript.actions[myScript.airBorn].action[(int)CharacterController2D.Inputs.DoubleTap]);
+        	myScript.actions[myScript.airBorn].action[(int)CharacterController2D.Inputs.Hold] = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onHold", myScript.actions[myScript.airBorn].action[(int)CharacterController2D.Inputs.Hold]);
+        	myScript.actions[myScript.airBorn].action[(int)CharacterController2D.Inputs.HoldUp] = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onHoldDown", myScript.actions[myScript.airBorn].action[(int)CharacterController2D.Inputs.HoldUp]);
         	EditorGUI.indentLevel--;
         }
 
@@ -62,15 +62,29 @@ public class CharacterController2DEditor : Editor
 		if (actionGroundedFold)
         {
         	EditorGUI.indentLevel++;
-        	myScript.onTapGrounded = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onTapGrounded", myScript.onTapGrounded);
-        	myScript.onSwipeLeftGrounded = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onSwipeLeftGrounded", myScript.onSwipeLeftGrounded);
-        	myScript.onSwipeRightGrounded = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onSwipeRightGrounded", myScript.onSwipeRightGrounded);
-        	myScript.onSwipeDownGrounded = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onSwipeDownGrounded", myScript.onSwipeDownGrounded);
-        	myScript.onSwipeUpGrounded = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onSwipeUpGrounded", myScript.onSwipeUpGrounded);
-        	myScript.onDoubleTapGrounded = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onDoubleTapGrounded", myScript.onDoubleTapGrounded);
-        	myScript.onHoldDownGrounded = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onHoldDownGrounded", myScript.onHoldDownGrounded);
-        	myScript.onHoldUpGrounded = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onHoldUpGrounded", myScript.onHoldUpGrounded);
-        	myScript.onRightCollisionGrounded = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onRightCollisionGrounded", myScript.onRightCollisionGrounded);
+        	myScript.actions[myScript.groundedIndex].action[(int)CharacterController2D.Inputs.Tap] = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onTap", myScript.actions[myScript.groundedIndex].action[(int)CharacterController2D.Inputs.Tap]);
+        	myScript.actions[myScript.groundedIndex].action[(int)CharacterController2D.Inputs.SwipeSameDir] = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onSwipeSameDir", myScript.actions[myScript.groundedIndex].action[(int)CharacterController2D.Inputs.SwipeSameDir]);
+        	myScript.actions[myScript.groundedIndex].action[(int)CharacterController2D.Inputs.SwipeOppDir] = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onSwipeOppDir", myScript.actions[myScript.groundedIndex].action[(int)CharacterController2D.Inputs.SwipeOppDir]);
+        	myScript.actions[myScript.groundedIndex].action[(int)CharacterController2D.Inputs.SwipeDown] = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onSwipeDown", myScript.actions[myScript.groundedIndex].action[(int)CharacterController2D.Inputs.SwipeDown]);
+        	myScript.actions[myScript.groundedIndex].action[(int)CharacterController2D.Inputs.SwipeUp] = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onSwipeUp", myScript.actions[myScript.groundedIndex].action[(int)CharacterController2D.Inputs.SwipeUp]);
+        	myScript.actions[myScript.groundedIndex].action[(int)CharacterController2D.Inputs.DoubleTap] = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onDoubleTap", myScript.actions[myScript.groundedIndex].action[(int)CharacterController2D.Inputs.DoubleTap]);
+        	myScript.actions[myScript.groundedIndex].action[(int)CharacterController2D.Inputs.Hold] = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onHold", myScript.actions[myScript.groundedIndex].action[(int)CharacterController2D.Inputs.Hold]);
+        	myScript.actions[myScript.groundedIndex].action[(int)CharacterController2D.Inputs.HoldUp] = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onHoldDown", myScript.actions[myScript.groundedIndex].action[(int)CharacterController2D.Inputs.HoldUp]);
+        	EditorGUI.indentLevel--;
+        }
+
+        actionStoppedFold = EditorGUILayout.Foldout(actionStoppedFold, "Actions grounded and stopped");
+		if (actionStoppedFold)
+        {
+        	EditorGUI.indentLevel++;
+        	myScript.actions[myScript.groundedAndStopped].action[(int)CharacterController2D.Inputs.Tap] = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onTap", myScript.actions[myScript.groundedAndStopped].action[(int)CharacterController2D.Inputs.Tap]);
+        	myScript.actions[myScript.groundedAndStopped].action[(int)CharacterController2D.Inputs.SwipeSameDir] = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onSwipeSameDir", myScript.actions[myScript.groundedAndStopped].action[(int)CharacterController2D.Inputs.SwipeSameDir]);
+        	myScript.actions[myScript.groundedAndStopped].action[(int)CharacterController2D.Inputs.SwipeOppDir] = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onSwipeOppDir", myScript.actions[myScript.groundedAndStopped].action[(int)CharacterController2D.Inputs.SwipeOppDir]);
+        	myScript.actions[myScript.groundedAndStopped].action[(int)CharacterController2D.Inputs.SwipeDown] = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onSwipeDown", myScript.actions[myScript.groundedAndStopped].action[(int)CharacterController2D.Inputs.SwipeDown]);
+        	myScript.actions[myScript.groundedAndStopped].action[(int)CharacterController2D.Inputs.SwipeUp] = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onSwipeUp", myScript.actions[myScript.groundedAndStopped].action[(int)CharacterController2D.Inputs.SwipeUp]);
+        	myScript.actions[myScript.groundedAndStopped].action[(int)CharacterController2D.Inputs.DoubleTap] = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onDoubleTap", myScript.actions[myScript.groundedAndStopped].action[(int)CharacterController2D.Inputs.DoubleTap]);
+        	myScript.actions[myScript.groundedAndStopped].action[(int)CharacterController2D.Inputs.Hold] = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onHold", myScript.actions[myScript.groundedAndStopped].action[(int)CharacterController2D.Inputs.Hold]);
+        	myScript.actions[myScript.groundedAndStopped].action[(int)CharacterController2D.Inputs.HoldUp] = (CharacterController2D.Action)EditorGUILayout.EnumPopup("onHoldDown", myScript.actions[myScript.groundedAndStopped].action[(int)CharacterController2D.Inputs.HoldUp]);
         	EditorGUI.indentLevel--;
         }
 
