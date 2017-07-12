@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Xml.Serialization;
+using System.Xml;
 using System.Collections;
 using System.Collections.Generic;
 using Random = UnityEngine.Random;
@@ -64,10 +65,20 @@ public class BasicLevelGenerator : MonoBehaviour
 
 	FileUtils.FileList loadFileList(string folder)
 	{
+		//XmlSerializer serial = new XmlSerializer(typeof(FileUtils.FileList));
+       // Stream reader = new FileStream(folder + "file_list.xml", FileMode.Open);
+        //FileUtils.FileList list = (FileUtils.FileList)serial.Deserialize(reader);
+		String path = folder + "file_list";
+        TextAsset data = Resources.Load(path) as TextAsset;
+        //XmlDocument xmldoc = new XmlDocument ();
+		//xmldoc.LoadXml ( data.text );
+		Debug.Log(path);
+		Debug.Log(data.text);
+		TextReader sr = new StringReader(data.text);
+
 		XmlSerializer serial = new XmlSerializer(typeof(FileUtils.FileList));
-        Stream reader = new FileStream(folder + "file_list.xml", FileMode.Open);
-        FileUtils.FileList list = (FileUtils.FileList)serial.Deserialize(reader);
-		
+		FileUtils.FileList list = (FileUtils.FileList)serial.Deserialize(sr);
+
 		foreach(string f in list.files)
 		{
 			list.loaded.Add(toInt(loadTileGroup(folder, f)));	
@@ -93,7 +104,11 @@ public class BasicLevelGenerator : MonoBehaviour
 	
 	string[] loadTileGroup(string folder, string name)
 	{
-		 string[] lines = System.IO.File.ReadAllLines(@folder + name);
+		String path = folder + name;
+		TextAsset data = Resources.Load(path) as TextAsset;
+		string fs = data.text;
+  		string[] lines = System.Text.RegularExpressions.Regex.Split ( fs, "\n|\r|\r\n" );
+		//string[] lines = System.IO.File.ReadAllLines(@folder + name);
 
 		 return lines;
 	}
@@ -191,7 +206,9 @@ public class BasicLevelGenerator : MonoBehaviour
 	{
 		FileUtils.FileList block = new FileUtils.FileList();
 		
-		block = loadFileList("Assets/Level Generation/");
+
+
+		block = loadFileList("LevelGeneration/");
 
 		Debug.Log("blocks loaded " + block.loaded.Count);
 		for(int i = 0; i < block.loaded.Count; ++i)

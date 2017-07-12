@@ -51,17 +51,17 @@
      <Compile Include="Assets\LeanTouch\Editor\LeanTouch_Editor.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\Editor\ReporterEditor.cs" />
      <None Include="Assets\LeanTouch\Examples\Fonts\OFL.txt" />
-     <None Include="Assets\Level Generation\file_list.xml" />
-     <None Include="Assets\Level Generation\two.txt" />
+     <None Include="Assets\Resources\LevelGeneration\file_list.xml" />
+     <None Include="Assets\Resources\LevelGeneration\two.txt" />
      <None Include="Assets\StreamingAssets\build_info.txt" />
-     <None Include="Assets\Level Generation\four.txt" />
-     <None Include="Assets\Level Generation\one.txt" />
+     <None Include="Assets\Resources\LevelGeneration\four.txt" />
+     <None Include="Assets\Resources\LevelGeneration\one.txt" />
      <None Include="Assets\LeanTouch\Examples\Shaders\Skybox.shader" />
      <None Include="Assets\LeanTouch\Examples\Shaders\Smooth.shader" />
-     <None Include="Assets\Level Generation\three.txt" />
-     <None Include="Assets\Level Generation\five.txt" />
+     <None Include="Assets\Resources\LevelGeneration\three.txt" />
+     <None Include="Assets\Resources\LevelGeneration\five.txt" />
      <None Include="Assets\dummy.txt" />
-     <None Include="Assets\Level Generation\level_test_01.txt" />
+     <None Include="Assets\Resources\LevelGeneration\level_test_01.txt" />
  <Reference Include="UnityEditor.Advertisements">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Advertisements/Editor/UnityEditor.Advertisements.dll</HintPath>
  </Reference>
