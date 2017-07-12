@@ -19,6 +19,12 @@ public class CharacterController2D : MonoBehaviour
 		StartOpposite
 	}
 
+	public enum JumpStrat
+	{
+		NormalJump,
+		DoubleJump
+	}
+
 	public enum Inputs
 	{
 		Tap,
@@ -65,6 +71,8 @@ public class CharacterController2D : MonoBehaviour
 	public Row[] actions = new Row[states];
 
 	private CharacterState state;
+	public JumpStrat jumpStrategy = JumpStrat.DoubleJump;
+	private int consecutiveJumps = 0;
 
 	public JumpRestrictions jumpRes = JumpRestrictions.OnGround;
 	public JumpDirectionOnWallOrEdge jumpWall = JumpDirectionOnWallOrEdge.KeepTheSame;
@@ -86,6 +94,11 @@ public class CharacterController2D : MonoBehaviour
 	private float gravityScale = 0;
 	public float timeBetweenJumps = 0.25f;
 	private float jumpIn = 0.0f;
+
+	private int getMaxJumps()
+	{
+		return jumpStrategy == JumpStrat.NormalJump ? 1 : 2;
+	}
 
 	public bool collidingRight()
 	{
@@ -162,10 +175,13 @@ public class CharacterController2D : MonoBehaviour
 
 		float xSpeed = shallNullifySpeed() ? 0.0f : _runSpeed;
 		float yVelocity = rb.velocity.y;
+		bool jumped = upSpeed > 0;
 
-		if(upSpeed > 0)
+		if(jumped)
 		{
 			yVelocity = upSpeed;
+			
+			//rb.AddForce(new Vector2(0, upSpeed), ForceMode2D.Impulse);
 			upSpeed = 0;
 			unlockYPosition();
 		}
@@ -185,11 +201,16 @@ public class CharacterController2D : MonoBehaviour
 			_lastSpeed = xSpeed;
 		}
 
-		if(grounded())
+		if(grounded() && !jumped)
 		{
+			consecutiveJumps = 0;
 			Collider2D myCollider = GetComponent<Collider2D>();
-			Vector2 point = new Vector2(myCollider.bounds.center.x, myCollider.bounds.center.y + 2);
+			Vector2 point = new Vector2(myCollider.bounds.center.x, myCollider.bounds.center.y + 1.5f);
 			Debug.DrawLine(myCollider.bounds.center, point, Color.black, 20);
+		}
+		else if(wallSticking() && !jumped)
+		{
+			consecutiveJumps = 0;
 		}
 
 		updateJumpIn();
@@ -215,6 +236,7 @@ public class CharacterController2D : MonoBehaviour
 			if(jumpIn < 0)
 			{
 				jumpIn = 0;
+				
 			}
 		}
 	}
@@ -256,7 +278,6 @@ public class CharacterController2D : MonoBehaviour
 		state.updateGrounded();
 		int index = grounded() ? (stopped() ? groundedAndStopped : groundedIndex ) : airBorn;
 		
-		Debug.Log(finger.TapCount);
 		if(finger.TapCount == 1)
 		{
 			Action action = actions[index].action[(int)Inputs.Tap];
@@ -313,12 +334,19 @@ public class CharacterController2D : MonoBehaviour
 
 	public void jump(float magnitude)
 	{
-		if(jumpIn > 0)
+		Debug.Log("Jump");
+		if(getMaxJumps() <= consecutiveJumps)
 		{
+			Debug.Log("Nope");
 			return;
 		}
 
-		if(grabingEdge() == false)
+		if(consecutiveJumps > 0)
+		{
+			Debug.Log("Second Jump");
+			// Second jump, no restriction
+		}
+		else if(grabingEdge() == false)
 		{
 		switch((JumpRestrictions)jumpState.Peek())
 		{
@@ -339,6 +367,7 @@ public class CharacterController2D : MonoBehaviour
 			changeDirection();
 		}
 
+		consecutiveJumps++;
 		upSpeed = magnitude;
 		jumpIn = timeBetweenJumps;
 	}
