@@ -308,7 +308,10 @@ public class CharacterController2D : MonoBehaviour
 
 	public void run()
 	{
-		_runSpeed = _runSpeedBeforeStop;
+		if(_runSpeed == 0)
+		{
+			_runSpeed = _runSpeedBeforeStop;
+		}
 	}
 
 	public void stop()
