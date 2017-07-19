@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using Lean.Touch;
+using System.Collections.Generic;
 
 public class CharacterState : MonoBehaviour
 {
@@ -13,13 +14,8 @@ public class CharacterState : MonoBehaviour
 		None
 	}
 
-	public enum JumpDirectionOnWallOrEdge
-	{
-		KeepTheSame,
-		Inverse
-	}
-
 	private Rigidbody2D rb;
+	private Collider2D myCollider;
 
 	public bool isGrounded { get; private set; }
 	public bool isCollidingRight { get; private set; }
@@ -36,12 +32,18 @@ public class CharacterState : MonoBehaviour
 	public int rightCollisionRayCasts = 16;
 	public LayerMask PlatformMask;
 
+	private List<Collider2D> colliderHitLastFrame; 
+	private List<Collider2D> colliderHitThisFrame; 
+
 	public EdgeGrabingStrategy edgeStrategy = EdgeGrabingStrategy.None;
-	public JumpDirectionOnWallOrEdge jumpWall = JumpDirectionOnWallOrEdge.KeepTheSame;
 
 	public void Start()
 	{
+		colliderHitThisFrame = new List<Collider2D>();
+		colliderHitLastFrame = new List<Collider2D>();
+
 		rb = GetComponent<Rigidbody2D>();
+		myCollider = GetComponent<Collider2D>();
 		isGrounded = false;
 		isCollidingRight = false;
 		isCollidingLeft = false;
@@ -50,10 +52,21 @@ public class CharacterState : MonoBehaviour
 
 	public void updateState()
 	{
+		colliderHitThisFrame.Clear();
+
 		updateGrounded();
 		updateRightCollision();
 		updateLeftCollision();
 		updateEdgeGrabing();
+		handleCollided();
+	}
+
+	private void addCollider(Collider2D col)
+	{
+		if(colliderHitThisFrame.Find(c => col == c) == false)
+		{
+			colliderHitThisFrame.Add(col);
+		}
 	}
 
 	public bool updateGrounded()
@@ -72,8 +85,8 @@ public class CharacterState : MonoBehaviour
 			Debug.DrawRay(rayVector, dir * groundedCastDistance, Color.green);
 			if (raycastHit)
 			{
+				addCollider(raycastHit.collider);
 				isGrounded = true;
-				return isGrounded;
 			}
 		
 			dir.x = 1;
@@ -82,8 +95,8 @@ public class CharacterState : MonoBehaviour
 			Debug.DrawRay(rayVector, dir * groundedCastDistance, Color.green);
 			if (raycastHit)
 			{
+				addCollider(raycastHit.collider);
 				isGrounded = true;
-				return isGrounded;
 			}
 		}
 
@@ -94,8 +107,8 @@ public class CharacterState : MonoBehaviour
 			Debug.DrawRay(rayVector, rayDirection * groundedCastDistance, Color.green);
 			if (raycastHit)
 			{
+				addCollider(raycastHit.collider);
 				isGrounded = true;
-				break;
 			}
 		}
 
@@ -168,6 +181,56 @@ public class CharacterState : MonoBehaviour
 		return isGrabingEdge;
 	}
 
+	private void handleCollided()
+	{
+		Debug.Log("Collide : " + colliderHitThisFrame.Count );
+		// New collisions
+		foreach(Collider2D collider in colliderHitThisFrame)
+		{
+			if(colliderHitLastFrame.Find(c => c == collider) == false) // new collision
+			{
+				if(collider.isTrigger)
+				{
+					collider.SendMessage("OnTriggerEnter2D", myCollider , SendMessageOptions.DontRequireReceiver); 
+				}
+				else
+				{
+					collider.SendMessage("OnCollisionEnter2D", myCollider, SendMessageOptions.DontRequireReceiver);
+				}
+			}
+			else
+			{
+				if(collider.isTrigger)
+				{
+					collider.SendMessage("OnTriggerStay2D", myCollider , SendMessageOptions.DontRequireReceiver); 
+				}
+				else
+				{
+					collider.SendMessage("OnCollisionStay2D", myCollider, SendMessageOptions.DontRequireReceiver);
+				}
+			}
+		}
+
+		// Collisons not happening
+		foreach(Collider2D collider in colliderHitLastFrame)
+		{
+			if(colliderHitThisFrame.Find(c => c == collider) == false) // new collision
+			{
+				if(collider.isTrigger)
+				{
+					collider.SendMessage("OnTriggerExit2D", myCollider , SendMessageOptions.DontRequireReceiver); 
+				}
+				else
+				{
+					collider.SendMessage("OnCollisionExit2D", myCollider, SendMessageOptions.DontRequireReceiver);
+				}
+			}	
+		}
+
+		colliderHitLastFrame.Clear();
+		colliderHitLastFrame = new List<Collider2D>(colliderHitThisFrame);
+	}
+
 
 	public bool updateLeftCollision()
 	{
@@ -177,7 +240,7 @@ public class CharacterState : MonoBehaviour
 
 		Vector2 rayDirection = Vector2.left;
 		float leftX = Mathf.Min(myCollider.bounds.max.x , myCollider.bounds.min.x);
-		Debug.Log("Left : " + leftX);
+		
 		{
 			Vector2 dir = rayDirection;
 			dir.y = -1;
@@ -186,14 +249,8 @@ public class CharacterState : MonoBehaviour
 			Debug.DrawRay(rayVector, dir * rcCastDistance, Color.red);
 			if (raycastHit)
 			{
-				if(raycastHit.collider.isTrigger)
-				{
-					raycastHit.collider.SendMessage("OnTriggerEnter2D", myCollider);
-				}
-
-				jumpWall = raycastHit.collider.tag == "InversePlatform" ? JumpDirectionOnWallOrEdge.Inverse : JumpDirectionOnWallOrEdge.KeepTheSame;
+				addCollider(raycastHit.collider);
 				isCollidingLeft = true;
-				return isCollidingRight;
 			}
 		}
 
@@ -204,14 +261,8 @@ public class CharacterState : MonoBehaviour
 			Debug.DrawRay(rayVector, rayDirection * rcCastDistance, Color.red);
 			if (raycastHit)
 			{
-				if( raycastHit.collider.isTrigger)
-				{
-					raycastHit.collider.SendMessage("OnTriggerEnter2D", myCollider);
-				}
-
-				jumpWall = raycastHit.collider.tag == "InversePlatform" ? JumpDirectionOnWallOrEdge.Inverse : JumpDirectionOnWallOrEdge.KeepTheSame;
 				isCollidingLeft = true;
-				break;
+				addCollider(raycastHit.collider);
 			}
 		}
 
@@ -226,7 +277,6 @@ public class CharacterState : MonoBehaviour
 
 		Vector2 rayDirection = Vector2.right;
 		float rightX = Mathf.Max(myCollider.bounds.max.x , myCollider.bounds.min.x);
-		Debug.Log("Right : " + rightX);
 
 		{
 			Vector2 dir = rayDirection;
@@ -236,14 +286,8 @@ public class CharacterState : MonoBehaviour
 			Debug.DrawRay(rayVector, dir * rcCastDistance, Color.black);
 			if (raycastHit)
 			{
-				if( raycastHit.collider.isTrigger)
-				{
-					raycastHit.collider.SendMessage("OnTriggerEnter2D", myCollider);
-				}
-
-				jumpWall = raycastHit.collider.tag == "InversePlatform" ? JumpDirectionOnWallOrEdge.Inverse : JumpDirectionOnWallOrEdge.KeepTheSame;
 				isCollidingRight = true;
-				return isCollidingRight;
+				addCollider(raycastHit.collider);
 			}
 		}
 
@@ -254,14 +298,8 @@ public class CharacterState : MonoBehaviour
 			Debug.DrawRay(rayVector, rayDirection * rcCastDistance, Color.black);
 			if (raycastHit)
 			{
-				if( raycastHit.collider.isTrigger)
-				{
-					raycastHit.collider.SendMessage("OnTriggerEnter2D", myCollider);
-				}
-
-				jumpWall = raycastHit.collider.tag == "InversePlatform" ? JumpDirectionOnWallOrEdge.Inverse : JumpDirectionOnWallOrEdge.KeepTheSame;
 				isCollidingRight = true;
-				break;
+				addCollider(raycastHit.collider);
 			}
 		}
 

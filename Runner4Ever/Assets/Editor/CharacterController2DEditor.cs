@@ -101,6 +101,13 @@ public class CharacterController2DEditor : Editor
         myScript.jumpRes = (CharacterController2D.JumpRestrictions)EditorGUILayout.EnumPopup("JumpRestrictions", myScript.jumpRes);
         myScript.runDir = (CharacterController2D.RunDirectionOnGround)EditorGUILayout.EnumPopup("Direction when hitting ground", myScript.runDir);
 
+
+       if (GUI.changed)
+        {
+        	EditorUtility.SetDirty(target);
+            UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(((GameObject)myScript.gameObject).scene);
+        }
+        
         infosFold = EditorGUILayout.Foldout(infosFold, "Infos");
 		if (infosFold)
         {
@@ -111,14 +118,10 @@ public class CharacterController2DEditor : Editor
         	EditorGUILayout.LabelField("isGrabingEdge ", myScript.grabingEdge() ? "true" : "false");
         	EditorGUILayout.LabelField("isWallSticking ", myScript.wallSticking() ? "true" : "false");
         	EditorGUILayout.LabelField("runSpeed ", myScript.runspeed().ToString());
+        	EditorGUILayout.LabelField("jumpWallDir ", myScript.jumpWallStack.Peek().ToString());
         	EditorGUI.indentLevel--;
         }
        
-       if (GUI.changed)
-        {
-        	EditorUtility.SetDirty(target);
-            UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(((GameObject)myScript.gameObject).scene);
-        }
        
 	}
 }

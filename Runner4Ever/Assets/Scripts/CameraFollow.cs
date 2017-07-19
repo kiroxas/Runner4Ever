@@ -21,6 +21,8 @@ public class CameraFollow : MonoBehaviour {
 		x = Mathf.Clamp(x, containingBox.min.x + cameraHalfWidth, containingBox.max.x - cameraHalfWidth);
 		y = Mathf.Clamp(y, containingBox.min.y + orthSize, containingBox.max.y - orthSize);
 
+		x =  Mathf.Lerp(x, transform.position.x, Time.deltaTime * smoothing.x);
+
 		transform.position = new Vector3(x, y, -10) ;
 	}
 

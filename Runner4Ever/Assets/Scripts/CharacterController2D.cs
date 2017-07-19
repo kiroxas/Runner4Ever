@@ -37,6 +37,12 @@ public class CharacterController2D : MonoBehaviour
 		HoldUp
 	}
 
+	public enum JumpDirectionOnWallOrEdge
+	{
+		KeepTheSame,
+		Inverse
+	}
+
 	public enum JumpRestrictions
 	{
 		Anywhere,
@@ -71,7 +77,10 @@ public class CharacterController2D : MonoBehaviour
 	public JumpRestrictions jumpRes = JumpRestrictions.OnGround;
 	
 	public RunDirectionOnGround runDir = RunDirectionOnGround.KeepTheAirOne;
+	public JumpDirectionOnWallOrEdge jumpWall = JumpDirectionOnWallOrEdge.KeepTheSame;
 
+	public Stack jumpWallStack;
+	public Stack runDirStack;
 	public Stack jumpState;
 
 	public Animator animator;
@@ -151,6 +160,12 @@ public class CharacterController2D : MonoBehaviour
 		gravityScale = rb.gravityScale;
 		jumpState = new Stack();
 		jumpState.Push(jumpRes);
+
+		runDirStack = new Stack();
+		runDirStack.Push(runDir);
+
+		jumpWallStack = new Stack();
+		jumpWallStack.Push(jumpWall);
 	}
 
 	private void lockYPosition()
@@ -296,7 +311,6 @@ public class CharacterController2D : MonoBehaviour
 
 	public void OnHoldDown(LeanFinger finger)
 	{
-		state.updateGrounded();
 		int index = grounded() ? (stopped() ? groundedAndStopped : groundedIndex ) : airBorn;
 		Action action = actions[index].action[(int)Inputs.Hold];
 		doAction(action);
@@ -304,7 +318,6 @@ public class CharacterController2D : MonoBehaviour
 
 	public void OnHoldUp(LeanFinger finger)
 	{
-		state.updateGrounded();
 		int index = grounded() ? (stopped() ? groundedAndStopped : groundedIndex ) : airBorn;
 		Action action = actions[index].action[(int)Inputs.HoldUp];
 		doAction(action);
@@ -312,7 +325,6 @@ public class CharacterController2D : MonoBehaviour
 
 	public void OnFingerTap(LeanFinger finger)
 	{
-		state.updateGrounded();
 		int index = grounded() ? (stopped() ? groundedAndStopped : groundedIndex ) : airBorn;
 		
 		if(finger.TapCount == 1)
@@ -392,7 +404,6 @@ public class CharacterController2D : MonoBehaviour
 		switch((JumpRestrictions)jumpState.Peek())
 		{
 			case JumpRestrictions.OnGround :
-				state.updateState();
 				if(!grounded() && !wallSticking())
 				{
 					return;
@@ -403,7 +414,7 @@ public class CharacterController2D : MonoBehaviour
 		}
 		}
 
-		if(state.jumpWall == CharacterState.JumpDirectionOnWallOrEdge.Inverse && (grabingEdge() || wallSticking()))
+		if((JumpDirectionOnWallOrEdge)jumpWallStack.Peek() == JumpDirectionOnWallOrEdge.Inverse && (grabingEdge() || wallSticking()))
 		{
 			changeDirection();
 		}
@@ -428,7 +439,6 @@ public class CharacterController2D : MonoBehaviour
 	{		
 		// Store the swipe delta in a temp variable
 		var swipe = finger.SwipeScreenDelta;
-		state.updateGrounded();
 
 		int index = grounded() ? (stopped() ? groundedAndStopped : groundedIndex ) : airBorn;
 		
@@ -488,8 +498,8 @@ public class CharacterController2D : MonoBehaviour
 
 	private void makeItRunRightOnGround()
 	{
-		if((runDir == RunDirectionOnGround.AlwaysRight && grounded() && _runSpeed < 0)
-		|| (runDir == RunDirectionOnGround.AlwaysLeft && grounded() && _runSpeed > 0))
+		if(((RunDirectionOnGround)runDirStack.Peek() == RunDirectionOnGround.AlwaysRight && grounded() && _runSpeed < 0)
+		|| ((RunDirectionOnGround)runDirStack.Peek() == RunDirectionOnGround.AlwaysLeft && grounded() && _runSpeed > 0))
 		{
 			changeDirection();
 		}
