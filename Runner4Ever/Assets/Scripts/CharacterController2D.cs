@@ -100,6 +100,7 @@ public class CharacterController2D : MonoBehaviour
 	public float highJumpMagnitude = 0.2f;
 	private float upSpeed = 0;
 	private float gravityScale = 0;
+	public Stack gravity;
 	public float timeBetweenJumps = 0.25f;
 	private float jumpIn = 0.0f;
 	public int maxHealth = 10;
@@ -166,6 +167,9 @@ public class CharacterController2D : MonoBehaviour
 
 		jumpWallStack = new Stack();
 		jumpWallStack.Push(jumpWall);
+
+		gravity = new Stack();
+		gravity.Push(gravityScale);
 	}
 
 	private void lockYPosition()
@@ -180,8 +184,7 @@ public class CharacterController2D : MonoBehaviour
 
 	private void putCorrectGravityScale()
 	{
-		bool conditions = rb.velocity.y < 0 && wallSticking();
-		rb.gravityScale = conditions ? 0.25f : gravityScale;
+		rb.gravityScale = rb.velocity.y < 0 ? (float)gravity.Peek() : gravityScale; // change gravity only when falling (for now)
 	}
 
 	private bool shallNullifySpeed()

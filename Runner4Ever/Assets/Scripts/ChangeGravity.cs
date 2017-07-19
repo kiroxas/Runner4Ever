@@ -2,11 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InverseJumpWall : MonoBehaviour 
+public class ChangeGravity : MonoBehaviour 
 {
+	public float gravity = 0.25f;
 
-	public CharacterController2D.JumpDirectionOnWallOrEdge strat = CharacterController2D.JumpDirectionOnWallOrEdge.Inverse;
-	// Use this for initialization
 	void Start () 
 	{
 		
@@ -22,7 +21,7 @@ public class InverseJumpWall : MonoBehaviour
         var state = other.GetComponent<CharacterController2D>();
         if(state != null && other.gameObject.tag == "Player")
         {
-        	state.jumpWallStack.Push(strat);
+        	state.gravity.Push(gravity);
         }
     }
 
@@ -31,7 +30,7 @@ public class InverseJumpWall : MonoBehaviour
         var state = other.GetComponent<CharacterController2D>();
         if(state != null && other.gameObject.tag == "Player")
         {
-        	state.jumpWallStack.Pop();
+        	state.gravity.Pop();
         }
     }
 }
