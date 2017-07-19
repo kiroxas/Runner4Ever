@@ -91,6 +91,8 @@ public class CharacterController2DEditor : Editor
         myScript.animator = (Animator)EditorGUILayout.ObjectField("Animator", myScript.animator, typeof(Animator), true);
        // myScript.state = (CharacterState)EditorGUILayout.ObjectField("CharacterState", myScript.state, typeof(CharacterState), true);
        
+       
+        myScript.speedBonusOnJump = EditorGUILayout.FloatField("speedBonusOnJump", myScript.speedBonusOnJump);
         myScript.runSpeed = EditorGUILayout.FloatField("runSpeed", myScript.runSpeed);
         myScript.accelerationSmooth = EditorGUILayout.FloatField("accelerationSmooth", myScript.accelerationSmooth);
         myScript.dashSpeedMul = EditorGUILayout.FloatField("dashSpeedMul", myScript.dashSpeedMul);
@@ -107,7 +109,7 @@ public class CharacterController2DEditor : Editor
         	EditorUtility.SetDirty(target);
             UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(((GameObject)myScript.gameObject).scene);
         }
-        
+
         infosFold = EditorGUILayout.Foldout(infosFold, "Infos");
 		if (infosFold)
         {

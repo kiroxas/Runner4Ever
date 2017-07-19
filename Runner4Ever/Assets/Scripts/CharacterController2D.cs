@@ -94,7 +94,7 @@ public class CharacterController2D : MonoBehaviour
 	private float _runSpeed, _actualSpeed, _lastSpeed;
 	public float accelerationSmooth = 1.0f;
 
-
+	public float speedBonusOnJump = 0.0f;
 	public float dashSpeedMul = 2.5f;
 	public float jumpMagnitude = 0.1f;
 	public float highJumpMagnitude = 0.2f;
@@ -151,13 +151,18 @@ public class CharacterController2D : MonoBehaviour
 		return _runSpeed;
 	}
 
+	public void Awake()
+	{
+		rb = GetComponent<Rigidbody2D>();
+		state = GetComponent<CharacterState>();
+	}
+
 	public void Start()
 	{
 		health = maxHealth;
 		_runSpeed = runSpeed;
-		_actualSpeed = _runSpeed;
-		rb = GetComponent<Rigidbody2D>();
-		state = GetComponent<CharacterState>();
+		_actualSpeed = 0;
+		
 		gravityScale = rb.gravityScale;
 		jumpState = new Stack();
 		jumpState.Push(jumpRes);
@@ -222,15 +227,14 @@ public class CharacterController2D : MonoBehaviour
 		putCorrectGravityScale();
 		updateSpeed();
 
-		float xSpeed = shallNullifySpeed() ? 0.0f : _actualSpeed;
-		float yVelocity = rb.velocity.y;
 		bool jumped = upSpeed > 0;
+		float yVelocity = rb.velocity.y;
 
 		if(jumped)
 		{
 			yVelocity = upSpeed;
+			_actualSpeed += speedBonusOnJump;
 			
-			//rb.AddForce(new Vector2(0, upSpeed), ForceMode2D.Impulse);
 			upSpeed = 0;
 			unlockYPosition();
 		}
@@ -240,6 +244,8 @@ public class CharacterController2D : MonoBehaviour
 			lockYPosition();
 		}
 
+		float xSpeed = shallNullifySpeed() ? 0.0f : _actualSpeed;
+		
 		rb.velocity = new Vector2(xSpeed, yVelocity);
 
 		if(_lastSpeed != xSpeed && animator)
