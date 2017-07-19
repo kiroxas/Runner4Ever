@@ -86,6 +86,7 @@ public class CharacterController2D : MonoBehaviour
 	public float accelerationSmooth = 1.0f;
 
 
+	public float dashSpeedMul = 2.5f;
 	public float jumpMagnitude = 0.1f;
 	public float highJumpMagnitude = 0.2f;
 	private float upSpeed = 0;
@@ -184,6 +185,7 @@ public class CharacterController2D : MonoBehaviour
 		{
 			Debug.Log("respawning a non dead character");
 		}
+		reinit();
 
 		health = maxHealth;
 		transform.position = new Vector2(x, y); 
@@ -362,8 +364,8 @@ public class CharacterController2D : MonoBehaviour
 	}
 
 	public void dash()
-	{
-		
+	{	
+		_actualSpeed *= dashSpeedMul;
 	}
 
 	public void slide()

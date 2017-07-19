@@ -93,6 +93,7 @@ public class CharacterController2DEditor : Editor
        
         myScript.runSpeed = EditorGUILayout.FloatField("runSpeed", myScript.runSpeed);
         myScript.accelerationSmooth = EditorGUILayout.FloatField("accelerationSmooth", myScript.accelerationSmooth);
+        myScript.dashSpeedMul = EditorGUILayout.FloatField("dashSpeedMul", myScript.dashSpeedMul);
         myScript.timeBetweenJumps = EditorGUILayout.FloatField("timeBetweenJumps", myScript.timeBetweenJumps);
         myScript.jumpMagnitude = EditorGUILayout.FloatField("jumpMagnitude", myScript.jumpMagnitude);
         myScript.highJumpMagnitude = EditorGUILayout.FloatField("highJumpMagnitude", myScript.highJumpMagnitude);
