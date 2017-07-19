@@ -100,6 +100,7 @@
      <Compile Include="Assets\Scripts\LevelGeneration\BasicLevelGenerator.cs" />
      <Compile Include="Assets\Scripts\LoopLevel.cs" />
      <Compile Include="Assets\Scripts\ProgressionDisplay.cs" />
+     <Compile Include="Assets\Scripts\WalkEnemyController2D.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\MultiKeyDictionary.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\Reporter.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\ReporterGUI.cs" />

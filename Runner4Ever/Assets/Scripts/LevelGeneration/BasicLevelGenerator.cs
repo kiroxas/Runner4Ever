@@ -64,6 +64,7 @@ public class BasicLevelGenerator : MonoBehaviour
 	public GameObject[] waterTiles;
 	public GameObject[] objectTiles;
 	public GameObject[] hurtTiles;
+	public GameObject[] enemies;
 
 	FileUtils.FileList loadFileList(string folder)
 	{
@@ -220,6 +221,25 @@ public class BasicLevelGenerator : MonoBehaviour
 					}
 					UnityEngine.Object.Instantiate(instance, new Vector3(xPos, yPos, 0),  Quaternion.identity);
 				}
+				else if(tileType == 8) // enemy
+				{
+					if(enemies.Length == 0)
+					{
+						Debug.LogError("Do not have any prefabs set in enemies");
+						return;
+					}
+					GameObject instance = enemies[Random.Range(0, enemies.Length)];
+
+
+					if(instance == null)
+					{
+						Debug.LogError("You have a null instance in enemies");
+						return;
+					}
+					UnityEngine.Object.Instantiate(instance, new Vector3(xPos, yPos, 0),  Quaternion.identity);
+				}
+
+				
 
 				++index;
 			}

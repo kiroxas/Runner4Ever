@@ -16,7 +16,7 @@ public class HurtPlayer : MonoBehaviour {
 		
 	}
 
-	void OnTriggerEnter2D(Collider2D other) 
+	void OnCollisionEnter2D(Collider2D other) 
 	{
         var state = other.GetComponent<CharacterController2D>();
         if(state != null && other.gameObject.tag == "Player")
