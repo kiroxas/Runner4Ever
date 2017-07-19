@@ -92,6 +92,7 @@ public class CharacterController2DEditor : Editor
        // myScript.state = (CharacterState)EditorGUILayout.ObjectField("CharacterState", myScript.state, typeof(CharacterState), true);
        
         myScript.runSpeed = EditorGUILayout.FloatField("runSpeed", myScript.runSpeed);
+        myScript.accelerationSmooth = EditorGUILayout.FloatField("accelerationSmooth", myScript.accelerationSmooth);
         myScript.timeBetweenJumps = EditorGUILayout.FloatField("timeBetweenJumps", myScript.timeBetweenJumps);
         myScript.jumpMagnitude = EditorGUILayout.FloatField("jumpMagnitude", myScript.jumpMagnitude);
         myScript.highJumpMagnitude = EditorGUILayout.FloatField("highJumpMagnitude", myScript.highJumpMagnitude);

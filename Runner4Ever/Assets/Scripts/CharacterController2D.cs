@@ -79,9 +79,13 @@ public class CharacterController2D : MonoBehaviour
 	private Rigidbody2D rb;
 	private bool facingRight = true;
 
+	// RunSpeed Related
 	public float runSpeed = 0.1f;
 	private float _runSpeedBeforeStop;
-	private float _runSpeed, _lastSpeed;
+	private float _runSpeed, _actualSpeed, _lastSpeed;
+	public float accelerationSmooth = 1.0f;
+
+
 	public float jumpMagnitude = 0.1f;
 	public float highJumpMagnitude = 0.2f;
 	private float upSpeed = 0;
@@ -140,6 +144,7 @@ public class CharacterController2D : MonoBehaviour
 	{
 		health = maxHealth;
 		_runSpeed = runSpeed;
+		_actualSpeed = _runSpeed;
 		rb = GetComponent<Rigidbody2D>();
 		state = GetComponent<CharacterState>();
 		gravityScale = rb.gravityScale;
@@ -195,8 +200,9 @@ public class CharacterController2D : MonoBehaviour
 		state.updateState();
 		makeItRunRightOnGround();
 		putCorrectGravityScale();
+		updateSpeed();
 
-		float xSpeed = shallNullifySpeed() ? 0.0f : _runSpeed;
+		float xSpeed = shallNullifySpeed() ? 0.0f : _actualSpeed;
 		float yVelocity = rb.velocity.y;
 		bool jumped = upSpeed > 0;
 
@@ -275,6 +281,11 @@ public class CharacterController2D : MonoBehaviour
 			LeanFingerHeld.OnFingerHeldUp -= OnHoldUp;
 	}
 
+	private void updateSpeed()
+	{
+		_actualSpeed = Mathf.Lerp(_actualSpeed, _runSpeed, Time.deltaTime * accelerationSmooth);
+	}
+
 	private bool stopped()
 	{
 		return _runSpeed == 0 ;
@@ -315,7 +326,7 @@ public class CharacterController2D : MonoBehaviour
 
 	public void doAction(Action action)
 	{
-		if(_runSpeed == 0) // Stopped
+		if(stopped()) // Stopped
 		{
 			run();
 		}
@@ -337,7 +348,7 @@ public class CharacterController2D : MonoBehaviour
 
 	public void run()
 	{
-		if(_runSpeed == 0)
+		if(stopped())
 		{
 			_runSpeed = _runSpeedBeforeStop;
 		}
@@ -347,6 +358,7 @@ public class CharacterController2D : MonoBehaviour
 	{
 		_runSpeedBeforeStop = _runSpeed;
 		_runSpeed = 0;
+		_actualSpeed = 0;
 	}
 
 	public void dash()
