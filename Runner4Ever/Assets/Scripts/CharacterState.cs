@@ -161,6 +161,11 @@ public class CharacterState : MonoBehaviour
 			Debug.DrawRay(rayVector, dir * rcCastDistance, Color.red);
 			if (raycastHit)
 			{
+				if(raycastHit.collider.isTrigger)
+				{
+					raycastHit.collider.SendMessage("OnTriggerEnter2D", myCollider);
+				}
+
 				jumpWall = raycastHit.collider.tag == "InversePlatform" ? JumpDirectionOnWallOrEdge.Inverse : JumpDirectionOnWallOrEdge.KeepTheSame;
 				isCollidingRight = true;
 				return isCollidingRight;
@@ -174,6 +179,11 @@ public class CharacterState : MonoBehaviour
 			Debug.DrawRay(rayVector, rayDirection * rcCastDistance, Color.red);
 			if (raycastHit)
 			{
+				if( raycastHit.collider.isTrigger)
+				{
+					raycastHit.collider.SendMessage("OnTriggerEnter2D", myCollider);
+				}
+
 				jumpWall = raycastHit.collider.tag == "InversePlatform" ? JumpDirectionOnWallOrEdge.Inverse : JumpDirectionOnWallOrEdge.KeepTheSame;
 				isCollidingLeft = true;
 				break;
@@ -199,6 +209,11 @@ public class CharacterState : MonoBehaviour
 			Debug.DrawRay(rayVector, dir * rcCastDistance, Color.red);
 			if (raycastHit)
 			{
+				if( raycastHit.collider.isTrigger)
+				{
+					raycastHit.collider.SendMessage("OnTriggerEnter2D", myCollider);
+				}
+
 				jumpWall = raycastHit.collider.tag == "InversePlatform" ? JumpDirectionOnWallOrEdge.Inverse : JumpDirectionOnWallOrEdge.KeepTheSame;
 				isCollidingRight = true;
 				return isCollidingRight;
@@ -212,6 +227,11 @@ public class CharacterState : MonoBehaviour
 			Debug.DrawRay(rayVector, rayDirection * rcCastDistance, Color.red);
 			if (raycastHit)
 			{
+				if( raycastHit.collider.isTrigger)
+				{
+					raycastHit.collider.SendMessage("OnTriggerEnter2D", myCollider);
+				}
+				
 				jumpWall = raycastHit.collider.tag == "InversePlatform" ? JumpDirectionOnWallOrEdge.Inverse : JumpDirectionOnWallOrEdge.KeepTheSame;
 				isCollidingRight = true;
 				break;

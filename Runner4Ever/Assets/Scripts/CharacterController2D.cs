@@ -88,6 +88,13 @@ public class CharacterController2D : MonoBehaviour
 	private float gravityScale = 0;
 	public float timeBetweenJumps = 0.25f;
 	private float jumpIn = 0.0f;
+	public int maxHealth = 10;
+	private int health = 10;
+
+	public void doDamage(int damage)
+	{
+		health -= damage;
+	}
 
 	private int getMaxJumps()
 	{
@@ -131,6 +138,7 @@ public class CharacterController2D : MonoBehaviour
 
 	public void Start()
 	{
+		health = maxHealth;
 		_runSpeed = runSpeed;
 		rb = GetComponent<Rigidbody2D>();
 		state = GetComponent<CharacterState>();
@@ -160,9 +168,30 @@ public class CharacterController2D : MonoBehaviour
 		return (_runSpeed > 0 && collidingRight()) || (_runSpeed < 0 && collidingLeft());
 	}
 
+	public bool isDead()
+	{
+		return health <= 0;
+	}
+
+	public void respawn(float x, float y)
+	{
+		if(!isDead())
+		{
+			Debug.Log("respawning a non dead character");
+		}
+
+		health = maxHealth;
+		transform.position = new Vector2(x, y); 
+	}
+
 
 	public void LateUpdate()
 	{
+		if(isDead())
+		{
+			return;
+		}
+
 		state.updateState();
 		makeItRunRightOnGround();
 		putCorrectGravityScale();

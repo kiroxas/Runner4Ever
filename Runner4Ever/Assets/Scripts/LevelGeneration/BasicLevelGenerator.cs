@@ -63,6 +63,7 @@ public class BasicLevelGenerator : MonoBehaviour
 	public GameObject[] inverseLandTiles;
 	public GameObject[] waterTiles;
 	public GameObject[] objectTiles;
+	public GameObject[] hurtTiles;
 
 	FileUtils.FileList loadFileList(string folder)
 	{
@@ -198,6 +199,23 @@ public class BasicLevelGenerator : MonoBehaviour
 					if(instance == null)
 					{
 						Debug.LogError("You have a null instance in inverseLandTiles");
+						return;
+					}
+					UnityEngine.Object.Instantiate(instance, new Vector3(xPos, yPos, 0),  Quaternion.identity);
+				}
+				else if(tileType == 7) // tile that hurt player
+				{
+					if(hurtTiles.Length == 0)
+					{
+						Debug.LogError("Do not have any prefabs set in hurtTiles");
+						return;
+					}
+					GameObject instance = hurtTiles[Random.Range(0, hurtTiles.Length)];
+
+
+					if(instance == null)
+					{
+						Debug.LogError("You have a null instance in hurtTiles");
 						return;
 					}
 					UnityEngine.Object.Instantiate(instance, new Vector3(xPos, yPos, 0),  Quaternion.identity);

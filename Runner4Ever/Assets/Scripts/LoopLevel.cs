@@ -39,8 +39,7 @@ public class LoopLevel : MonoBehaviour
 	}
 
 	public void Update()
-	{
-	
+	{	
 		int xPlayer = (int)player.GetComponent<Transform>().position.x;
 		int yPlayer = (int)player.GetComponent<Transform>().position.y;
 
@@ -48,11 +47,9 @@ public class LoopLevel : MonoBehaviour
 		int maxDistance = (int)xEnd - (int)xStart;
 		float percent =  xStart == xEnd ? 1.0f : (float)distance / (float)maxDistance;
 
-		if(percent > 1.0f || yPlayer < cam.containingBox.min.y || xPlayer < (cam.containingBox.min.x)|| xPlayer > cam.containingBox.max.x)
+		if(player.GetComponent<CharacterController2D>().isDead() || percent > 1.0f || yPlayer < cam.containingBox.min.y || xPlayer < (cam.containingBox.min.x)|| xPlayer > cam.containingBox.max.x)
 		{
-			Debug.Log("Min y : " + cam.containingBox.min.y + " actual y : " + yPlayer);
-			player.GetComponent<Transform>().position = new Vector2(xStart, yStart);
-			player.GetComponent<CharacterController2D>().reinit();
+			player.GetComponent<CharacterController2D>().respawn(xStart, yStart);
 		}
 	}
 }
