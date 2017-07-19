@@ -106,6 +106,7 @@ public class CharacterController2DEditor : Editor
         {
         	EditorGUI.indentLevel++;
         	EditorGUILayout.LabelField("CollidingRight ", myScript.collidingRight() ? "true" : "false");
+        	EditorGUILayout.LabelField("CollidingLeft ", myScript.collidingLeft() ? "true" : "false");
         	EditorGUILayout.LabelField("Grounded ", myScript.grounded() ? "true" : "false");
         	EditorGUILayout.LabelField("isGrabingEdge ", myScript.grabingEdge() ? "true" : "false");
         	EditorGUILayout.LabelField("isWallSticking ", myScript.wallSticking() ? "true" : "false");

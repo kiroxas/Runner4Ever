@@ -63,6 +63,30 @@ public class CharacterState : MonoBehaviour
 		isGrounded = false;
 
 		Vector2 rayDirection = Vector2.down;
+
+		{
+			Vector2 dir = rayDirection;
+			dir.x = -1;
+			Vector2 rayVector = new Vector2(myCollider.bounds.min.x , myCollider.bounds.min.y);
+			var raycastHit = Physics2D.Raycast(rayVector, dir, rcCastDistance, PlatformMask);
+			Debug.DrawRay(rayVector, dir * groundedCastDistance, Color.green);
+			if (raycastHit)
+			{
+				isGrounded = true;
+				return isGrounded;
+			}
+		
+			dir.x = 1;
+			rayVector = new Vector2(myCollider.bounds.max.x , myCollider.bounds.min.y);
+			raycastHit = Physics2D.Raycast(rayVector, dir, rcCastDistance, PlatformMask);
+			Debug.DrawRay(rayVector, dir * groundedCastDistance, Color.green);
+			if (raycastHit)
+			{
+				isGrounded = true;
+				return isGrounded;
+			}
+		}
+
 		for(int i = 0; i < groundedRayCasts; ++i)
 		{
 			Vector2 rayVector = new Vector2(myCollider.bounds.min.x + i * step, myCollider.bounds.min.y);
@@ -152,11 +176,12 @@ public class CharacterState : MonoBehaviour
 		isCollidingLeft = false;
 
 		Vector2 rayDirection = Vector2.left;
-
+		float leftX = Mathf.Min(myCollider.bounds.max.x , myCollider.bounds.min.x);
+		Debug.Log("Left : " + leftX);
 		{
 			Vector2 dir = rayDirection;
 			dir.y = -1;
-			Vector2 rayVector = new Vector2(myCollider.bounds.min.x , myCollider.bounds.min.y + yRightColDetDelta);
+			Vector2 rayVector = new Vector2(leftX , myCollider.bounds.min.y + yRightColDetDelta);
 			var raycastHit = Physics2D.Raycast(rayVector, dir, rcCastDistance, PlatformMask);
 			Debug.DrawRay(rayVector, dir * rcCastDistance, Color.red);
 			if (raycastHit)
@@ -167,14 +192,14 @@ public class CharacterState : MonoBehaviour
 				}
 
 				jumpWall = raycastHit.collider.tag == "InversePlatform" ? JumpDirectionOnWallOrEdge.Inverse : JumpDirectionOnWallOrEdge.KeepTheSame;
-				isCollidingRight = true;
+				isCollidingLeft = true;
 				return isCollidingRight;
 			}
 		}
 
 		for(int i = 0; i < rightCollisionRayCasts; ++i)
 		{
-			Vector2 rayVector = new Vector2(myCollider.bounds.min.x , myCollider.bounds.min.y + yRightColDetDelta + i * step);
+			Vector2 rayVector = new Vector2(leftX , myCollider.bounds.min.y + yRightColDetDelta + i * step);
 			var raycastHit = Physics2D.Raycast(rayVector, rayDirection, rcCastDistance, PlatformMask);
 			Debug.DrawRay(rayVector, rayDirection * rcCastDistance, Color.red);
 			if (raycastHit)
@@ -200,13 +225,15 @@ public class CharacterState : MonoBehaviour
 		isCollidingRight = false;
 
 		Vector2 rayDirection = Vector2.right;
-		
+		float rightX = Mathf.Max(myCollider.bounds.max.x , myCollider.bounds.min.x);
+		Debug.Log("Right : " + rightX);
+
 		{
 			Vector2 dir = rayDirection;
 			dir.y = -1;
-			Vector2 rayVector = new Vector2(myCollider.bounds.max.x , myCollider.bounds.min.y + yRightColDetDelta);
+			Vector2 rayVector = new Vector2(rightX , myCollider.bounds.min.y + yRightColDetDelta);
 			var raycastHit = Physics2D.Raycast(rayVector, dir, rcCastDistance, PlatformMask);
-			Debug.DrawRay(rayVector, dir * rcCastDistance, Color.red);
+			Debug.DrawRay(rayVector, dir * rcCastDistance, Color.black);
 			if (raycastHit)
 			{
 				if( raycastHit.collider.isTrigger)
@@ -222,16 +249,16 @@ public class CharacterState : MonoBehaviour
 
 		for(int i = 0; i < rightCollisionRayCasts; ++i)
 		{
-			Vector2 rayVector = new Vector2(myCollider.bounds.max.x , myCollider.bounds.min.y + yRightColDetDelta + i * step);
+			Vector2 rayVector = new Vector2(rightX , myCollider.bounds.min.y + yRightColDetDelta + i * step);
 			var raycastHit = Physics2D.Raycast(rayVector, rayDirection, rcCastDistance, PlatformMask);
-			Debug.DrawRay(rayVector, rayDirection * rcCastDistance, Color.red);
+			Debug.DrawRay(rayVector, rayDirection * rcCastDistance, Color.black);
 			if (raycastHit)
 			{
 				if( raycastHit.collider.isTrigger)
 				{
 					raycastHit.collider.SendMessage("OnTriggerEnter2D", myCollider);
 				}
-				
+
 				jumpWall = raycastHit.collider.tag == "InversePlatform" ? JumpDirectionOnWallOrEdge.Inverse : JumpDirectionOnWallOrEdge.KeepTheSame;
 				isCollidingRight = true;
 				break;

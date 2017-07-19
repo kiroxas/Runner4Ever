@@ -235,9 +235,9 @@ public class CharacterController2D : MonoBehaviour
 		if(grounded() && !jumped)
 		{
 			consecutiveJumps = 0;
-			Collider2D myCollider = GetComponent<Collider2D>();
-			Vector2 point = new Vector2(myCollider.bounds.center.x, myCollider.bounds.center.y + 1.5f);
-			Debug.DrawLine(myCollider.bounds.center, point, Color.black, 20);
+			//Collider2D myCollider = GetComponent<Collider2D>();
+			//Vector2 point = new Vector2(myCollider.bounds.center.x, myCollider.bounds.center.y + 1.5f);
+			//Debug.DrawLine(myCollider.bounds.center, point, Color.black, 20);
 		}
 		else if(wallSticking() && !jumped)
 		{
@@ -285,7 +285,8 @@ public class CharacterController2D : MonoBehaviour
 
 	private void updateSpeed()
 	{
-		_actualSpeed = Mathf.Lerp(_actualSpeed, _runSpeed, Time.deltaTime * accelerationSmooth);
+		float percent = wallSticking() ? 1.0f : Time.deltaTime * accelerationSmooth;
+		_actualSpeed = Mathf.Lerp(_actualSpeed, _runSpeed, percent);
 	}
 
 	private bool stopped()
@@ -476,6 +477,11 @@ public class CharacterController2D : MonoBehaviour
 	private void changeDirection()
 	{
 		Flip(); // display
+
+		if(stopped())
+		{
+			run();
+		}
 
 		_runSpeed *= -1;
 	}
