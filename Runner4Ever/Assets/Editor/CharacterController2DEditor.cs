@@ -91,7 +91,7 @@ public class CharacterController2DEditor : Editor
         myScript.animator = (Animator)EditorGUILayout.ObjectField("Animator", myScript.animator, typeof(Animator), true);
        // myScript.state = (CharacterState)EditorGUILayout.ObjectField("CharacterState", myScript.state, typeof(CharacterState), true);
        
-       
+      	myScript.touchzone = (CharacterController2D.TouchZone)EditorGUILayout.EnumPopup("touchzone", myScript.touchzone);
         myScript.speedBonusOnJump = EditorGUILayout.FloatField("speedBonusOnJump", myScript.speedBonusOnJump);
         myScript.runSpeed = EditorGUILayout.FloatField("runSpeed", myScript.runSpeed);
         myScript.accelerationSmooth = EditorGUILayout.FloatField("accelerationSmooth", myScript.accelerationSmooth);

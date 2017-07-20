@@ -5,6 +5,13 @@ using System;
 
 public class CharacterController2D : MonoBehaviour
 {
+	public enum TouchZone
+	{
+		EntireScreen,
+		LeftHalf,
+		RightHalf
+	}
+
 	public enum Action
 	{
 		None,
@@ -105,6 +112,8 @@ public class CharacterController2D : MonoBehaviour
 	private float jumpIn = 0.0f;
 	public int maxHealth = 10;
 	private int health = 10;
+
+	public TouchZone touchzone = TouchZone.EntireScreen;
 
 	public int getCurrentJumpCount()
 	{
@@ -323,8 +332,27 @@ public class CharacterController2D : MonoBehaviour
 		return _runSpeed == 0 ;
 	}
 
+	private bool isItForMe(LeanFinger finger)
+	{
+		Vector2 originPos = finger.StartScreenPosition;
+
+		switch(touchzone)
+		{
+			case TouchZone.EntireScreen : return true;
+			case TouchZone.LeftHalf : return originPos.x < Screen.width / 2f;
+			case TouchZone.RightHalf : return originPos.x > Screen.width / 2f;
+		}
+
+		return true;
+	}
+
 	public void OnHoldDown(LeanFinger finger)
 	{
+		if(!isItForMe(finger))
+		{
+			return;
+		}
+
 		int index = grounded() ? (stopped() ? groundedAndStopped : groundedIndex ) : airBorn;
 		Action action = actions[index].action[(int)Inputs.Hold];
 		doAction(action);
@@ -332,6 +360,11 @@ public class CharacterController2D : MonoBehaviour
 
 	public void OnHoldUp(LeanFinger finger)
 	{
+		if(!isItForMe(finger))
+		{
+			return;
+		}
+
 		int index = grounded() ? (stopped() ? groundedAndStopped : groundedIndex ) : airBorn;
 		Action action = actions[index].action[(int)Inputs.HoldUp];
 		doAction(action);
@@ -339,6 +372,11 @@ public class CharacterController2D : MonoBehaviour
 
 	public void OnFingerTap(LeanFinger finger)
 	{
+		if(!isItForMe(finger))
+		{
+			return;
+		}
+
 		int index = grounded() ? (stopped() ? groundedAndStopped : groundedIndex ) : airBorn;
 		
 		if(finger.TapCount == 1)
@@ -450,7 +488,11 @@ public class CharacterController2D : MonoBehaviour
 
 
 	public void OnFingerSwipe(LeanFinger finger)
-	{		
+	{	
+		if(!isItForMe(finger))
+		{
+			return;
+		}
 		// Store the swipe delta in a temp variable
 		var swipe = finger.SwipeScreenDelta;
 
