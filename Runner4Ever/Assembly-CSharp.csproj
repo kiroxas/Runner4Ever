@@ -99,6 +99,7 @@
      <Compile Include="Assets\Scripts\InverseJumpWall.cs" />
      <Compile Include="Assets\Scripts\LevelGeneration\BasicLevelGenerator.cs" />
      <Compile Include="Assets\Scripts\LoopLevel.cs" />
+     <Compile Include="Assets\Scripts\MoveBlockOnTrigger.cs" />
      <Compile Include="Assets\Scripts\ProgressionDisplay.cs" />
      <Compile Include="Assets\Scripts\WalkEnemyController2D.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\MultiKeyDictionary.cs" />
