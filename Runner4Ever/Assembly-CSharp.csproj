@@ -94,6 +94,7 @@
      <Compile Include="Assets\Scripts\ChangeGravity.cs" />
      <Compile Include="Assets\Scripts\CharacterController2D.cs" />
      <Compile Include="Assets\Scripts\CharacterState.cs" />
+     <Compile Include="Assets\Scripts\ExploseTile.cs" />
      <Compile Include="Assets\Scripts\GoldCollectible.cs" />
      <Compile Include="Assets\Scripts\HurtPlayer.cs" />
      <Compile Include="Assets\Scripts\InverseJumpWall.cs" />
