@@ -100,7 +100,7 @@ public class CharacterState : MonoBehaviour
 			}
 		}
 
-		for(int i = 0; i < groundedRayCasts; ++i)
+		for(int i = -1; i <= groundedRayCasts; ++i)
 		{
 			Vector2 rayVector = new Vector2(myCollider.bounds.min.x + i * step, myCollider.bounds.min.y);
 			var raycastHit = Physics2D.Raycast(rayVector, rayDirection, groundedCastDistance, PlatformMask);

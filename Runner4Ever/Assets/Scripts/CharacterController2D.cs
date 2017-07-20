@@ -106,6 +106,11 @@ public class CharacterController2D : MonoBehaviour
 	public int maxHealth = 10;
 	private int health = 10;
 
+	public int getCurrentJumpCount()
+	{
+		return consecutiveJumps;
+	}
+
 	public void doDamage(int damage)
 	{
 		health -= damage;
@@ -265,7 +270,7 @@ public class CharacterController2D : MonoBehaviour
 		}
 		else if(wallSticking() && !jumped)
 		{
-			consecutiveJumps = 0;
+			consecutiveJumps = 1;
 		}
 
 		updateJumpIn();
