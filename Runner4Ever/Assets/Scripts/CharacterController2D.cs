@@ -233,7 +233,7 @@ public class CharacterController2D : MonoBehaviour
 		if(jumped)
 		{
 			yVelocity = upSpeed;
-			_actualSpeed += speedBonusOnJump;
+			_actualSpeed += _actualSpeed < 0 ? -speedBonusOnJump : speedBonusOnJump;
 			
 			upSpeed = 0;
 			unlockYPosition();

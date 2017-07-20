@@ -22,7 +22,7 @@ public class CharacterState : MonoBehaviour
 	public bool isCollidingLeft { get; private set; }
 	public bool isCollidingSide { get {return isCollidingRight || isCollidingLeft;}}
 	public bool isGrabingEdge { get; private set; }
-	public bool isWallSticking { get{ return isCollidingSide && ! isGrounded && !isGrabingEdge;} }
+	public bool isWallSticking { get{ return isCollidingSide && !isGrabingEdge;} }
 
 	public float yRightColDetDelta = 0.02f;
 
@@ -79,7 +79,7 @@ public class CharacterState : MonoBehaviour
 
 		{
 			Vector2 dir = rayDirection;
-			dir.x = -1;
+			dir.x = -0.0f;
 			Vector2 rayVector = new Vector2(myCollider.bounds.min.x , myCollider.bounds.min.y);
 			var raycastHit = Physics2D.Raycast(rayVector, dir, rcCastDistance, PlatformMask);
 			Debug.DrawRay(rayVector, dir * groundedCastDistance, Color.green);
@@ -89,7 +89,7 @@ public class CharacterState : MonoBehaviour
 				isGrounded = true;
 			}
 		
-			dir.x = 1;
+			dir.x = 0.0f;
 			rayVector = new Vector2(myCollider.bounds.max.x , myCollider.bounds.min.y);
 			raycastHit = Physics2D.Raycast(rayVector, dir, rcCastDistance, PlatformMask);
 			Debug.DrawRay(rayVector, dir * groundedCastDistance, Color.green);
@@ -183,7 +183,7 @@ public class CharacterState : MonoBehaviour
 
 	private void handleCollided()
 	{
-		Debug.Log("Collide : " + colliderHitThisFrame.Count );
+		
 		// New collisions
 		foreach(Collider2D collider in colliderHitThisFrame)
 		{
@@ -243,7 +243,7 @@ public class CharacterState : MonoBehaviour
 		
 		{
 			Vector2 dir = rayDirection;
-			dir.y = -1;
+			dir.y = -0.5f;
 			Vector2 rayVector = new Vector2(leftX , myCollider.bounds.min.y + yRightColDetDelta);
 			var raycastHit = Physics2D.Raycast(rayVector, dir, rcCastDistance, PlatformMask);
 			Debug.DrawRay(rayVector, dir * rcCastDistance, Color.red);
@@ -280,7 +280,7 @@ public class CharacterState : MonoBehaviour
 
 		{
 			Vector2 dir = rayDirection;
-			dir.y = -1;
+			dir.y = -0.5f;
 			Vector2 rayVector = new Vector2(rightX , myCollider.bounds.min.y + yRightColDetDelta);
 			var raycastHit = Physics2D.Raycast(rayVector, dir, rcCastDistance, PlatformMask);
 			Debug.DrawRay(rayVector, dir * rcCastDistance, Color.black);
