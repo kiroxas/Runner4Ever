@@ -244,6 +244,7 @@ public class CharacterState : MonoBehaviour
 		{
 			Vector2 dir = rayDirection;
 			dir.y = -0.5f;
+			dir.x = -1.3f;
 			Vector2 rayVector = new Vector2(leftX , myCollider.bounds.min.y + yRightColDetDelta);
 			var raycastHit = Physics2D.Raycast(rayVector, dir, rcCastDistance, PlatformMask);
 			Debug.DrawRay(rayVector, dir * rcCastDistance, Color.red);
@@ -281,6 +282,7 @@ public class CharacterState : MonoBehaviour
 		{
 			Vector2 dir = rayDirection;
 			dir.y = -0.5f;
+			dir.x = 1.3f;
 			Vector2 rayVector = new Vector2(rightX , myCollider.bounds.min.y + yRightColDetDelta);
 			var raycastHit = Physics2D.Raycast(rayVector, dir, rcCastDistance, PlatformMask);
 			Debug.DrawRay(rayVector, dir * rcCastDistance, Color.black);
