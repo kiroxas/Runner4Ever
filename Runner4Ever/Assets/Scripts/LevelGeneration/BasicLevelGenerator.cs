@@ -180,7 +180,7 @@ public class BasicLevelGenerator : MonoBehaviour
 				}
 				else if(tileType == 4) // spawn player
 				{
-					createPlayer(xPos, yPos);
+					//createPlayer(xPos, yPos);
 					createCheckpoint(xPos, yPos);
 				}
 				else if(tileType == 5)

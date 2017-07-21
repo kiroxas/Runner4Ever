@@ -13,6 +13,20 @@ public class CameraFollow : MonoBehaviour {
 
 	public void LateUpdate()
 	{
+		if(target == null)
+		{
+			GameObject player = GameObject.FindGameObjectWithTag("Player");
+			if(player != null)
+			{
+				target = player.GetComponent<Transform>();
+			}
+			else 
+			{
+				return;
+			}
+
+		}
+
 		float orthSize =  GetComponent<Camera>().orthographicSize;
 		var cameraHalfWidth = orthSize * ((float)Screen.width / Screen.height);
 		float y = Mathf.Lerp(transform.position.y, target.position.y + offset.y, Time.deltaTime * smoothing.y);

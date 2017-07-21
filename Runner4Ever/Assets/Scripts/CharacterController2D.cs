@@ -2,8 +2,9 @@ using UnityEngine;
 using System.Collections;
 using Lean.Touch;
 using System;
+using UnityEngine.Networking;
 
-public class CharacterController2D : MonoBehaviour
+public class CharacterController2D : NetworkBehaviour
 {
 	public enum TouchZone
 	{
@@ -165,19 +166,16 @@ public class CharacterController2D : MonoBehaviour
 		return _runSpeed;
 	}
 
+	public override void OnStartLocalPlayer()
+    {
+        Debug.Log("Start Local");
+    }
+
 	public void Awake()
 	{
 		rb = GetComponent<Rigidbody2D>();
 		state = GetComponent<CharacterState>();
-	}
 
-	public void Start()
-	{
-		health = maxHealth;
-		_runSpeed = runSpeed;
-		_actualSpeed = 0;
-		
-		gravityScale = rb.gravityScale;
 		jumpState = new Stack();
 		jumpState.Push(jumpRes);
 
@@ -187,8 +185,17 @@ public class CharacterController2D : MonoBehaviour
 		jumpWallStack = new Stack();
 		jumpWallStack.Push(jumpWall);
 
+		gravityScale = rb.gravityScale;
+
 		gravity = new Stack();
 		gravity.Push(gravityScale);
+	}
+
+	public void Start()
+	{
+		health = maxHealth;
+		_runSpeed = runSpeed;
+		_actualSpeed = 0;		
 	}
 
 	private void lockYPosition()
@@ -231,6 +238,15 @@ public class CharacterController2D : MonoBehaviour
 
 	public void LateUpdate()
 	{
+		if(state == null)
+		{
+			state = GetComponent<CharacterState>();
+			if(state == null)
+			{
+				return;
+			}
+		}
+
 		if(isDead())
 		{
 			return;
@@ -334,6 +350,11 @@ public class CharacterController2D : MonoBehaviour
 
 	private bool isItForMe(LeanFinger finger)
 	{
+		if (!isLocalPlayer)
+		{
+            return false;
+		}
+
 		Vector2 originPos = finger.StartScreenPosition;
 
 		switch(touchzone)
@@ -439,16 +460,13 @@ public class CharacterController2D : MonoBehaviour
 
 	public void jump(float magnitude)
 	{
-		Debug.Log("Jump");
 		if(getMaxJumps() <= consecutiveJumps)
 		{
-			Debug.Log("Nope");
 			return;
 		}
 
 		if(consecutiveJumps > 0)
 		{
-			Debug.Log("Second Jump");
 			// Second jump, no restriction
 		}
 		else if(grabingEdge() == false)

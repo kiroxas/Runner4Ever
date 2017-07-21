@@ -37,7 +37,7 @@ public class CharacterState : MonoBehaviour
 
 	public EdgeGrabingStrategy edgeStrategy = EdgeGrabingStrategy.None;
 
-	public void Start()
+	public void Awake()
 	{
 		colliderHitThisFrame = new List<Collider2D>();
 		colliderHitLastFrame = new List<Collider2D>();
@@ -48,6 +48,11 @@ public class CharacterState : MonoBehaviour
 		isCollidingRight = false;
 		isCollidingLeft = false;
 		isGrabingEdge = false;
+	}
+
+	public void Start()
+	{
+		
 	}
 
 	public void updateState()

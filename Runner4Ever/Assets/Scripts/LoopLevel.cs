@@ -40,6 +40,15 @@ public class LoopLevel : MonoBehaviour
 
 	public void Update()
 	{	
+		if(player == null)
+		{
+			player =  GameObject.FindGameObjectWithTag("Player");
+			if(player == null)
+			{
+				return;
+			}
+		}
+
 		int xPlayer = (int)player.GetComponent<Transform>().position.x;
 		int yPlayer = (int)player.GetComponent<Transform>().position.y;
 
