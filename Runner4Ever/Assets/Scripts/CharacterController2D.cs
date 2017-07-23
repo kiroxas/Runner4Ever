@@ -168,7 +168,7 @@ public class CharacterController2D : NetworkBehaviour
 
 	public override void OnStartLocalPlayer()
     {
-        Debug.Log("Start Local");
+        gameObject.AddComponent(typeof(LocalPlayer));
     }
 
 	public void Awake()

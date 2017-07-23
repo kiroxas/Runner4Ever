@@ -15,7 +15,7 @@ public class CameraFollow : MonoBehaviour {
 	{
 		if(target == null)
 		{
-			GameObject player = GameObject.FindGameObjectWithTag("Player");
+			LocalPlayer player = (LocalPlayer)GameObject.FindObjectOfType(typeof(LocalPlayer));
 			if(player != null)
 			{
 				target = player.GetComponent<Transform>();
