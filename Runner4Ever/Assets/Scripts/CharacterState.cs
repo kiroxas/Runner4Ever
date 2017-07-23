@@ -90,8 +90,11 @@ public class CharacterState : MonoBehaviour
 			Debug.DrawRay(rayVector, dir * groundedCastDistance, Color.green);
 			if (raycastHit)
 			{
-				addCollider(raycastHit.collider);
-				isGrounded = true;
+				if(raycastHit != myCollider) // Not with yourself, dummy
+				{
+					addCollider(raycastHit.collider);
+					isGrounded = true;
+				}
 			}
 		
 			dir.x = 0.0f;
@@ -100,8 +103,11 @@ public class CharacterState : MonoBehaviour
 			Debug.DrawRay(rayVector, dir * groundedCastDistance, Color.green);
 			if (raycastHit)
 			{
-				addCollider(raycastHit.collider);
-				isGrounded = true;
+				if(raycastHit != myCollider) // Not with yourself, dummy
+				{
+					addCollider(raycastHit.collider);
+					isGrounded = true;
+				}
 			}
 		}
 
@@ -110,7 +116,7 @@ public class CharacterState : MonoBehaviour
 			Vector2 rayVector = new Vector2(myCollider.bounds.min.x + i * step, myCollider.bounds.min.y);
 			var raycastHit = Physics2D.Raycast(rayVector, rayDirection, groundedCastDistance, PlatformMask);
 			Debug.DrawRay(rayVector, rayDirection * groundedCastDistance, Color.green);
-			if (raycastHit)
+			if (raycastHit && raycastHit.collider != myCollider)
 			{
 				addCollider(raycastHit.collider);
 				isGrounded = true;
@@ -150,7 +156,7 @@ public class CharacterState : MonoBehaviour
 				var raycastHit = Physics2D.Raycast(rayVector, rayDirection, rcCastDistance, PlatformMask);
 				Debug.DrawRay(rayVector, rayDirection * rcCastDistance, Color.green);
 
-				collided |= raycastHit;
+				collided |= (raycastHit  && raycastHit.collider != myCollider);
 
 				if (!raycastHit && collided)
 				{
@@ -173,7 +179,7 @@ public class CharacterState : MonoBehaviour
 				var raycastHit = Physics2D.Raycast(rayVector, rayDirection, rcCastDistance, PlatformMask);
 				Debug.DrawRay(rayVector, rayDirection * rcCastDistance, Color.green);
 
-				collided |= raycastHit;
+				collided |= (raycastHit  && raycastHit.collider != myCollider);
 
 				if (!raycastHit && collided)
 				{
@@ -253,7 +259,7 @@ public class CharacterState : MonoBehaviour
 			Vector2 rayVector = new Vector2(leftX , myCollider.bounds.min.y + yRightColDetDelta);
 			var raycastHit = Physics2D.Raycast(rayVector, dir, rcCastDistance, PlatformMask);
 			Debug.DrawRay(rayVector, dir * rcCastDistance, Color.red);
-			if (raycastHit)
+			if (raycastHit && raycastHit.collider != myCollider)
 			{
 				addCollider(raycastHit.collider);
 				isCollidingLeft = true;
@@ -265,7 +271,7 @@ public class CharacterState : MonoBehaviour
 			Vector2 rayVector = new Vector2(leftX , myCollider.bounds.min.y + yRightColDetDelta + i * step);
 			var raycastHit = Physics2D.Raycast(rayVector, rayDirection, rcCastDistance, PlatformMask);
 			Debug.DrawRay(rayVector, rayDirection * rcCastDistance, Color.red);
-			if (raycastHit)
+			if (raycastHit && raycastHit.collider != myCollider)
 			{
 				isCollidingLeft = true;
 				addCollider(raycastHit.collider);
@@ -291,7 +297,7 @@ public class CharacterState : MonoBehaviour
 			Vector2 rayVector = new Vector2(rightX , myCollider.bounds.min.y + yRightColDetDelta);
 			var raycastHit = Physics2D.Raycast(rayVector, dir, rcCastDistance, PlatformMask);
 			Debug.DrawRay(rayVector, dir * rcCastDistance, Color.black);
-			if (raycastHit)
+			if (raycastHit && raycastHit.collider != myCollider)
 			{
 				isCollidingRight = true;
 				addCollider(raycastHit.collider);
@@ -303,7 +309,7 @@ public class CharacterState : MonoBehaviour
 			Vector2 rayVector = new Vector2(rightX , myCollider.bounds.min.y + yRightColDetDelta + i * step);
 			var raycastHit = Physics2D.Raycast(rayVector, rayDirection, rcCastDistance, PlatformMask);
 			Debug.DrawRay(rayVector, rayDirection * rcCastDistance, Color.black);
-			if (raycastHit)
+			if (raycastHit && raycastHit.collider != myCollider)
 			{
 				isCollidingRight = true;
 				addCollider(raycastHit.collider);
