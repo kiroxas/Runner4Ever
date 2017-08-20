@@ -113,6 +113,9 @@ public class CharacterController2D : MonoBehaviour
 	public int maxHealth = 10;
 	private int health = 10;
 
+	private float dashIn = 0.0f;
+	public float dashTime = 1.0f;
+
 	public TouchZone touchzone = TouchZone.EntireScreen;
 
 	public int getCurrentJumpCount()
@@ -282,8 +285,11 @@ public class CharacterController2D : MonoBehaviour
 			consecutiveJumps = 1;
 		}
 
-		updateJumpIn();
+		updateActionTimer(ref jumpIn);
+		updateActionTimer(ref dashIn);
+
 		animator.SetBool("isJumping", jumpIn > 0);
+		animator.SetBool("isSliding", dashIn > 0);
 		
 	}
 
@@ -297,14 +303,14 @@ public class CharacterController2D : MonoBehaviour
 			LeanFingerHeld.OnFingerHeldUp += OnHoldUp;
 	}
 
-	private void updateJumpIn()
+	private void updateActionTimer(ref float variable)
 	{
-		if(jumpIn > 0)
+		if(variable > 0)
 		{
-			jumpIn -= Time.deltaTime;
-			if(jumpIn < 0)
+			variable -= Time.deltaTime;
+			if(variable < 0)
 			{
-				jumpIn = 0;
+				variable = 0;
 				
 			}
 		}
@@ -431,6 +437,8 @@ public class CharacterController2D : MonoBehaviour
 	public void dash()
 	{	
 		_actualSpeed *= dashSpeedMul;
+		animator.SetBool("isSliding", true);
+		dashIn = dashTime;
 	}
 
 	public void slide()
