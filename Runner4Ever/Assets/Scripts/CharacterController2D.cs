@@ -130,7 +130,7 @@ public class CharacterController2D : MonoBehaviour
 
 	private int getMaxJumps()
 	{
-		return jumpStrategy == JumpStrat.NormalJump ? 1 : 2;
+		return  jumpRes == JumpRestrictions.Anywhere ? 9999 : jumpStrategy == JumpStrat.NormalJump ? 1 : 2;
 	}
 
 	public bool collidingRight()
@@ -447,10 +447,8 @@ public class CharacterController2D : MonoBehaviour
 
 	public void jump(float magnitude)
 	{
-		Debug.Log("Jump");
 		if(getMaxJumps() <= consecutiveJumps)
 		{
-			Debug.Log("Nope");
 			return;
 		}
 
