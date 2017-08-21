@@ -560,7 +560,8 @@ public class CharacterController2D : MonoBehaviour
 
 	private void makeItRunRightOnGround()
 	{
-		if(((RunDirectionOnGround)runDirStack.Peek() == RunDirectionOnGround.AlwaysRight && grounded() && _runSpeed < 0)
+		if( !wallSticking() &&
+			((RunDirectionOnGround)runDirStack.Peek() == RunDirectionOnGround.AlwaysRight && grounded() && _runSpeed < 0)
 		|| ((RunDirectionOnGround)runDirStack.Peek() == RunDirectionOnGround.AlwaysLeft && grounded() && _runSpeed > 0))
 		{
 			changeDirection();
