@@ -160,7 +160,7 @@ public class CharacterController2D : MonoBehaviour
 
 	public bool grounded()
 	{
-		return state.isGrounded;
+		return state.isGrounded || wallSticking();
 	}
 
 	public float runspeed()
