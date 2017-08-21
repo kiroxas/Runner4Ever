@@ -280,10 +280,10 @@ public class CharacterController2D : MonoBehaviour
 			//Vector2 point = new Vector2(myCollider.bounds.center.x, myCollider.bounds.center.y + 1.5f);
 			//Debug.DrawLine(myCollider.bounds.center, point, Color.black, 20);
 		}
-		else if(wallSticking() && !jumped)
-		{
-			consecutiveJumps = 1;
-		}
+		//else if(wallSticking() && !jumped)
+		//{
+			//consecutiveJumps = 1;
+		//}
 
 		updateActionTimer(ref jumpIn);
 		updateActionTimer(ref dashIn);
