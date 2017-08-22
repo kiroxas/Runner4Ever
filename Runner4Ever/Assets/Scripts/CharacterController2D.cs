@@ -116,6 +116,11 @@ public class CharacterController2D : MonoBehaviour
 	private float dashIn = 0.0f;
 	public float dashTime = 1.0f;
 
+	private float xColliderSize = 0.0f;
+	private float yColliderSize = 0.0f;
+
+	private Vector2 colliderOffset;
+
 	public TouchZone touchzone = TouchZone.EntireScreen;
 
 	public int getCurrentJumpCount()
@@ -192,6 +197,10 @@ public class CharacterController2D : MonoBehaviour
 
 		gravity = new Stack();
 		gravity.Push(gravityScale);
+
+		xColliderSize = GetComponent<BoxCollider2D>().size.x;
+		yColliderSize = GetComponent<BoxCollider2D>().size.y;
+		colliderOffset = GetComponent<BoxCollider2D>().offset;
 	}
 
 	private void lockYPosition()
@@ -286,7 +295,11 @@ public class CharacterController2D : MonoBehaviour
 		//}
 
 		updateActionTimer(ref jumpIn);
-		updateActionTimer(ref dashIn);
+		if(updateActionTimer(ref dashIn))
+		{
+			GetComponent<BoxCollider2D>().size = new Vector2(xColliderSize, yColliderSize);
+			GetComponent<BoxCollider2D>().offset = new Vector2(colliderOffset.x, colliderOffset.y);
+		}
 
 		animator.SetBool("isJumping", jumpIn > 0);
 		animator.SetBool("isSliding", dashIn > 0);
@@ -303,7 +316,7 @@ public class CharacterController2D : MonoBehaviour
 			LeanFingerHeld.OnFingerHeldUp += OnHoldUp;
 	}
 
-	private void updateActionTimer(ref float variable)
+	private bool updateActionTimer(ref float variable)
 	{
 		if(variable > 0)
 		{
@@ -311,9 +324,11 @@ public class CharacterController2D : MonoBehaviour
 			if(variable < 0)
 			{
 				variable = 0;
-				
+				return true;
 			}
 		}
+
+		return false;
 	}
 		
 	protected virtual void OnDisable()
@@ -439,6 +454,8 @@ public class CharacterController2D : MonoBehaviour
 		_actualSpeed *= dashSpeedMul;
 		animator.SetBool("isSliding", true);
 		dashIn = dashTime;
+		GetComponent<BoxCollider2D>().size = new Vector2(xColliderSize, yColliderSize / 2);
+		GetComponent<BoxCollider2D>().offset = new Vector2(colliderOffset.x, colliderOffset.y - (yColliderSize / 4));
 	}
 
 	public void slide()
