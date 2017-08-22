@@ -18,15 +18,15 @@ namespace FileUtils
 
 		public int index = 0;
 		
-		public List<List<int>> loaded{ get; set;}
+		public List<List<char>> loaded{ get; set;}
 		
-		public List<int> getOneRandom()
+		public List<char> getOneRandom()
 		{
 			index = Random.Range(0, loaded.Count);
 			return loaded[index];
 		}
 
-		public List<int> getNextOne()
+		public List<char> getNextOne()
 		{
 			index++;
 			if(index >= loaded.Count)
@@ -65,6 +65,10 @@ public class BasicLevelGenerator : MonoBehaviour
 	public GameObject[] objectTiles;
 	public GameObject[] hurtTiles;
 	public GameObject[] enemies;
+	public GameObject[] disapearingTile;
+	public GameObject[] escalator;
+	public GameObject[] movingTile;
+	public GameObject[] killMovingTile;
 
 	FileUtils.FileList loadFileList(string folder)
 	{
@@ -84,21 +88,21 @@ public class BasicLevelGenerator : MonoBehaviour
 
 		foreach(string f in list.files)
 		{
-			list.loaded.Add(toInt(loadTileGroup(folder, f)));	
+			list.loaded.Add(toChar(loadTileGroup(folder, f)));	
 		}
 		
 		return list;
 	}
 	
-	List<int> toInt(string[] lines)
+	List<char> toChar(string[] lines)
 	{
-		List<int> list = new List<int>();
+		List<char> list = new List<char>();
 		
 		foreach(string s in lines)
 		{
 			foreach(char c in s)
 			{
-				list.Add((int)Char.GetNumericValue(c));
+				list.Add(c);
 			}
 		}
 		
@@ -116,7 +120,24 @@ public class BasicLevelGenerator : MonoBehaviour
 		 return lines;
 	}
 
-	void createSection(List<int> toCreate, int xStart, int yStart)
+	void createTileType(GameObject[] tiles, float xPos, float yPos)
+	{
+		if(tiles.Length == 0)
+		{
+			Debug.LogError("Do not have any prefabs set in createTileType");
+			return;
+		}
+		GameObject instance = tiles[Random.Range(0, tiles.Length)];
+
+		if(instance == null)
+		{
+			Debug.LogError("You have a null instance in createTileType");
+			return;
+		}
+		UnityEngine.Object.Instantiate(instance, new Vector3(xPos, yPos, 0),  Quaternion.identity);
+	}
+
+	void createSection(List<char> toCreate, int xStart, int yStart)
 	{
 		
 		int index = 0;
@@ -124,122 +145,59 @@ public class BasicLevelGenerator : MonoBehaviour
 		{
 			for(int x = 0; x < xTilePerSection; ++x)
 			{
-				int tileType = toCreate[index];
+				char tileType = toCreate[index];
 				float yPos = yStart + (yTilePerSection - y) * tileHeight;
 				float xPos = xStart + x * tileWidth;
 
-				if(tileType == 1) // ground tile
+				if(tileType == '1') // ground tile
 				{
-					if(landTiles.Length == 0)
-					{
-						Debug.LogError("Do not have any prefabs set in landTiles");
-						return;
-					}
-					GameObject instance = landTiles[Random.Range(0, landTiles.Length)];
-
-					if(instance == null)
-					{
-						Debug.LogError("You have a null instance in landTiles");
-						return;
-					}
-					UnityEngine.Object.Instantiate(instance, new Vector3(xPos, yPos, 0),  Quaternion.identity);
+					createTileType(landTiles, xPos, yPos);
 				} 
-				else if (tileType == 3) // random object
+				else if (tileType == '3') // random object
 				{
-					if(objectTiles.Length == 0)
-					{
-						Debug.LogError("Do not have any prefabs set in objectTiles");
-						return;
-					}
-					GameObject instance = objectTiles[Random.Range(0, objectTiles.Length)];
-
-
-					if(instance == null)
-					{
-						Debug.LogError("You have a null instance in objectTiles");
-						return;
-					}
-					UnityEngine.Object.Instantiate(instance, new Vector3(xPos, yPos, 0),  Quaternion.identity);
+					createTileType(objectTiles, xPos, yPos);
 				}
-				else if (tileType == 2) // water tile
+				else if (tileType == '2') // water tile
 				{
-					if(waterTiles.Length == 0)
-					{
-						Debug.LogError("Do not have any prefabs set in waterTiles");
-						return;
-					}
-					GameObject instance = waterTiles[Random.Range(0, waterTiles.Length)];
-
-
-					if(instance == null)
-					{
-						Debug.LogError("You have a null instance in waterTiles");
-						return;
-					}
-					UnityEngine.Object.Instantiate(instance, new Vector3(xPos, yPos, 0),  Quaternion.identity);
+					createTileType(waterTiles, xPos, yPos);
 				}
-				else if(tileType == 4) // spawn player
+				else if(tileType == '4') // spawn player
 				{
 					createPlayer(xPos, yPos);
 					createCheckpoint(xPos, yPos);
 				}
-				else if(tileType == 5)
+				else if(tileType == '5')
 				{
 					createCheckpoint(xPos, yPos);
 				}
-				else if(tileType == 6) // tile that inverse wall jump
+				else if(tileType == '6') // tile that inverse wall jump
 				{
-					if(inverseLandTiles.Length == 0)
-					{
-						Debug.LogError("Do not have any prefabs set in inverseLandTiles");
-						return;
-					}
-					GameObject instance = inverseLandTiles[Random.Range(0, inverseLandTiles.Length)];
-
-
-					if(instance == null)
-					{
-						Debug.LogError("You have a null instance in inverseLandTiles");
-						return;
-					}
-					UnityEngine.Object.Instantiate(instance, new Vector3(xPos, yPos, 0),  Quaternion.identity);
+					createTileType(inverseLandTiles, xPos, yPos);
 				}
-				else if(tileType == 7) // tile that hurt player
+				else if(tileType == '7') // tile that hurt player
 				{
-					if(hurtTiles.Length == 0)
-					{
-						Debug.LogError("Do not have any prefabs set in hurtTiles");
-						return;
-					}
-					GameObject instance = hurtTiles[Random.Range(0, hurtTiles.Length)];
-
-
-					if(instance == null)
-					{
-						Debug.LogError("You have a null instance in hurtTiles");
-						return;
-					}
-					UnityEngine.Object.Instantiate(instance, new Vector3(xPos, yPos, 0),  Quaternion.identity);
+					createTileType(hurtTiles, xPos, yPos);
 				}
-				else if(tileType == 8) // enemy
+				else if(tileType == '8') // enemy
 				{
-					if(enemies.Length == 0)
-					{
-						Debug.LogError("Do not have any prefabs set in enemies");
-						return;
-					}
-					GameObject instance = enemies[Random.Range(0, enemies.Length)];
-
-
-					if(instance == null)
-					{
-						Debug.LogError("You have a null instance in enemies");
-						return;
-					}
-					UnityEngine.Object.Instantiate(instance, new Vector3(xPos, yPos, 0),  Quaternion.identity);
+					createTileType(enemies, xPos, yPos);
 				}
-
-				
+				else if(tileType == '9') // disapearing Tile
+				{
+					createTileType(disapearingTile, xPos, yPos);
+				}
+				else if(tileType == 'a') // escalator
+				{
+					createTileType(escalator, xPos, yPos);
+				}
+				else if(tileType == 'b') // moving tile
+				{
+					createTileType(movingTile, xPos, yPos);
+				}
+				else if(tileType == 'c') // kill moving tile
+				{
+					createTileType(killMovingTile, xPos, yPos);
+				}
 
 				++index;
 			}
@@ -262,19 +220,11 @@ public class BasicLevelGenerator : MonoBehaviour
 	{
 		FileUtils.FileList block = new FileUtils.FileList();
 		
-
-
 		block = loadFileList("LevelGeneration/");
-
-		Debug.Log("blocks loaded " + block.loaded.Count);
-		for(int i = 0; i < block.loaded.Count; ++i)
-		{
-			Debug.Log(block.loaded[i].Count);
-		}
 
 		for(int x = 0; x < tileGroupsNumber; ++x)
 		{
-			List<int> layout;
+			List<char> layout;
 			
 			if(genStyle == GenerationStyle.Random)
 			{
