@@ -85,8 +85,20 @@ public class CharacterState : MonoBehaviour
 			Debug.DrawRay(rayVector, dir * groundedCastDistance, Color.green);
 			if (raycastHit)
 			{
-				addCollider(raycastHit.collider);
-				isGrounded = true;
+				var effector2D = raycastHit.collider.GetComponent<PlatformEffector2D>();
+				if(effector2D != null)
+				{
+					if(effector2D.useOneWay && myCollider.bounds.min.y > raycastHit.collider.bounds.center.y ) // Only allowed if above
+					{
+						addCollider(raycastHit.collider);
+						isGrounded = true;
+					}
+				}
+				else
+				{
+					addCollider(raycastHit.collider);
+					isGrounded = true;
+				}
 			}
 		
 			dir.x = 0.0f;
@@ -95,8 +107,20 @@ public class CharacterState : MonoBehaviour
 			Debug.DrawRay(rayVector, dir * groundedCastDistance, Color.green);
 			if (raycastHit)
 			{
-				addCollider(raycastHit.collider);
-				isGrounded = true;
+				var effector2D = raycastHit.collider.GetComponent<PlatformEffector2D>();
+				if(effector2D != null)
+				{
+					if(effector2D.useOneWay && myCollider.bounds.min.y > raycastHit.collider.bounds.center.y ) // Only allowed if above
+					{
+						addCollider(raycastHit.collider);
+						isGrounded = true;
+					}
+				}
+				else
+				{
+					addCollider(raycastHit.collider);
+					isGrounded = true;
+				}
 			}
 		}
 
@@ -107,8 +131,20 @@ public class CharacterState : MonoBehaviour
 			Debug.DrawRay(rayVector, rayDirection * groundedCastDistance, Color.green);
 			if (raycastHit)
 			{
-				addCollider(raycastHit.collider);
-				isGrounded = true;
+				var effector2D = raycastHit.collider.GetComponent<PlatformEffector2D>();
+				if(effector2D != null)
+				{
+					if(effector2D.useOneWay && myCollider.bounds.min.y > raycastHit.collider.bounds.center.y ) // Only allowed if above
+					{
+						addCollider(raycastHit.collider);
+						isGrounded = true;
+					}
+				}
+				else
+				{
+					addCollider(raycastHit.collider);
+					isGrounded = true;
+				}
 			}
 		}
 
