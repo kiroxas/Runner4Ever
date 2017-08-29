@@ -220,7 +220,14 @@ public class CharacterController2D : MonoBehaviour
 
 	private bool shallNullifySpeed()
 	{
-		return (_runSpeed > 0 && collidingRight()) || (_runSpeed < 0 && collidingLeft());
+		bool answer =  (_runSpeed > 0 && _actualSpeed > 0 && collidingRight()) || (_runSpeed < 0 && _actualSpeed < 0 && collidingLeft());
+
+		if(answer)
+		{
+			Debug.Log("nullify speed " + _runSpeed + " " + _actualSpeed);
+		}
+
+		return answer;
 	}
 
 	public bool isDead()
@@ -282,7 +289,7 @@ public class CharacterController2D : MonoBehaviour
 			_lastSpeed = xSpeed;
 		}
 
-		if(grounded() && !jumped)
+		if(grounded() && !jumped && yVelocity < 0.1f)
 		{
 			consecutiveJumps = 0;
 			//Collider2D myCollider = GetComponent<Collider2D>();
@@ -344,7 +351,7 @@ public class CharacterController2D : MonoBehaviour
 
 	private void updateSpeed()
 	{
-		float percent = wallSticking() ? 1.0f : Time.deltaTime * accelerationSmooth;
+		float percent = wallSticking() ? Time.deltaTime * accelerationSmooth : Time.deltaTime * accelerationSmooth;
 		_actualSpeed = Mathf.Lerp(_actualSpeed, _runSpeed, percent);
 	}
 
@@ -456,6 +463,35 @@ public class CharacterController2D : MonoBehaviour
 		dashIn = dashTime;
 		GetComponent<BoxCollider2D>().size = new Vector2(xColliderSize, yColliderSize / 2);
 		GetComponent<BoxCollider2D>().offset = new Vector2(colliderOffset.x, colliderOffset.y - (yColliderSize / 4));
+	}
+
+	public void inverseXVelocity(float magnitude, float max)
+	{
+		float speed = _actualSpeed == 0 ? _runSpeedBeforeStop : _actualSpeed;
+		_actualSpeed = speed * -1 * magnitude;
+		
+		_actualSpeed = Mathf.Clamp(_actualSpeed, -max, max);
+
+		rb.velocity = new Vector2(_actualSpeed, rb.velocity.y);
+		run();
+	}
+
+	public void inverseYVelocity(float magnitude, float max)
+	{
+		float ySpeed =  rb.velocity.y * -1 * magnitude;
+
+		ySpeed = Mathf.Clamp(ySpeed, -max, max);
+
+		rb.velocity = new Vector2(rb.velocity.x, ySpeed);
+		run();
+		consecutiveJumps = 1;
+	}
+
+
+	public void inverseVelocity(float magnitude, float maxX, float maxY)
+	{
+		inverseXVelocity(magnitude, maxX);
+		inverseYVelocity(magnitude, maxY);
 	}
 
 	public void slide()
@@ -577,9 +613,10 @@ public class CharacterController2D : MonoBehaviour
 
 	private void makeItRunRightOnGround()
 	{
+
 		if( !wallSticking() &&
-			((RunDirectionOnGround)runDirStack.Peek() == RunDirectionOnGround.AlwaysRight && grounded() && _runSpeed < 0)
-		|| ((RunDirectionOnGround)runDirStack.Peek() == RunDirectionOnGround.AlwaysLeft && grounded() && _runSpeed > 0))
+			((RunDirectionOnGround)runDirStack.Peek() == RunDirectionOnGround.AlwaysRight && grounded() && _runSpeed < 0 )
+		|| ((RunDirectionOnGround)runDirStack.Peek() == RunDirectionOnGround.AlwaysLeft && grounded() && _runSpeed > 0 ))
 		{
 			changeDirection();
 		}
