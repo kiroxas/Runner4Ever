@@ -16,7 +16,6 @@ public class CharacterController2D : MonoBehaviour
 	{
 		None,
 		Jump,
-		HighJump,
 		Accelerate,
 		Decelerate,
 		Dash,
@@ -287,7 +286,7 @@ public class CharacterController2D : MonoBehaviour
 		{
 			if(canJump())
 			{
-				jump(jumpMagnitude);
+				jump(selectJumpMagnitude());
 			}
 		}
 
@@ -421,6 +420,11 @@ public class CharacterController2D : MonoBehaviour
 		}
 	}
 
+	float selectJumpMagnitude()
+	{
+		return getCurrentJumpCount() == 0 ? jumpMagnitude : highJumpMagnitude;
+	}
+
 	public void doAction(Action action)
 	{
 		if(stopped()) // Stopped
@@ -430,8 +434,7 @@ public class CharacterController2D : MonoBehaviour
 
 		switch(action)
 		{
-			case Action.Jump : jump(jumpMagnitude); break;
-			case Action.HighJump : jump(highJumpMagnitude); break;
+			case Action.Jump : jump(selectJumpMagnitude()); break;
 			case Action.Accelerate : accelerate(); break;
 			case Action.Decelerate : decelerate(); break;
 			case Action.Dash : dash(); break;
