@@ -110,6 +110,8 @@ public class CharacterController2D : MonoBehaviour
 	public Stack gravity;
 	public float timeBetweenJumps = 0.25f;
 	private float jumpIn = 0.0f;
+	private float lastJumpFailedAttempt = 0.0f;
+	public float jumpBufferTime = 0.2f;
 	public int maxHealth = 10;
 	private int health = 10;
 
@@ -222,11 +224,6 @@ public class CharacterController2D : MonoBehaviour
 	{
 		bool answer =  (_runSpeed > 0 && _actualSpeed > 0 && collidingRight()) || (_runSpeed < 0 && _actualSpeed < 0 && collidingLeft());
 
-		if(answer)
-		{
-			Debug.Log("nullify speed " + _runSpeed + " " + _actualSpeed);
-		}
-
 		return answer;
 	}
 
@@ -255,11 +252,21 @@ public class CharacterController2D : MonoBehaviour
 			return;
 		}
 
+		// ------------ Update all states and variables -------------------------------
 		state.updateState();
 		makeItRunRightOnGround();
 		putCorrectGravityScale();
 		updateSpeed();
 
+		updateActionTimer(ref jumpIn);
+		updateActionTimer(ref lastJumpFailedAttempt);
+		if(updateActionTimer(ref dashIn))
+		{
+			GetComponent<BoxCollider2D>().size = new Vector2(xColliderSize, yColliderSize);
+			GetComponent<BoxCollider2D>().offset = new Vector2(colliderOffset.x, colliderOffset.y);
+		}
+
+		// ------------------------------- Frame actions -------------------------------
 		bool jumped = upSpeed > 0;
 		float yVelocity = rb.velocity.y;
 
@@ -276,6 +283,13 @@ public class CharacterController2D : MonoBehaviour
 			yVelocity = 0;
 			lockYPosition();
 		}
+		else if(lastJumpFailedAttempt > 0.0f) // Time buffer, if we pressed jump not so long ago, and now we can jump, let's jump
+		{
+			if(canJump())
+			{
+				jump(jumpMagnitude);
+			}
+		}
 
 		float xSpeed = shallNullifySpeed() ? 0.0f : _actualSpeed;
 		
@@ -289,24 +303,12 @@ public class CharacterController2D : MonoBehaviour
 			_lastSpeed = xSpeed;
 		}
 
-		if(grounded() && !jumped && yVelocity < 0.1f)
+		if(grounded() && !jumped)
 		{
 			consecutiveJumps = 0;
-			//Collider2D myCollider = GetComponent<Collider2D>();
-			//Vector2 point = new Vector2(myCollider.bounds.center.x, myCollider.bounds.center.y + 1.5f);
-			//Debug.DrawLine(myCollider.bounds.center, point, Color.black, 20);
 		}
-		//else if(wallSticking() && !jumped)
-		//{
-			//consecutiveJumps = 1;
-		//}
 
-		updateActionTimer(ref jumpIn);
-		if(updateActionTimer(ref dashIn))
-		{
-			GetComponent<BoxCollider2D>().size = new Vector2(xColliderSize, yColliderSize);
-			GetComponent<BoxCollider2D>().offset = new Vector2(colliderOffset.x, colliderOffset.y);
-		}
+
 
 		animator.SetBool("isJumping", jumpIn > 0);
 		animator.SetBool("isSliding", dashIn > 0);
@@ -498,41 +500,57 @@ public class CharacterController2D : MonoBehaviour
 	{
 	}
 
-	public void jump(float magnitude)
+	public bool canJump()
 	{
-		if(getMaxJumps() <= consecutiveJumps)
+		if(getMaxJumps() <= getCurrentJumpCount())
 		{
-			return;
+			return false;
+		}
+		else
+		{
+			return true;
 		}
 
-		if(consecutiveJumps > 0)
+		if(getCurrentJumpCount() > 0)
 		{
-			Debug.Log("Second Jump");
-			// Second jump, no restriction
+			return true;
 		}
 		else if(grabingEdge() == false)
 		{
-		switch((JumpRestrictions)jumpState.Peek())
-		{
-			case JumpRestrictions.OnGround :
-				if(!grounded() && !wallSticking())
-				{
-					return;
-				}
-				break;
-			case JumpRestrictions.Never : return;
-			case JumpRestrictions.Anywhere : break;
-		}
-		}
-
-		if((JumpDirectionOnWallOrEdge)jumpWallStack.Peek() == JumpDirectionOnWallOrEdge.Inverse && (grabingEdge() || wallSticking()))
-		{
-			changeDirection();
+			switch((JumpRestrictions)jumpState.Peek())
+			{
+				case JumpRestrictions.OnGround :
+					if(!grounded() && !wallSticking())
+					{
+						return false;
+					}
+					break;
+				case JumpRestrictions.Never : return false;
+				case JumpRestrictions.Anywhere : break;
+			}
 		}
 
-		consecutiveJumps++;
-		upSpeed = magnitude;
-		jumpIn = timeBetweenJumps;
+		return true;
+	}
+
+	public void jump(float magnitude)
+	{
+		if(canJump())
+		{		
+			if((JumpDirectionOnWallOrEdge)jumpWallStack.Peek() == JumpDirectionOnWallOrEdge.Inverse && (grabingEdge() || wallSticking()))
+			{
+				changeDirection();
+			}
+
+			consecutiveJumps++;
+			upSpeed = magnitude;
+			jumpIn = timeBetweenJumps;
+			lastJumpFailedAttempt = 0.0f;
+		}
+		else
+		{
+			lastJumpFailedAttempt = jumpBufferTime;
+		}
 	}
 
 	public void accelerate()
