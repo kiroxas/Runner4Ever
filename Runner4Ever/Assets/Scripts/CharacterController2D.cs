@@ -5,6 +5,12 @@ using System;
 
 public class CharacterController2D : MonoBehaviour
 {
+	public enum MovementState
+	{
+		Rigidbody,
+		Transform
+	}	
+
 	public enum TouchZone
 	{
 		EntireScreen,
@@ -93,6 +99,7 @@ public class CharacterController2D : MonoBehaviour
 
 	public Animator animator;
 
+	private Transform transform;
 	private Rigidbody2D rb;
 	private bool facingRight = true;
 
@@ -125,6 +132,28 @@ public class CharacterController2D : MonoBehaviour
 	private Vector2 colliderOffset;
 
 	public TouchZone touchzone = TouchZone.EntireScreen;
+
+	public MovementState movstate;
+
+	bool isJumping()
+	{
+		return movstate == MovementState.Transform;
+	}
+
+	void changeMovementState()
+	{
+		if(movstate == MovementState.Rigidbody)
+		{
+			rb.velocity = new Vector2(0.0f, 0.0f); // moving it manually
+			charc.startJump(transform.position);
+			movstate = MovementState.Transform;
+		}
+		else
+		{
+			charc.endJump();
+			movstate = MovementState.Rigidbody;
+		}
+	}
 
 	public int getCurrentJumpCount()
 	{
@@ -180,10 +209,13 @@ public class CharacterController2D : MonoBehaviour
 	{
 		rb = GetComponent<Rigidbody2D>();
 		state = GetComponent<CharacterState>();
+		transform = GetComponent<Transform>();
+		charc = GetComponent<JumpCharacs>();
 	}
 
 	public void Start()
 	{
+		movstate = MovementState.Rigidbody;
 		health = maxHealth;
 		_runSpeed = runSpeed;
 		_actualSpeed = 0;
@@ -295,7 +327,33 @@ public class CharacterController2D : MonoBehaviour
 
 		float xSpeed = shallNullifySpeed() ? 0.0f : _actualSpeed;
 		
-		rb.velocity = new Vector2(xSpeed, yVelocity);
+		if(jumped && !isJumping())
+		{
+			/*if(charc.jumpEnded() == false)
+			{
+				changeMovementState();	
+			}*/
+
+			changeMovementState();
+		}
+
+		if(isJumping() && charc.jumpEnded() == false && grounded())
+		{
+			changeMovementState();
+		}
+		else if(isJumping() && charc.jumpEnded())
+		{
+			changeMovementState();
+		}
+
+		if(isJumping())
+		{
+			transform.position += charc.getNext();
+		}
+		else
+		{
+			rb.velocity = new Vector2(xSpeed, yVelocity);
+		}
 
 		if(_lastSpeed != xSpeed && animator)
 		{
@@ -315,6 +373,8 @@ public class CharacterController2D : MonoBehaviour
 		animator.SetBool("isSliding", dashIn > 0);
 		
 	}
+
+
 
 	protected virtual void OnEnable()
 	{
