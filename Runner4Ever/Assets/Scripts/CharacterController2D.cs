@@ -145,11 +145,13 @@ public class CharacterController2D : MonoBehaviour
 		if(movstate == MovementState.Rigidbody)
 		{
 			rb.velocity = new Vector2(0.0f, 0.0f); // moving it manually
+			rb.bodyType = RigidbodyType2D.Kinematic;
 			charc.startJump(transform.position);
 			movstate = MovementState.Transform;
 		}
 		else
 		{
+			rb.bodyType = RigidbodyType2D.Dynamic;
 			charc.endJump();
 			movstate = MovementState.Rigidbody;
 		}
@@ -333,11 +335,10 @@ public class CharacterController2D : MonoBehaviour
 			{
 				changeMovementState();	
 			}*/
-
 			changeMovementState();
 		}
 
-		if(isJumping() && charc.jumpEnded() == false && grounded())
+		if(isJumping() && collidingSide())
 		{
 			changeMovementState();
 		}
