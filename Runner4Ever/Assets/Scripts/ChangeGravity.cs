@@ -16,7 +16,7 @@ public class ChangeGravity : MonoBehaviour
 		
 	}
 
-	void OnCollisionEnter2D(Collider2D other) 
+	void OnTriggerEnter2D(Collider2D other) 
 	{
         var state = other.GetComponent<CharacterController2D>();
         if(state != null && other.gameObject.tag == "Player")
@@ -25,7 +25,7 @@ public class ChangeGravity : MonoBehaviour
         }
     }
 
-    void OnCollisionExit2D(Collider2D other) 
+    void OnTriggerExit2D(Collider2D other) 
 	{
         var state = other.GetComponent<CharacterController2D>();
         if(state != null && other.gameObject.tag == "Player")

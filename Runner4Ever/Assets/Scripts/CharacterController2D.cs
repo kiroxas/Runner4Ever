@@ -216,7 +216,8 @@ public class CharacterController2D : MonoBehaviour
 
 	private void putCorrectGravityScale()
 	{
-		rb.gravityScale = rb.velocity.y < 0 ? (float)gravity.Peek() : gravityScale; // change gravity only when falling (for now)
+		//rb.gravityScale = rb.velocity.y < 0 ? (float)gravity.Peek() : gravityScale; // change gravity only when falling (for now)
+		rb.gravityScale = (float)gravity.Peek();
 	}
 
 	private bool shallNullifySpeed()
@@ -306,7 +307,6 @@ public class CharacterController2D : MonoBehaviour
 		{
 			consecutiveJumps = 0;
 		}
-
 
 
 		animator.SetBool("isJumping", jumpIn > 0);
@@ -505,6 +505,17 @@ public class CharacterController2D : MonoBehaviour
 
 	public bool canJump()
 	{
+		JumpRestrictions jump = (JumpRestrictions)jumpState.Peek();
+		if(jump == JumpRestrictions.Anywhere)
+		{
+			return true;
+		}
+		else if(jump == JumpRestrictions.Never)
+		{
+			return false;
+		}
+
+
 		if(getMaxJumps() <= getCurrentJumpCount())
 		{
 			return false;
@@ -512,25 +523,6 @@ public class CharacterController2D : MonoBehaviour
 		else
 		{
 			return true;
-		}
-
-		if(getCurrentJumpCount() > 0)
-		{
-			return true;
-		}
-		else if(grabingEdge() == false)
-		{
-			switch((JumpRestrictions)jumpState.Peek())
-			{
-				case JumpRestrictions.OnGround :
-					if(!grounded() && !wallSticking())
-					{
-						return false;
-					}
-					break;
-				case JumpRestrictions.Never : return false;
-				case JumpRestrictions.Anywhere : break;
-			}
 		}
 
 		return true;
