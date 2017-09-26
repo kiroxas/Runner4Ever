@@ -69,6 +69,8 @@ public class CharacterController2D : MonoBehaviour
      	public Action[] action = new Action[System.Enum.GetNames(typeof(Inputs)).Length];
  	}
 
+ 	public JumpCharacs charc;
+
 	static public int states = 3;
 	public int airBorn = 0;
 	public int groundedIndex = 1;
