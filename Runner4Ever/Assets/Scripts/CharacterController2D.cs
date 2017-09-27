@@ -11,42 +11,10 @@ public class CharacterController2D : MonoBehaviour
 		Transform
 	}	
 
-	public enum TouchZone
-	{
-		EntireScreen,
-		LeftHalf,
-		RightHalf
-	}
-
-	public enum Action
-	{
-		None,
-		Jump,
-		Accelerate,
-		Decelerate,
-		Dash,
-		Slide,
-		Stop,
-		StartSame,
-		StartOpposite
-	}
-
 	public enum JumpStrat
 	{
 		NormalJump,
 		DoubleJump
-	}
-
-	public enum Inputs
-	{
-		Tap,
-		DoubleTap,
-		SwipeSameDir,
-		SwipeOppDir,
-		SwipeUp,
-		SwipeDown,
-		Hold,
-		HoldUp
 	}
 
 	public enum JumpDirectionOnWallOrEdge
@@ -69,20 +37,9 @@ public class CharacterController2D : MonoBehaviour
 		KeepTheAirOne
 	}
 
-	[Serializable]
- 	public class Row
- 	{
-     	public Action[] action = new Action[System.Enum.GetNames(typeof(Inputs)).Length];
- 	}
+	
 
  	public JumpCharacs charc;
-
-	static public int states = 3;
-	public int airBorn = 0;
-	public int groundedIndex = 1;
-	public int groundedAndStopped = 2;
-
-	public Row[] actions = new Row[states];
 
 	private CharacterState state;
 	public JumpStrat jumpStrategy = JumpStrat.DoubleJump;
@@ -131,7 +88,7 @@ public class CharacterController2D : MonoBehaviour
 
 	private Vector2 colliderOffset;
 
-	public TouchZone touchzone = TouchZone.EntireScreen;
+	
 
 	public MovementState movstate;
 
@@ -375,18 +332,6 @@ public class CharacterController2D : MonoBehaviour
 		
 	}
 
-
-
-	protected virtual void OnEnable()
-	{
-			// Hook into the events we need
-			LeanTouch.OnFingerTap   += OnFingerTap;
-			LeanTouch.OnFingerSwipe += OnFingerSwipe;
-
-			LeanFingerHeld.OnFingerHeldDown += OnHoldDown;
-			LeanFingerHeld.OnFingerHeldUp += OnHoldUp;
-	}
-
 	private bool updateActionTimer(ref float variable)
 	{
 		if(variable > 0)
@@ -402,111 +347,21 @@ public class CharacterController2D : MonoBehaviour
 		return false;
 	}
 		
-	protected virtual void OnDisable()
-	{
-			// Unhook the events
-			
-			LeanTouch.OnFingerTap   -= OnFingerTap;
-			LeanTouch.OnFingerSwipe -= OnFingerSwipe;
-
-			LeanFingerHeld.OnFingerHeldDown -= OnHoldDown;
-			LeanFingerHeld.OnFingerHeldUp -= OnHoldUp;
-	}
-
+	
 	private void updateSpeed()
 	{
 		float percent = wallSticking() ? Time.deltaTime * accelerationSmooth : Time.deltaTime * accelerationSmooth;
 		_actualSpeed = Mathf.Lerp(_actualSpeed, _runSpeed, percent);
 	}
 
-	private bool stopped()
+	public bool stopped()
 	{
 		return _runSpeed == 0 ;
 	}
 
-	private bool isItForMe(LeanFinger finger)
-	{
-		Vector2 originPos = finger.StartScreenPosition;
-
-		switch(touchzone)
-		{
-			case TouchZone.EntireScreen : return true;
-			case TouchZone.LeftHalf : return originPos.x < Screen.width / 2f;
-			case TouchZone.RightHalf : return originPos.x > Screen.width / 2f;
-		}
-
-		return true;
-	}
-
-	public void OnHoldDown(LeanFinger finger)
-	{
-		if(!isItForMe(finger))
-		{
-			return;
-		}
-
-		int index = grounded() ? (stopped() ? groundedAndStopped : groundedIndex ) : airBorn;
-		Action action = actions[index].action[(int)Inputs.Hold];
-		doAction(action);
-	}
-
-	public void OnHoldUp(LeanFinger finger)
-	{
-		if(!isItForMe(finger))
-		{
-			return;
-		}
-
-		int index = grounded() ? (stopped() ? groundedAndStopped : groundedIndex ) : airBorn;
-		Action action = actions[index].action[(int)Inputs.HoldUp];
-		doAction(action);
-	}
-
-	public void OnFingerTap(LeanFinger finger)
-	{
-		if(!isItForMe(finger))
-		{
-			return;
-		}
-
-		int index = grounded() ? (stopped() ? groundedAndStopped : groundedIndex ) : airBorn;
-		
-		if(finger.TapCount == 1)
-		{
-			Action action = actions[index].action[(int)Inputs.Tap];
-			doAction(action);
-		}
-		else if(finger.TapCount > 1)
-		{
-			Action action = actions[index].action[(int)Inputs.DoubleTap];
-			doAction(action);
-		}
-	}
-
-	float selectJumpMagnitude()
+	public float selectJumpMagnitude()
 	{
 		return getCurrentJumpCount() == 0 ? jumpMagnitude : highJumpMagnitude;
-	}
-
-	public void doAction(Action action)
-	{
-		if(stopped()) // Stopped
-		{
-			run();
-		}
-
-		switch(action)
-		{
-			case Action.Jump : jump(selectJumpMagnitude()); break;
-			case Action.Accelerate : accelerate(); break;
-			case Action.Decelerate : decelerate(); break;
-			case Action.Dash : dash(); break;
-			case Action.Slide : slide(); break;
-			case Action.StartSame : run(); break;
-			case Action.StartOpposite : run(); changeDirection(); break;
-			case Action.Stop : stop(); break;
-			default : break;
-		}
 	}
 
 	public void run()
@@ -622,62 +477,15 @@ public class CharacterController2D : MonoBehaviour
 	}
 
 
-	public void OnFingerSwipe(LeanFinger finger)
-	{	
-		if(!isItForMe(finger))
-		{
-			return;
-		}
-		// Store the swipe delta in a temp variable
-		var swipe = finger.SwipeScreenDelta;
-
-		int index = grounded() ? (stopped() ? groundedAndStopped : groundedIndex ) : airBorn;
-		
-			
-		if (swipe.x < -Mathf.Abs(swipe.y)) // Left
-		{
-			bool goingRight = _runSpeed >= 0;
-			if(index == groundedAndStopped)
-			{
-				doAction(flipped() ? Action.StartSame : Action.StartOpposite);
-			}
-			else
-			{
-				Action action = actions[index].action[goingRight ? (int)Inputs.SwipeOppDir : (int)Inputs.SwipeSameDir];
-				doAction(action);
-			}
-		}
-			
-		if (swipe.x > Mathf.Abs(swipe.y)) // Rigth
-		{
-			bool goingRight = _runSpeed >= 0;
-			if(index == groundedAndStopped)
-			{
-				doAction(flipped() ? Action.StartOpposite : Action.StartSame);
-			}
-			else
-			{
-				Action action = actions[index].action[goingRight ? (int)Inputs.SwipeSameDir : (int)Inputs.SwipeOppDir];
-				doAction(action);
-			}
-		}
-			
-		if (swipe.y < -Mathf.Abs(swipe.x)) // Down
-		{
-			Action action = actions[index].action[(int)Inputs.SwipeDown];
-			doAction(action);		
-		}
-			
-		if (swipe.y > Mathf.Abs(swipe.x)) // Up
-		{
-			Action action = actions[index].action[(int)Inputs.SwipeUp];
-			doAction(action);
-		}
+	public bool areWeGoingRight()
+	{
+		return _runSpeed >= 0;
 	}
-
-	private void changeDirection()
+	
+	public void changeDirection()
 	{
 		Flip(); // display
+		charc.flip();
 
 		if(stopped())
 		{
@@ -706,7 +514,7 @@ public class CharacterController2D : MonoBehaviour
 		_runSpeed = runSpeed;
 	}
 
-	private bool flipped()
+	public bool flipped()
 	{
 		return transform.localScale.x < 0 ;
 	}

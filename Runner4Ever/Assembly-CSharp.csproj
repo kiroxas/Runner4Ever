@@ -98,6 +98,7 @@
      <Compile Include="Assets\Scripts\ExploseTile.cs" />
      <Compile Include="Assets\Scripts\GoldCollectible.cs" />
      <Compile Include="Assets\Scripts\HurtPlayer.cs" />
+     <Compile Include="Assets\Scripts\InputHandler.cs" />
      <Compile Include="Assets\Scripts\InverseJumpWall.cs" />
      <Compile Include="Assets\Scripts\JumpCharacs.cs" />
      <Compile Include="Assets\Scripts\LevelGeneration\BasicLevelGenerator.cs" />

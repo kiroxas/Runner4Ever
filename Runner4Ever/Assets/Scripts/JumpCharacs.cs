@@ -2,36 +2,42 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/* Class that handles a jump, its definition and all the points of the curve 
+*/
 public class JumpCharacs : MonoBehaviour
 {
-	public AnimationCurve jumpShape;
+	// --------------------------------- Public Interface -----------------------------------------------
+	public AnimationCurve jumpShape; // the curve
 	public float xDistance = 1.0f; // distance we are going to travel on X 
-	public float yDistance = 1.0f; // max Y 
-	private Transform debugOrigin;
-
-	private float jumpTime;
-
-	private float expectedVelocity;
-	private Vector2 currentJumpStart;
-	private Vector2 nextFrame;
-	private float shapeIndex;
-	private List<Vector3> offsetsOrigin;
-	private List<Vector3> offsets;
-
-	private int index;
-	private float startTime;
-	private float timeClock = 0.0f;
+	public float yDistance = 1.0f; // Y for one unit in the curve editor 
 
 
+	// ---------------------------------- Private Members -----------------------------------------------
+	private Transform debugOrigin; // the transform to plot the curve
 
-	public void Start()
+	private float jumpTime; // time a jump takes
+
+	private float expectedVelocity; // velocity per frame
+	private Vector2 currentJumpStart; // origin of the jump
+	
+	private float shapeIndex; // index to evaluate the jumpShape
+	private List<Vector3> offsetsOrigin; // offstes with the origin
+	private List<Vector3> offsets; // offset with the previous
+
+	private int index; // index in the offsets list
+	private float startTime; // the start time of the first key in animation
+	private float timeClock = 0.0f; // current time in the animation curve
+	private bool goingRight = true; // Are we going right, true by default
+
+	// --------------------------------- Functions -----------------------------------------------
+
+	public void flip()
 	{
-		debugOrigin = GetComponent<Transform>();
-		if(jumpShape.length < 2)
-		{
-			Debug.LogError("Not enough keys in jump Shape");
-		}
+		goingRight = !goingRight;
+	}
 
+	public void init()
+	{
 		startTime = jumpShape[0].time;
 		jumpTime = jumpShape[jumpShape.length - 1].time - startTime;
 
@@ -56,11 +62,20 @@ public class JumpCharacs : MonoBehaviour
         	offsets.Add(offsetsOrigin[i] - offsetsOrigin[i-1]);
         }
 
-        Debug.Log("Time of jump : " + jumpTime + " expected velocity : " + expectedVelocity + " offsetsOrigin : " + offsetsOrigin.Count);
-
         shapeIndex = jumpTime;
         timeClock = 0.0f;
         index = 0;
+	}
+
+	public void Start()
+	{
+		debugOrigin = GetComponent<Transform>();
+		if(jumpShape.length < 2)
+		{
+			Debug.LogError("Not enough keys in jump Shape");
+		}
+
+		init();
 	}
 
 	public void startJump(Vector2 origin)
@@ -71,27 +86,7 @@ public class JumpCharacs : MonoBehaviour
 		index = 0;
 	}
 
-	void OnDrawGizmosSelected() 
-	{
-        if (debugOrigin != null) 
-        {
-            Gizmos.color = Color.blue;
-
-           // for(int i = 0; i < offsetsOrigin.Count - 1; ++i)
-           // {
-           // 	Gizmos.DrawLine(debugOrigin.position + offsetsOrigin[i],debugOrigin.position + offsetsOrigin[i + 1]);
-           // }
-             
-            Vector3 from = debugOrigin.position;
-            for(int i = 0; i < offsets.Count - 1; ++i)
-            {
-            	Vector3 to = from + offsets[i];
-            	Gizmos.DrawLine(from ,to);
-            	from = to;
-            }
-        }
-    }
-
+	
     public bool jumpEnded()
     {
     	return timeClock >= jumpTime;
@@ -108,7 +103,14 @@ public class JumpCharacs : MonoBehaviour
 			index = offsets.Count - 1;
 		}
 
-		return offsets[ind];
+		Vector3 ret = offsets[ind];
+
+		if(!goingRight)
+		{
+			ret = new Vector3(ret.x * -1, ret.y, ret.z);
+		}
+
+		return ret;
 	}
 
 	// For now let's impose speed
@@ -137,4 +139,23 @@ public class JumpCharacs : MonoBehaviour
 		shapeIndex = shapeIndex;
 		currentJumpStart = Vector2.zero;
 	}
+
+	// --------------------------------- Editor Functions -----------------------------------------------
+
+	void OnDrawGizmosSelected() 
+	{
+        if (debugOrigin != null) 
+        {
+            Gizmos.color = Color.blue;
+
+            Vector3 from = debugOrigin.position;
+            for(int i = 0; i < offsets.Count - 1; ++i)
+            {
+            	Vector3 to = from + offsets[i];
+            	Gizmos.DrawLine(from ,to);
+            	from = to;
+            }
+        }
+    }
+
 }

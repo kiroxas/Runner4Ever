@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Editor\CharacterController2DEditor.cs" />
+     <Compile Include="Assets\Editor\InputHandlerEditor.cs" />
      <Compile Include="Assets\LeanTouch\Editor\LeanSelectable_Editor.cs" />
      <Compile Include="Assets\LeanTouch\Editor\LeanTouch_Editor.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\Editor\ReporterEditor.cs" />
