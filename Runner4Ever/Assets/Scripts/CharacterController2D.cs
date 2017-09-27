@@ -54,6 +54,7 @@ public class CharacterController2D : MonoBehaviour
  	public Stack jumpState; // stack to know which is the current strategy for JumpRestrictions
  	public float timeBetweenJumps = 0.25f; // minimum time between 2 jumps
  	public float jumpBufferTime = 0.2f; // buffer time when we register a failed jump attempt
+
  	private int consecutiveJumps = 0; // Consecutive jumps we're in
 	private float lastJumpFailedAttempt = 0.0f; // private variable to register when was the last failed jump
 	private float jumpIn; // variable to register when we last jumped
@@ -63,7 +64,7 @@ public class CharacterController2D : MonoBehaviour
 	private int health = 10;
 
 	// ---------------------------------------- Other Components
-	private CharacterState state; // State about if we hit ground/walls
+	public CharacterState state; // State about if we hit ground/walls
 	public Animator animator; // Animator for the character
 	private Transform transform; // transform
 	private Rigidbody2D rb; // rigidbody
@@ -95,7 +96,7 @@ public class CharacterController2D : MonoBehaviour
 
 	/* ------------------------------------------------------ Monobehaviour Functions -------------------------------------------------------*/
 
-	public CharacterController2D()
+	public void Awake()
 	{
 		if(jumpDefinition == null)
 		{
@@ -106,13 +107,15 @@ public class CharacterController2D : MonoBehaviour
 		{
 			doubleJumpDefinition = new JumpCharacs();
 		}
-	}
 
-	public void Awake()
-	{
 		rb = GetComponent<Rigidbody2D>();
-		state = GetComponent<CharacterState>();
 		transform = GetComponent<Transform>();
+		state = GetComponent<CharacterState>();
+		if(state == null)
+		{
+			Debug.LogError("You need a character State");
+		}
+		
 	}
 
 	public void Start()
@@ -123,23 +126,16 @@ public class CharacterController2D : MonoBehaviour
 		jumpDefinition.setDebugTransform(transform);
 		doubleJumpDefinition.setDebugTransform(transform);
 
-		movstate = MovementState.Rigidbody;
-		health = maxHealth;
-		_runSpeed = runSpeed;
-		_actualSpeed = 0;
+		jumpDefinition.setName("First Jump");
+		doubleJumpDefinition.setName("Double Jump");
 		
 		gravityScale = rb.gravityScale;
 		jumpState = new Stack();
-		jumpState.Push(jumpRes);
-
 		runDirStack = new Stack();
-		runDirStack.Push(runDir);
-
 		jumpWallStack = new Stack();
-		jumpWallStack.Push(jumpWall);
-
 		gravity = new Stack();
-		gravity.Push(gravityScale);
+
+		reinit();
 
 		xColliderSize = GetComponent<BoxCollider2D>().size.x;
 		yColliderSize = GetComponent<BoxCollider2D>().size.y;
@@ -168,6 +164,14 @@ public class CharacterController2D : MonoBehaviour
 		}
 
 		// ------------------------------- Frame actions -------------------------------
+		if(lastJumpFailedAttempt > 0.0f) // Time buffer, if we pressed jump not so long ago, and now we can jump, let's jump
+		{
+			if(canJump())
+			{
+				jump();
+			}
+		}
+
 		bool jumped = upSpeed > 0;
 		float yVelocity = rb.velocity.y;
 
@@ -182,37 +186,15 @@ public class CharacterController2D : MonoBehaviour
 			yVelocity = 0;
 			lockYPosition();
 		}
-		else if(lastJumpFailedAttempt > 0.0f) // Time buffer, if we pressed jump not so long ago, and now we can jump, let's jump
-		{
-			if(canJump())
-			{
-				jump();
-			}
-		}
 
 		float xSpeed = shallNullifySpeed() ? 0.0f : _actualSpeed;
 		
-		if(jumped && !isJumping())
-		{
-			/*if(jumpDefinition.jumpEnded() == false)
-			{
-				changeMovementState();	
-			}*/
-			changeMovementState();
-		}
-
-		if(isJumping() && collidingSide())
-		{
-			changeMovementState();
-		}
-		else if(isJumping() && jumpDefinition.jumpEnded())
-		{
-			changeMovementState();
-		}
+		// ----------------------- Jump part ------------------------------
+		handleJump(jumped);
 
 		if(isJumping())
 		{
-			transform.position += jumpDefinition.getNext();
+			transform.position += getCorrectJump().getNext();
 		}
 		else
 		{
@@ -227,12 +209,7 @@ public class CharacterController2D : MonoBehaviour
 			_lastSpeed = xSpeed;
 		}
 
-		if(grounded() && !jumped)
-		{
-			consecutiveJumps = 0;
-		}
-
-
+		
 		animator.SetBool("isJumping", jumpIn > 0);
 		animator.SetBool("isSliding", dashIn > 0);
 		
@@ -240,19 +217,62 @@ public class CharacterController2D : MonoBehaviour
 		
 	/* ------------------------------------------------------ Functions -------------------------------------------------------*/
 	
+	public void handleJump(bool jumpedThisFrame)
+	{
+		if(jumpedThisFrame) // jumped this frame
+		{
+			if(isJumping()) // was already jumping
+			{
+				jumpDefinition.endJump(); // end the first jump
+				doubleJumpDefinition.startJump(transform.position);
+			}
+			else
+			{
+				changeMovementState(); // change state
+			}
+		}
+		else if(isJumping() && collidingSide()) // if in jump mode && colliding
+		{
+			changeMovementState(); // get back to dynamic
+		}
+		else if(isJumping() && getCorrectJump().jumpEnded()) // in jump mode && our jump has ended
+		{
+			changeMovementState(); // get back to dynamic
+		}
+
+		// reset consecutive jumps
+		if(grounded() && !jumpedThisFrame)
+		{
+			consecutiveJumps = 0;
+			jumpDefinition.endJump();
+			doubleJumpDefinition.endJump();
+		}
+	}
+
+	JumpCharacs getCorrectJump()
+	{
+		return (getCurrentJumpCount() == 0 ? jumpDefinition : doubleJumpDefinition);
+	}
+
+	JumpCharacs getOtherJump()
+	{
+		return (getCurrentJumpCount() == 0 ?  doubleJumpDefinition : jumpDefinition);
+	}
+
 	void changeMovementState()
 	{
 		if(movstate == MovementState.Rigidbody)
 		{
 			rb.velocity = new Vector2(0.0f, 0.0f); // moving it manually
 			rb.bodyType = RigidbodyType2D.Kinematic;
-			jumpDefinition.startJump(transform.position);
+			getOtherJump().endJump();
+			getCorrectJump().startJump(transform.position);
 			movstate = MovementState.Transform;
 		}
 		else
 		{
 			rb.bodyType = RigidbodyType2D.Dynamic;
-			jumpDefinition.endJump();
+			getCorrectJump().endJump();
 			movstate = MovementState.Rigidbody;
 		}
 	}
@@ -279,7 +299,6 @@ public class CharacterController2D : MonoBehaviour
 	}
 
 
-
 	public void respawn(float x, float y)
 	{
 		if(!isDead())
@@ -291,7 +310,6 @@ public class CharacterController2D : MonoBehaviour
 		health = maxHealth;
 		transform.position = new Vector2(x, y); 
 	}
-
 
 	
 	private bool updateActionTimer(ref float variable)
@@ -512,6 +530,7 @@ public class CharacterController2D : MonoBehaviour
 	{
 		Flip(); // display
 		jumpDefinition.flip();
+		doubleJumpDefinition.flip();
 
 		if(stopped())
 		{
@@ -538,6 +557,22 @@ public class CharacterController2D : MonoBehaviour
 			Flip();
 
 		_runSpeed = runSpeed;
+		_actualSpeed = 0;
+		consecutiveJumps = 0;
+		movstate = MovementState.Rigidbody;
+
+		runDirStack.Clear();
+		runDirStack.Push(runDir);
+
+		jumpState.Clear();
+		jumpState.Push(jumpRes);
+
+		jumpWallStack.Clear();
+		jumpWallStack.Push(jumpWall);
+
+		gravity.Clear();
+		gravity.Push(gravityScale);
+		health = maxHealth;
 	}
 
 	public bool flipped()

@@ -40,7 +40,7 @@ public class CharacterController2DEditor : Editor
 	public override void OnInspectorGUI()
 	{
 		CharacterController2D myScript = (CharacterController2D)target;
-		
+
         myScript.animator = (Animator)EditorGUILayout.ObjectField("Animator", myScript.animator, typeof(Animator), true);
 
         jumpFold = EditorGUILayout.Foldout(jumpFold, "First Jump");
@@ -72,28 +72,29 @@ public class CharacterController2DEditor : Editor
         myScript.runDir = (CharacterController2D.RunDirectionOnGround)EditorGUILayout.EnumPopup("Direction when hitting ground", myScript.runDir);
         myScript.dashTime = EditorGUILayout.FloatField("dashTime", myScript.dashTime);
 
-        infosFold = EditorGUILayout.Foldout(infosFold, "Infos");
-		if (infosFold)
-        {
-        	EditorGUI.indentLevel++;
-        	EditorGUILayout.LabelField("CollidingRight ", myScript.collidingRight() ? "true" : "false");
-        	EditorGUILayout.LabelField("CollidingLeft ", myScript.collidingLeft() ? "true" : "false");
-        	EditorGUILayout.LabelField("Grounded ", myScript.grounded() ? "true" : "false");
-        	EditorGUILayout.LabelField("isGrabingEdge ", myScript.grabingEdge() ? "true" : "false");
-        	EditorGUILayout.LabelField("isWallSticking ", myScript.wallSticking() ? "true" : "false");
-        	EditorGUILayout.LabelField("runSpeed ", myScript.runspeed().ToString());
-        	EditorGUILayout.LabelField("jumpWallDir ", myScript.jumpWallStack.Peek().ToString());
-            EditorGUILayout.LabelField("movstate ", myScript.movstate.ToString());
-        	int jumps = myScript.getCurrentJumpCount();
-        	EditorGUILayout.LabelField("jumps", jumps.ToString());
-
-        	EditorGUI.indentLevel--;
-        }
-
-        if (GUI.changed)
+       
+        /*if (GUI.changed)
         {
             EditorUtility.SetDirty(target);
             UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(((GameObject)myScript.gameObject).scene);
+        }*/
+
+        infosFold = EditorGUILayout.Foldout(infosFold, "Infos");
+        if (infosFold)
+        {
+            EditorGUI.indentLevel++;
+            /*EditorGUILayout.LabelField("CollidingRight ", myScript.collidingRight() ? "true" : "false");
+            EditorGUILayout.LabelField("CollidingLeft ", myScript.collidingLeft() ? "true" : "false");
+            EditorGUILayout.LabelField("Grounded ", myScript.grounded() ? "true" : "false");
+            EditorGUILayout.LabelField("isGrabingEdge ", myScript.grabingEdge() ? "true" : "false");
+            EditorGUILayout.LabelField("isWallSticking ", myScript.wallSticking() ? "true" : "false");
+            EditorGUILayout.LabelField("runSpeed ", myScript.runspeed().ToString());
+            EditorGUILayout.LabelField("jumpWallDir ", myScript.jumpWallStack.Peek().ToString());*/
+            EditorGUILayout.LabelField("movstate ", myScript.movstate.ToString());
+            int jumps = myScript.getCurrentJumpCount();
+            EditorGUILayout.LabelField("jumps", jumps.ToString());
+
+            EditorGUI.indentLevel--;
         }
 	}
 }

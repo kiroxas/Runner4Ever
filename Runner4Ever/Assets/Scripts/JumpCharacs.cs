@@ -31,6 +31,8 @@ public class JumpCharacs
 	private float timeClock = 0.0f; // current time in the animation curve
 	private bool goingRight = true; // Are we going right, true by default
 
+	private string name; // can name it for log
+
 	// --------------------------------- Functions -----------------------------------------------
 
 	public JumpCharacs()
@@ -47,7 +49,7 @@ public class JumpCharacs
 	{
 		if(jumpShape.length < 2)
 		{
-			Debug.LogError("Not enough keys in jump Shape");
+			Debug.LogError("Not enough keys in jump Shape : " + name);
 		}
 
 		startTime = jumpShape[0].time;
@@ -81,6 +83,7 @@ public class JumpCharacs
 
 	public void startJump(Vector2 origin)
 	{
+		Debug.Log("Start jump for : " + name);
 		timeClock = 0.0f;
 		shapeIndex = startTime;
 		currentJumpStart = origin;
@@ -101,7 +104,8 @@ public class JumpCharacs
 
 		if(index >= offsets.Count)
 		{
-			index = offsets.Count - 1;
+			endJump();
+			return Vector3.zero;
 		}
 
 		Vector3 ret = offsets[ind];
@@ -137,11 +141,17 @@ public class JumpCharacs
 
 	public void endJump()
 	{
-		shapeIndex = shapeIndex;
+		Debug.Log("End jump for : " + name);
+		shapeIndex = jumpTime;
 		currentJumpStart = Vector2.zero;
 	}
 
 	// --------------------------------- Editor Functions -----------------------------------------------
+
+	public void setName(string n)
+	{
+		name = n;
+	}
 
 	public void setDebugTransform(Transform t)
 	{
