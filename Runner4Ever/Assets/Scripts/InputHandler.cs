@@ -49,14 +49,14 @@ public class InputHandler : MonoBehaviour
  	}
 
  	// --------------------------------- Members ---------------------------------
-	static public int states = 3;
-	public int airBorn = 0;
-	public int groundedIndex = 1;
-	public int groundedAndStopped = 2;
+	static public int states = 3; // Number of states in actions
+	public int airBorn = 0; // index for airborn
+	public int groundedIndex = 1; // index for grounded
+	public int groundedAndStopped = 2; // index for grounded and stopped
+	public TouchZone touchzone = TouchZone.EntireScreen; // zone where we handle the input
+ 	public Row[] actions = new Row[states]; // all the actions for every state and input
 
-	public TouchZone touchzone = TouchZone.EntireScreen;
- 	public Row[] actions = new Row[states];
- 	private CharacterController2D character;
+ 	private CharacterController2D character; // reference to the character
 
  	// --------------------------------- Functions ---------------------------------
 
@@ -207,7 +207,7 @@ public class InputHandler : MonoBehaviour
 
 		switch(action)
 		{
-			case Action.Jump : character.jump(character.selectJumpMagnitude()); break;
+			case Action.Jump : character.jump(); break;
 			case Action.Accelerate : character.accelerate(); break;
 			case Action.Decelerate : character.decelerate(); break;
 			case Action.Dash : character.dash(); break;

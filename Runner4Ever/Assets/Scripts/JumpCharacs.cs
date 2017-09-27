@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 /* Class that handles a jump, its definition and all the points of the curve 
 */
-public class JumpCharacs : MonoBehaviour
+[Serializable]
+public class JumpCharacs
 {
 	// --------------------------------- Public Interface -----------------------------------------------
 	public AnimationCurve jumpShape; // the curve
@@ -13,7 +15,7 @@ public class JumpCharacs : MonoBehaviour
 
 
 	// ---------------------------------- Private Members -----------------------------------------------
-	private Transform debugOrigin; // the transform to plot the curve
+	public Transform debugOrigin; // the transform to plot the curve
 
 	private float jumpTime; // time a jump takes
 
@@ -31,6 +33,11 @@ public class JumpCharacs : MonoBehaviour
 
 	// --------------------------------- Functions -----------------------------------------------
 
+	public JumpCharacs()
+	{
+		jumpShape = new AnimationCurve();
+	}
+
 	public void flip()
 	{
 		goingRight = !goingRight;
@@ -38,6 +45,11 @@ public class JumpCharacs : MonoBehaviour
 
 	public void init()
 	{
+		if(jumpShape.length < 2)
+		{
+			Debug.LogError("Not enough keys in jump Shape");
+		}
+
 		startTime = jumpShape[0].time;
 		jumpTime = jumpShape[jumpShape.length - 1].time - startTime;
 
@@ -65,17 +77,6 @@ public class JumpCharacs : MonoBehaviour
         shapeIndex = jumpTime;
         timeClock = 0.0f;
         index = 0;
-	}
-
-	public void Start()
-	{
-		debugOrigin = GetComponent<Transform>();
-		if(jumpShape.length < 2)
-		{
-			Debug.LogError("Not enough keys in jump Shape");
-		}
-
-		init();
 	}
 
 	public void startJump(Vector2 origin)
@@ -142,7 +143,12 @@ public class JumpCharacs : MonoBehaviour
 
 	// --------------------------------- Editor Functions -----------------------------------------------
 
-	void OnDrawGizmosSelected() 
+	public void setDebugTransform(Transform t)
+	{
+		debugOrigin = t;
+	}
+
+	public void OnDrawGizmosSelected() 
 	{
         if (debugOrigin != null) 
         {

@@ -6,13 +6,12 @@ using UnityEditor;
 [CustomEditor(typeof(CharacterController2D))]
 public class CharacterController2DEditor : Editor 
 {
-	public static bool actionFold = false;
-	public static bool actionGroundedFold = false;
-	public static bool actionStoppedFold = false;
-	public static bool collisionsFold = false;
+	public static bool jumpFold = false;
+    public static bool secondJumpFold = false;
 	public static bool infosFold = false;
 
-	static LayerMask LayerMaskField( string label, LayerMask layerMask) {
+	static LayerMask LayerMaskField( string label, LayerMask layerMask) 
+    {
      List<string> layers = new List<string>();
      List<int> layerNumbers = new List<int>();
  
@@ -36,21 +35,38 @@ public class CharacterController2DEditor : Editor
      }
      layerMask.value = mask;
      return layerMask;
- }
+    }
 
 	public override void OnInspectorGUI()
 	{
 		CharacterController2D myScript = (CharacterController2D)target;
 		
         myScript.animator = (Animator)EditorGUILayout.ObjectField("Animator", myScript.animator, typeof(Animator), true);
+
+        jumpFold = EditorGUILayout.Foldout(jumpFold, "First Jump");
+        if (jumpFold)
+        {
+            EditorGUI.indentLevel++;
+            myScript.jumpDefinition.jumpShape = EditorGUILayout.CurveField("Shape", myScript.jumpDefinition.jumpShape);
+            myScript.jumpDefinition.xDistance = EditorGUILayout.FloatField("total x distance", myScript.jumpDefinition.xDistance);
+            myScript.jumpDefinition.yDistance = EditorGUILayout.FloatField("y distance for 1 unit", myScript.jumpDefinition.yDistance);
+            EditorGUI.indentLevel--;
+        }
+
+        secondJumpFold = EditorGUILayout.Foldout(secondJumpFold, "Double Jump");
+        if (secondJumpFold)
+        {
+            EditorGUI.indentLevel++;
+            myScript.doubleJumpDefinition.jumpShape = EditorGUILayout.CurveField("Shape", myScript.doubleJumpDefinition.jumpShape);
+            myScript.doubleJumpDefinition.xDistance = EditorGUILayout.FloatField("total x distance", myScript.doubleJumpDefinition.xDistance);
+            myScript.doubleJumpDefinition.yDistance = EditorGUILayout.FloatField("y distance for 1 unit", myScript.doubleJumpDefinition.yDistance);
+            EditorGUI.indentLevel--;
+        }
        
-        myScript.speedBonusOnJump = EditorGUILayout.FloatField("speedBonusOnJump", myScript.speedBonusOnJump);
         myScript.runSpeed = EditorGUILayout.FloatField("runSpeed", myScript.runSpeed);
         myScript.accelerationSmooth = EditorGUILayout.FloatField("accelerationSmooth", myScript.accelerationSmooth);
         myScript.dashSpeedMul = EditorGUILayout.FloatField("dashSpeedMul", myScript.dashSpeedMul);
         myScript.timeBetweenJumps = EditorGUILayout.FloatField("timeBetweenJumps", myScript.timeBetweenJumps);
-        myScript.jumpMagnitude = EditorGUILayout.FloatField("jumpMagnitude", myScript.jumpMagnitude);
-        myScript.highJumpMagnitude = EditorGUILayout.FloatField("highJumpMagnitude", myScript.highJumpMagnitude);
         myScript.jumpStrategy = (CharacterController2D.JumpStrat)EditorGUILayout.EnumPopup("jumpStrategy", myScript.jumpStrategy);
         myScript.jumpRes = (CharacterController2D.JumpRestrictions)EditorGUILayout.EnumPopup("JumpRestrictions", myScript.jumpRes);
         myScript.runDir = (CharacterController2D.RunDirectionOnGround)EditorGUILayout.EnumPopup("Direction when hitting ground", myScript.runDir);
@@ -72,6 +88,12 @@ public class CharacterController2DEditor : Editor
         	EditorGUILayout.LabelField("jumps", jumps.ToString());
 
         	EditorGUI.indentLevel--;
+        }
+
+        if (GUI.changed)
+        {
+            EditorUtility.SetDirty(target);
+            UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(((GameObject)myScript.gameObject).scene);
         }
 	}
 }
