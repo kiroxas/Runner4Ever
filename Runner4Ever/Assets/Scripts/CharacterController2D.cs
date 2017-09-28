@@ -10,12 +10,6 @@ public class CharacterController2D : MonoBehaviour
 {
 
 	//--------------------------------------- Enum declarations ---------------------------------------
-	public enum MovementState
-	{
-		Rigidbody,
-		Transform
-	}	
-
 	public enum JumpStrat
 	{
 		NormalJump,
@@ -96,7 +90,6 @@ public class CharacterController2D : MonoBehaviour
 	private float yColliderSize = 0.0f;
 
 	private Vector2 colliderOffset;
-	public MovementState movstate;
 
 	/* ------------------------------------------------------ Monobehaviour Functions -------------------------------------------------------*/
 
@@ -162,8 +155,8 @@ public class CharacterController2D : MonoBehaviour
 		// ------------ Update all states and variables -------------------------------
 		state.updateState();
 		makeItRunRightOnGround();
-		putCorrectGravityScale();
-		updateSpeed();
+		//putCorrectGravityScale();
+		//updateSpeed();
 
 		updateActionTimer(ref jumpIn);
 		updateActionTimer(ref lastJumpFailedAttempt);
@@ -183,18 +176,10 @@ public class CharacterController2D : MonoBehaviour
 		}
 
 		bool jumped = upSpeed > 0;
-		float yVelocity = rb.velocity.y;
-
+		
 		if(jumped)
 		{
-			yVelocity = upSpeed;
 			upSpeed = 0;
-			unlockYPosition();
-		}
-		else if (grabingEdge())
-		{
-			yVelocity = 0;
-			lockYPosition();
 		}
 
 		if(wallSticking() && !isJumping())
@@ -236,7 +221,6 @@ public class CharacterController2D : MonoBehaviour
 			Vector3 offset = new Vector3(xMoveForward, gravity, 0.0f);
 
 			transform.position += offset;
-			//rb.velocity = new Vector2(xSpeed, yVelocity);
 		}
 
 		animator.SetBool("isRunning", running);
@@ -251,16 +235,10 @@ public class CharacterController2D : MonoBehaviour
 	{
 		if(jumpedThisFrame) // jumped this frame
 		{
-			//changeMovementState(); // change state
 			jumpCollec.startJump(transform.position);
-		}
-		else if(isJumping() && collidingForward()) // if in jump mode && colliding
-		{
-			//changeMovementState(); // get back to dynamic
 		}
 		else if(isJumping() && jumpCollec.jumpEnded()) // in jump mode && our jump has ended
 		{
-			//changeMovementState(); // get back to dynamic
 			jumpCollec.reset();
 		}
 
@@ -268,23 +246,6 @@ public class CharacterController2D : MonoBehaviour
 		if(grounded() && !jumpedThisFrame)
 		{
 			jumpCollec.reset();
-		}
-	}
-
-
-	void changeMovementState()
-	{
-		if(movstate == MovementState.Rigidbody)
-		{
-			rb.velocity = new Vector2(0.0f, 0.0f); // moving it manually
-			rb.bodyType = RigidbodyType2D.Kinematic;
-			jumpCollec.startJump(transform.position);
-			movstate = MovementState.Transform;
-		}
-		else
-		{
-			rb.bodyType = RigidbodyType2D.Dynamic;
-			movstate = MovementState.Rigidbody;
 		}
 	}
 

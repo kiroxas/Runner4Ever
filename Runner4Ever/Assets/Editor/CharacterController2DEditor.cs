@@ -90,7 +90,6 @@ public class CharacterController2DEditor : Editor
             EditorGUILayout.LabelField("isWallSticking ", myScript.wallSticking() ? "true" : "false");
             EditorGUILayout.LabelField("runSpeed ", myScript.runspeed().ToString());
             EditorGUILayout.LabelField("jumpWallDir ", myScript.jumpWallStack.Peek().ToString());*/
-            EditorGUILayout.LabelField("movstate ", myScript.movstate.ToString());
             int jumps = myScript.getCurrentJumpCount();
             EditorGUILayout.LabelField("jumps", jumps.ToString());
 
