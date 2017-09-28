@@ -75,6 +75,7 @@ public class CharacterController2D : MonoBehaviour
 	private bool facingRight = true;
 
 	// RunSpeed Related
+	private bool running = true;
 	public float xSpeedPerFrame = 0.1f;
 	public float gravityFactor = 0.2f;
 
@@ -224,7 +225,7 @@ public class CharacterController2D : MonoBehaviour
 		}
 		else
 		{
-			float xMoveForward = collidingForward() ? 0.0f : areWeGoingRight() ? xSpeedPerFrame : -xSpeedPerFrame;
+			float xMoveForward = (collidingForward() || !running) ? 0.0f : areWeGoingRight() ? xSpeedPerFrame : -xSpeedPerFrame;
 			float gravity = grounded() ? 0.0f : wallSticking() ? -(gravityFactor / 2.0f) : -gravityFactor;
 
 			Vector3 offset = new Vector3(xMoveForward, gravity, 0.0f);
@@ -233,15 +234,7 @@ public class CharacterController2D : MonoBehaviour
 			//rb.velocity = new Vector2(xSpeed, yVelocity);
 		}
 
-		if(_lastSpeed != xSpeed && animator)
-		{
-			bool isRunning = xSpeed != 0;
-			
-			animator.SetBool("isRunning", isRunning);
-			_lastSpeed = xSpeed;
-		}
-
-		
+		animator.SetBool("isRunning", running);
 		animator.SetBool("isJumping", jumpIn > 0);
 		animator.SetBool("isSliding", dashIn > 0);
 		
@@ -417,15 +410,16 @@ public class CharacterController2D : MonoBehaviour
 	{
 		if(stopped())
 		{
-			_runSpeed = _runSpeedBeforeStop;
+			running = true;
 		}
 	}
 
 	public void stop()
 	{
-		_runSpeedBeforeStop = _runSpeed;
+		running = false;
+		/*_runSpeedBeforeStop = _runSpeed;
 		_runSpeed = 0;
-		_actualSpeed = 0;
+		_actualSpeed = 0;*/
 	}
 
 	public void dash()
@@ -527,7 +521,7 @@ public class CharacterController2D : MonoBehaviour
 
 	public bool stopped()
 	{
-		return _runSpeed == 0 ;
+		return !running ;
 	}
 
 	private bool shallNullifySpeed()
@@ -577,6 +571,7 @@ public class CharacterController2D : MonoBehaviour
 		_runSpeed = runSpeed;
 		_actualSpeed = 0;
 		jumpCollec.reset();
+		running = true;
 		//movstate = MovementState.Rigidbody;
 
 		runDirStack.Clear();
