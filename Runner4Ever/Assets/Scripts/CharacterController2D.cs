@@ -221,6 +221,11 @@ public class CharacterController2D : MonoBehaviour
 				}
 			}
 
+			if (collidingAbove() && offset.y > 0)
+			{
+				offset.y = 0;
+			}
+
 			transform.position += offset;
 		}
 		else
@@ -452,6 +457,11 @@ public class CharacterController2D : MonoBehaviour
 	{
 		return jumpCollec.isJumping();
 		//return movstate == MovementState.Transform;
+	}
+
+	public bool collidingAbove()
+	{
+		return state.isCollidingAbove;
 	}
 
 	public bool collidingForward()

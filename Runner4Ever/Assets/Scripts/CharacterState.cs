@@ -18,6 +18,7 @@ public class CharacterState : MonoBehaviour
 	private Collider2D myCollider;
 
 	public bool isGrounded { get; private set; }
+	public bool isCollidingAbove { get; private set; }
 	public bool isCollidingRight { get; private set; }
 	public bool isCollidingLeft { get; private set; }
 	public bool isCollidingSide { get {return isCollidingRight || isCollidingLeft;}}
@@ -55,6 +56,7 @@ public class CharacterState : MonoBehaviour
 		colliderHitThisFrame.Clear();
 
 		updateGrounded();
+		updateAbove();
 		updateRightCollision();
 		updateLeftCollision();
 		updateEdgeGrabing();
@@ -149,6 +151,88 @@ public class CharacterState : MonoBehaviour
 		}
 
 		return isGrounded;
+	}
+
+	public bool updateAbove()
+	{
+		Collider2D myCollider = GetComponent<Collider2D>();
+		float step = (float)myCollider.bounds.size.x / (float)groundedRayCasts;
+		isCollidingAbove = false;
+
+		Vector2 rayDirection = Vector2.up;
+
+		{
+			Vector2 dir = rayDirection;
+			dir.x = -0.0f;
+			Vector2 rayVector = new Vector2(myCollider.bounds.min.x , myCollider.bounds.max.y);
+			var raycastHit = Physics2D.Raycast(rayVector, dir, rcCastDistance, PlatformMask);
+			Debug.DrawRay(rayVector, dir * groundedCastDistance, Color.green);
+			if (raycastHit)
+			{
+				var effector2D = raycastHit.collider.GetComponent<PlatformEffector2D>();
+				if(effector2D != null)
+				{
+					if(effector2D.useOneWay && myCollider.bounds.min.y > raycastHit.collider.bounds.center.y ) // Only allowed if above
+					{
+						addCollider(raycastHit.collider);
+						isCollidingAbove = true;
+					}
+				}
+				else
+				{
+					addCollider(raycastHit.collider);
+					isCollidingAbove = true;
+				}
+			}
+		
+			dir.x = 0.0f;
+			rayVector = new Vector2(myCollider.bounds.max.x , myCollider.bounds.max.y);
+			raycastHit = Physics2D.Raycast(rayVector, dir, rcCastDistance, PlatformMask);
+			Debug.DrawRay(rayVector, dir * groundedCastDistance, Color.green);
+			if (raycastHit)
+			{
+				var effector2D = raycastHit.collider.GetComponent<PlatformEffector2D>();
+				if(effector2D != null)
+				{
+					if(effector2D.useOneWay && myCollider.bounds.min.y > raycastHit.collider.bounds.center.y ) // Only allowed if above
+					{
+						addCollider(raycastHit.collider);
+						isCollidingAbove = true;
+					}
+				}
+				else
+				{
+					addCollider(raycastHit.collider);
+					isCollidingAbove = true;
+				}
+			}
+		}
+
+		for(int i = -1; i <= groundedRayCasts; ++i)
+		{
+			Vector2 rayVector = new Vector2(myCollider.bounds.min.x + i * step, myCollider.bounds.max.y);
+			var raycastHit = Physics2D.Raycast(rayVector, rayDirection, groundedCastDistance, PlatformMask);
+			Debug.DrawRay(rayVector, rayDirection * groundedCastDistance, Color.green);
+			if (raycastHit)
+			{
+				var effector2D = raycastHit.collider.GetComponent<PlatformEffector2D>();
+				if(effector2D != null)
+				{
+					if(effector2D.useOneWay && myCollider.bounds.min.y > raycastHit.collider.bounds.center.y ) // Only allowed if above
+					{
+						addCollider(raycastHit.collider);
+						isCollidingAbove = true;
+					}
+				}
+				else
+				{
+					addCollider(raycastHit.collider);
+					isCollidingAbove = true;
+				}
+			}
+		}
+
+		return isCollidingAbove;
 	}
 
 	public bool updateEdgeGrabing()
