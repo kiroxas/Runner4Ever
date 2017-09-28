@@ -231,7 +231,7 @@ public class CharacterController2D : MonoBehaviour
 				changeMovementState(); // change state
 			}
 		}
-		else if(isJumping() && collidingSide()) // if in jump mode && colliding
+		else if(isJumping() && collidingForward()) // if in jump mode && colliding
 		{
 			changeMovementState(); // get back to dynamic
 		}
@@ -251,12 +251,12 @@ public class CharacterController2D : MonoBehaviour
 
 	JumpCharacs getCorrectJump()
 	{
-		return (getCurrentJumpCount() == 0 ? jumpDefinition : doubleJumpDefinition);
+		return (getCurrentJumpCount() == 0 ? jumpDefinition : jumpDefinition);
 	}
 
 	JumpCharacs getOtherJump()
 	{
-		return (getCurrentJumpCount() == 0 ?  doubleJumpDefinition : jumpDefinition);
+		return (getCurrentJumpCount() == 0 ?  jumpDefinition : jumpDefinition);
 	}
 
 	void changeMovementState()
@@ -353,7 +353,7 @@ public class CharacterController2D : MonoBehaviour
 
 		rb.velocity = new Vector2(rb.velocity.x, ySpeed);
 		run();
-		consecutiveJumps = 1;
+		//consecutiveJumps = 1;
 	}
 
 
@@ -445,6 +445,11 @@ public class CharacterController2D : MonoBehaviour
 	public bool isJumping()
 	{
 		return movstate == MovementState.Transform;
+	}
+
+	public bool collidingForward()
+	{
+		return _runSpeed > 0 && state.isCollidingRight || _runSpeed < 0 && state.isCollidingLeft;
 	}
 
 	public bool collidingRight()
@@ -543,7 +548,7 @@ public class CharacterController2D : MonoBehaviour
 	private void makeItRunRightOnGround()
 	{
 
-		if( !wallSticking() &&
+		if( 
 			((RunDirectionOnGround)runDirStack.Peek() == RunDirectionOnGround.AlwaysRight && grounded() && _runSpeed < 0 )
 		|| ((RunDirectionOnGround)runDirStack.Peek() == RunDirectionOnGround.AlwaysLeft && grounded() && _runSpeed > 0 ))
 		{
@@ -594,7 +599,11 @@ public class CharacterController2D : MonoBehaviour
 	{
 		if(jumpDefinition != null)
 		{
+			Gizmos.color = Color.blue;
 			jumpDefinition.OnDrawGizmosSelected();
+			Gizmos.color = Color.green;
+
+			doubleJumpDefinition.OnDrawGizmosSelected(jumpDefinition.getHighestPoint() + jumpDefinition.getDebugPosition());
 		}
 	}
 

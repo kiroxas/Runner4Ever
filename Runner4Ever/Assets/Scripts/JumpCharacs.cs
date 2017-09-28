@@ -96,6 +96,21 @@ public class JumpCharacs
     	return timeClock >= jumpTime;
     }
 
+    public Vector3 getHighestPoint()
+    {
+    	Vector3 highest = offsetsOrigin[0];
+
+    	foreach(Vector3 v in offsetsOrigin)
+    	{
+    		if(v.y > highest.y)
+    		{
+    			highest = v;
+    		}
+    	}
+
+    	return highest;
+    }
+
     public Vector3 getNext()
 	{
 		int ind = index;
@@ -158,19 +173,30 @@ public class JumpCharacs
 		debugOrigin = t;
 	}
 
+	public Vector3 getDebugPosition()
+	{
+		if(debugOrigin == null)
+			return Vector3.zero;
+
+		return debugOrigin.position;
+	}
+
+	public void OnDrawGizmosSelected(Vector3 position) 
+	{      
+        Vector3 from = position;
+        for(int i = 0; i < offsets.Count - 1; ++i)
+        {
+            Vector3 to = from + offsets[i];
+            Gizmos.DrawLine(from ,to);
+            from = to;
+        }
+    }
+
 	public void OnDrawGizmosSelected() 
 	{
         if (debugOrigin != null) 
         {
-            Gizmos.color = Color.blue;
-
-            Vector3 from = debugOrigin.position;
-            for(int i = 0; i < offsets.Count - 1; ++i)
-            {
-            	Vector3 to = from + offsets[i];
-            	Gizmos.DrawLine(from ,to);
-            	from = to;
-            }
+            OnDrawGizmosSelected(debugOrigin.position);
         }
     }
 
