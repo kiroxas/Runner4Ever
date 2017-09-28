@@ -75,6 +75,9 @@ public class CharacterController2D : MonoBehaviour
 	private bool facingRight = true;
 
 	// RunSpeed Related
+	public float xSpeedPerFrame = 0.1f;
+	public float gravityFactor = 0.2f;
+
 	public float runSpeed = 0.1f;
 	private float _runSpeedBeforeStop;
 	private float _runSpeed, _actualSpeed, _lastSpeed;
@@ -145,6 +148,7 @@ public class CharacterController2D : MonoBehaviour
 		xColliderSize = GetComponent<BoxCollider2D>().size.x;
 		yColliderSize = GetComponent<BoxCollider2D>().size.y;
 		colliderOffset = GetComponent<BoxCollider2D>().offset;
+		//changeMovementState();
 	}
 
 	public void LateUpdate()
@@ -192,6 +196,11 @@ public class CharacterController2D : MonoBehaviour
 			lockYPosition();
 		}
 
+		if(wallSticking() && !isJumping())
+		{
+			jumpCollec.reset();
+		}
+
 		float xSpeed = shallNullifySpeed() ? 0.0f : _actualSpeed;
 		
 		// ----------------------- Jump part ------------------------------
@@ -203,13 +212,25 @@ public class CharacterController2D : MonoBehaviour
 			if(collidingForward()) // if colliding, move only on Y
 			{
 				offset.x = 0;
+
+				if(offset.y <= 0)
+				{
+					offset.y = 0;
+					jumpCollec.reset();
+				}
 			}
 
 			transform.position += offset;
 		}
 		else
 		{
-			rb.velocity = new Vector2(xSpeed, yVelocity);
+			float xMoveForward = collidingForward() ? 0.0f : areWeGoingRight() ? xSpeedPerFrame : -xSpeedPerFrame;
+			float gravity = grounded() ? 0.0f : wallSticking() ? -(gravityFactor / 2.0f) : -gravityFactor;
+
+			Vector3 offset = new Vector3(xMoveForward, gravity, 0.0f);
+
+			transform.position += offset;
+			//rb.velocity = new Vector2(xSpeed, yVelocity);
 		}
 
 		if(_lastSpeed != xSpeed && animator)
@@ -232,7 +253,8 @@ public class CharacterController2D : MonoBehaviour
 	{
 		if(jumpedThisFrame) // jumped this frame
 		{
-			changeMovementState(); // change state
+			//changeMovementState(); // change state
+			jumpCollec.startJump(transform.position);
 		}
 		else if(isJumping() && collidingForward()) // if in jump mode && colliding
 		{
@@ -240,7 +262,8 @@ public class CharacterController2D : MonoBehaviour
 		}
 		else if(isJumping() && jumpCollec.jumpEnded()) // in jump mode && our jump has ended
 		{
-			changeMovementState(); // get back to dynamic
+			//changeMovementState(); // get back to dynamic
+			jumpCollec.reset();
 		}
 
 		// reset consecutive jumps
@@ -433,7 +456,8 @@ public class CharacterController2D : MonoBehaviour
 
 	public bool isJumping()
 	{
-		return movstate == MovementState.Transform;
+		return jumpCollec.isJumping();
+		//return movstate == MovementState.Transform;
 	}
 
 	public bool collidingForward()
@@ -468,7 +492,7 @@ public class CharacterController2D : MonoBehaviour
 
 	public bool grounded()
 	{
-		return state.isGrounded || wallSticking();
+		return state.isGrounded;
 	}
 
 	public bool areWeGoingRight()
@@ -553,7 +577,7 @@ public class CharacterController2D : MonoBehaviour
 		_runSpeed = runSpeed;
 		_actualSpeed = 0;
 		jumpCollec.reset();
-		movstate = MovementState.Rigidbody;
+		//movstate = MovementState.Rigidbody;
 
 		runDirStack.Clear();
 		runDirStack.Push(runDir);
