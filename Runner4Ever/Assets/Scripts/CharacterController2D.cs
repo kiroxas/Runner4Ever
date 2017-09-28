@@ -55,9 +55,9 @@ public class CharacterController2D : MonoBehaviour
  	public float timeBetweenJumps = 0.25f; // minimum time between 2 jumps
  	public float jumpBufferTime = 0.2f; // buffer time when we register a failed jump attempt
 
- 	private int consecutiveJumps = 0; // Consecutive jumps we're in
 	private float lastJumpFailedAttempt = 0.0f; // private variable to register when was the last failed jump
 	private float jumpIn; // variable to register when we last jumped
+	private JumpCollection jumpCollec; // where we store the jumps, and it will manage the order and the proper end of each jump
 
 	// ---------------------------------------- Health Related
 	public int maxHealth = 10;
@@ -108,6 +108,8 @@ public class CharacterController2D : MonoBehaviour
 			doubleJumpDefinition = new JumpCharacs();
 		}
 
+		jumpCollec = new JumpCollection();
+
 		rb = GetComponent<Rigidbody2D>();
 		transform = GetComponent<Transform>();
 		state = GetComponent<CharacterState>();
@@ -128,6 +130,9 @@ public class CharacterController2D : MonoBehaviour
 
 		jumpDefinition.setName("First Jump");
 		doubleJumpDefinition.setName("Double Jump");
+
+		jumpCollec.addJump(jumpDefinition);
+		jumpCollec.addJump(doubleJumpDefinition);
 		
 		gravityScale = rb.gravityScale;
 		jumpState = new Stack();
@@ -194,7 +199,13 @@ public class CharacterController2D : MonoBehaviour
 
 		if(isJumping())
 		{
-			transform.position += getCorrectJump().getNext();
+			Vector3 offset = jumpCollec.getNext();
+			if(collidingForward()) // if colliding, move only on Y
+			{
+				offset.x = 0;
+			}
+
+			transform.position += offset;
 		}
 		else
 		{
@@ -221,21 +232,13 @@ public class CharacterController2D : MonoBehaviour
 	{
 		if(jumpedThisFrame) // jumped this frame
 		{
-			if(isJumping()) // was already jumping
-			{
-				jumpDefinition.endJump(); // end the first jump
-				doubleJumpDefinition.startJump(transform.position);
-			}
-			else
-			{
-				changeMovementState(); // change state
-			}
+			changeMovementState(); // change state
 		}
 		else if(isJumping() && collidingForward()) // if in jump mode && colliding
 		{
-			changeMovementState(); // get back to dynamic
+			//changeMovementState(); // get back to dynamic
 		}
-		else if(isJumping() && getCorrectJump().jumpEnded()) // in jump mode && our jump has ended
+		else if(isJumping() && jumpCollec.jumpEnded()) // in jump mode && our jump has ended
 		{
 			changeMovementState(); // get back to dynamic
 		}
@@ -243,21 +246,10 @@ public class CharacterController2D : MonoBehaviour
 		// reset consecutive jumps
 		if(grounded() && !jumpedThisFrame)
 		{
-			consecutiveJumps = 0;
-			jumpDefinition.endJump();
-			doubleJumpDefinition.endJump();
+			jumpCollec.reset();
 		}
 	}
 
-	JumpCharacs getCorrectJump()
-	{
-		return (getCurrentJumpCount() == 0 ? jumpDefinition : jumpDefinition);
-	}
-
-	JumpCharacs getOtherJump()
-	{
-		return (getCurrentJumpCount() == 0 ?  jumpDefinition : jumpDefinition);
-	}
 
 	void changeMovementState()
 	{
@@ -265,14 +257,12 @@ public class CharacterController2D : MonoBehaviour
 		{
 			rb.velocity = new Vector2(0.0f, 0.0f); // moving it manually
 			rb.bodyType = RigidbodyType2D.Kinematic;
-			getOtherJump().endJump();
-			getCorrectJump().startJump(transform.position);
+			jumpCollec.startJump(transform.position);
 			movstate = MovementState.Transform;
 		}
 		else
 		{
 			rb.bodyType = RigidbodyType2D.Dynamic;
-			getCorrectJump().endJump();
 			movstate = MovementState.Rigidbody;
 		}
 	}
@@ -376,7 +366,6 @@ public class CharacterController2D : MonoBehaviour
 				changeDirection();
 			}
 
-			consecutiveJumps++;
 			upSpeed = 10.0f;
 			jumpIn = timeBetweenJumps;
 			lastJumpFailedAttempt = 0.0f;
@@ -429,7 +418,7 @@ public class CharacterController2D : MonoBehaviour
 
 	public int getCurrentJumpCount()
 	{
-		return consecutiveJumps;
+		return jumpCollec.getCurrentJumpIndex();
 	}
 
 	private int getMaxJumps()
@@ -563,7 +552,7 @@ public class CharacterController2D : MonoBehaviour
 
 		_runSpeed = runSpeed;
 		_actualSpeed = 0;
-		consecutiveJumps = 0;
+		jumpCollec.reset();
 		movstate = MovementState.Rigidbody;
 
 		runDirStack.Clear();

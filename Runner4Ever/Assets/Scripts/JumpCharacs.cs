@@ -159,6 +159,7 @@ public class JumpCharacs
 		Debug.Log("End jump for : " + name);
 		shapeIndex = jumpTime;
 		currentJumpStart = Vector2.zero;
+		index = 0;
 	}
 
 	// --------------------------------- Editor Functions -----------------------------------------------

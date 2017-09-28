@@ -101,6 +101,7 @@
      <Compile Include="Assets\Scripts\InputHandler.cs" />
      <Compile Include="Assets\Scripts\InverseJumpWall.cs" />
      <Compile Include="Assets\Scripts\JumpCharacs.cs" />
+     <Compile Include="Assets\Scripts\JumpCollection.cs" />
      <Compile Include="Assets\Scripts\LevelGeneration\BasicLevelGenerator.cs" />
      <Compile Include="Assets\Scripts\LoopLevel.cs" />
      <Compile Include="Assets\Scripts\MoveBlockOnTrigger.cs" />
