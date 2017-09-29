@@ -11,17 +11,20 @@ public class JumpCollection
 	//---------------------------------- Members
 	private List<JumpCharacs> jumps; // all jumps
 	private int currentIndex; // current jump
+	private List<int> jumpsRealised; // keep track of how many jumps we did
 
 	// --------------------------------- Public functions
 	public JumpCollection()
 	{
 		jumps = new List<JumpCharacs>();
 		currentIndex = -1;
+		jumpsRealised = new List<int>();
 	}
 
 	public void addJump(JumpCharacs j)
 	{
 		jumps.Add(j);
+		jumpsRealised.Add(0);
 	}
 
 	public void reset()
@@ -48,6 +51,7 @@ public class JumpCollection
 
 		cleanPrecedentJump();
 		jumps[currentIndex].startJump(position);
+		jumpsRealised[currentIndex]++;
 	}
 
 	public int getCurrentJumpIndex()
@@ -63,6 +67,21 @@ public class JumpCollection
 	public bool jumpEnded()
 	{
 		return !isJumping();
+	}
+
+	public int getNumberOfFirstJump()
+	{
+		return jumpsRealised[0];
+	}
+
+	public int getNumberOfDoubleJump()
+	{
+		return jumpsRealised[1];
+	}
+
+	public int getNumberOfJumps()
+	{
+		return getNumberOfFirstJump() + getNumberOfDoubleJump();
 	}
 
 	public Vector3 getNext()

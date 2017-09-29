@@ -64,6 +64,7 @@ public class JumpCharacs
 		shapeIndex = startTime;
 
 		offsetsOrigin = new List<Vector3>();
+
 		while(!jumpEnded())
         {
             offsetsOrigin.Add(getNextKey());
