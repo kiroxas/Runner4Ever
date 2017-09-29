@@ -67,8 +67,10 @@ public class BasicLevelGenerator : MonoBehaviour
 	public GameObject[] enemies;
 	public GameObject[] disapearingTile;
 	public GameObject[] escalator;
+	public GameObject[] bumperTile;
 	public GameObject[] movingTile;
 	public GameObject[] killMovingTile;
+	public GameObject[] standOnTile;
 
 	FileUtils.FileList loadFileList(string folder)
 	{
@@ -186,17 +188,25 @@ public class BasicLevelGenerator : MonoBehaviour
 				{
 					createTileType(disapearingTile, xPos, yPos);
 				}
-				else if(tileType == 'a') // escalator
+				else if(tileType == 'A') // escalator
 				{
 					createTileType(escalator, xPos, yPos);
 				}
-				else if(tileType == 'b') // moving tile
+				else if(tileType == 'B') // bumper tile
+				{
+					createTileType(bumperTile, xPos, yPos);
+				}
+				else if(tileType == 'C') // moving tile
 				{
 					createTileType(movingTile, xPos, yPos);
 				}
-				else if(tileType == 'c') // kill moving tile
+				else if(tileType == 'D') // kill moving tile
 				{
 					createTileType(killMovingTile, xPos, yPos);
+				}
+				else if(tileType == 'E') // stand on tile
+				{
+					createTileType(standOnTile, xPos, yPos);
 				}
 
 				++index;
