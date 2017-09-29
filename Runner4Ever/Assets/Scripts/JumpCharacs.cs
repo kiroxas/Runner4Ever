@@ -31,6 +31,7 @@ public class JumpCharacs
 	private float timeClock = 0.0f; // current time in the animation curve
 	private bool goingRight = true; // Are we going right, true by default
 
+	private bool inJump = false;
 	private string name; // can name it for log
 
 	// --------------------------------- Functions -----------------------------------------------
@@ -64,6 +65,7 @@ public class JumpCharacs
 		shapeIndex = startTime;
 
 		offsetsOrigin = new List<Vector3>();
+		inJump = true;
 
 		while(!jumpEnded())
         {
@@ -71,30 +73,36 @@ public class JumpCharacs
         }
 
         offsets = new List<Vector3>();
-        offsets.Add(offsetsOrigin[0]);
-        for(int i = 1 ; i < offsetsOrigin.Count - 1; ++i)
+
+        if(offsetsOrigin.Count > 0)
         {
-        	offsets.Add(offsetsOrigin[i] - offsetsOrigin[i-1]);
-        }
+        	offsets.Add(offsetsOrigin[0]);
+        	for(int i = 1 ; i < offsetsOrigin.Count - 1; ++i)
+       		{
+        		offsets.Add(offsetsOrigin[i] - offsetsOrigin[i-1]);
+        	}
+    	}
 
         shapeIndex = jumpTime;
         timeClock = 0.0f;
         index = 0;
+        inJump = false;
 	}
 
 	public void startJump(Vector2 origin)
 	{
-		Debug.Log("Start jump for : " + name);
+		//Debug.Log("Start jump for : " + name);
 		timeClock = 0.0f;
 		shapeIndex = startTime;
 		currentJumpStart = origin;
 		index = 0;
+		inJump = true;
 	}
 
 	
     public bool jumpEnded()
     {
-    	return timeClock >= jumpTime;
+    	return  !inJump; // timeClock >= jumpTime;
     }
 
     public Vector3 getHighestPoint()
@@ -140,9 +148,10 @@ public class JumpCharacs
 		shapeIndex += Time.deltaTime;
 		timeClock += Time.deltaTime;
 
-		if(jumpEnded())
+		if(timeClock >= jumpTime)
 		{
 			shapeIndex = jumpShape[jumpShape.length - 1].time;
+			endJump();
 		}
 
 		float expectedY = jumpShape.Evaluate(shapeIndex) * yDistance;
@@ -157,10 +166,11 @@ public class JumpCharacs
 
 	public void endJump()
 	{
-		Debug.Log("End jump for : " + name);
+		//Debug.Log("End jump for : " + name);
 		shapeIndex = jumpTime;
 		currentJumpStart = Vector2.zero;
 		index = 0;
+		inJump = false;
 	}
 
 	// --------------------------------- Editor Functions -----------------------------------------------

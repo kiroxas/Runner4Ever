@@ -70,6 +70,7 @@ public class CharacterController2D : MonoBehaviour
 
 	// RunSpeed Related
 	private bool running = true;
+	private float currentVelocity;
 	public float xSpeedPerFrame = 0.1f;
 	public float gravityFactor = 0.2f;
 
@@ -142,7 +143,6 @@ public class CharacterController2D : MonoBehaviour
 		xColliderSize = GetComponent<BoxCollider2D>().size.x;
 		yColliderSize = GetComponent<BoxCollider2D>().size.y;
 		colliderOffset = GetComponent<BoxCollider2D>().offset;
-		//changeMovementState();
 	}
 
 	public void LateUpdate()
@@ -186,8 +186,6 @@ public class CharacterController2D : MonoBehaviour
 		{
 			jumpCollec.reset();
 		}
-
-		float xSpeed = shallNullifySpeed() ? 0.0f : _actualSpeed;
 		
 		// ----------------------- Jump part ------------------------------
 		handleJump(jumped);
@@ -199,14 +197,14 @@ public class CharacterController2D : MonoBehaviour
 			{
 				offset.x = 0;
 
-				if(offset.y <= 0)
+				if(offset.y <= 0) // if falling while colliding forward, then reset jump (wall jumps)
 				{
 					offset.y = 0;
 					jumpCollec.reset();
 				}
 			}
 
-			if (collidingAbove() && offset.y > 0)
+			if (collidingAbove() && offset.y > 0) // colliding forward and going up, let's keep going up
 			{
 				offset.y = 0;
 			}
@@ -215,7 +213,9 @@ public class CharacterController2D : MonoBehaviour
 		}
 		else
 		{
-			float xMoveForward = (collidingForward() || !running) ? 0.0f : areWeGoingRight() ? xSpeedPerFrame : -xSpeedPerFrame;
+			currentVelocity = Mathf.Lerp(currentVelocity, xSpeedPerFrame, Time.deltaTime * accelerationSmooth);
+			
+			float xMoveForward = (collidingForward() || !running) ? 0.0f : areWeGoingRight() ? currentVelocity : -currentVelocity;
 			float gravity = grounded() ? 0.0f : wallSticking() ? -(gravityFactor / 2.0f) : -gravityFactor;
 
 			Vector3 offset = new Vector3(xMoveForward, gravity, 0.0f);
@@ -390,11 +390,10 @@ public class CharacterController2D : MonoBehaviour
 
 	public void dash()
 	{	
-		_actualSpeed *= dashSpeedMul;
-		animator.SetBool("isSliding", true);
+		currentVelocity *= 2;
 		dashIn = dashTime;
-		GetComponent<BoxCollider2D>().size = new Vector2(xColliderSize, yColliderSize / 2);
-		GetComponent<BoxCollider2D>().offset = new Vector2(colliderOffset.x, colliderOffset.y - (yColliderSize / 4));
+		//GetComponent<BoxCollider2D>().size = new Vector2(xColliderSize, yColliderSize / 2);
+		//GetComponent<BoxCollider2D>().offset = new Vector2(colliderOffset.x, colliderOffset.y - (yColliderSize / 4));
 	}
 
 	/* ------------------------------------------------------ Function to inquiry the state -------------------------------------------------------*/
@@ -543,7 +542,7 @@ public class CharacterController2D : MonoBehaviour
 		_actualSpeed = 0;
 		jumpCollec.reset();
 		running = true;
-		//movstate = MovementState.Rigidbody;
+		currentVelocity = xSpeedPerFrame;
 
 		runDirStack.Clear();
 		runDirStack.Push(runDir);

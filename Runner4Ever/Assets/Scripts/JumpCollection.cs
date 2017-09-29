@@ -44,9 +44,9 @@ public class JumpCollection
 	public void startJump(Vector3 position)
 	{
 		currentIndex++;
-		if(jumps.Count >= currentIndex)
+		if(jumps.Count <= currentIndex)
 		{
-			Debug.LogError("Cannot jump, no more jump registered");
+			Debug.LogError("Cannot jump, no more jump registered, jumps : " + jumps.Count + ", index : " + currentIndex);
 		}
 
 		cleanPrecedentJump();
