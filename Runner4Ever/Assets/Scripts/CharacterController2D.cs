@@ -60,7 +60,7 @@ public class CharacterController2D : MonoBehaviour
 	// ---------------------------------------- Other Components
 	public CharacterState state; // State about if we hit ground/walls
 	public Animator animator; // Animator for the character
-	private Transform transform; // transform
+	private Transform characTransform; // characTransform
 	private Rigidbody2D rb; // rigidbody
 
 	//---------------------------------------- Misc
@@ -75,13 +75,10 @@ public class CharacterController2D : MonoBehaviour
 	public float gravityFactor = 0.2f;
 
 	public float runSpeed = 0.1f;
-	private float _runSpeedBeforeStop;
-	private float _runSpeed, _actualSpeed, _lastSpeed;
 	public float accelerationSmooth = 1.0f;
 
 	public float dashSpeedMul = 2.5f;
 	private float upSpeed = 0;
-	private float gravityScale = 0;
 	public Stack gravity;
 
 	private float dashIn = 0.0f;
@@ -109,7 +106,7 @@ public class CharacterController2D : MonoBehaviour
 		jumpCollec = new JumpCollection();
 
 		rb = GetComponent<Rigidbody2D>();
-		transform = GetComponent<Transform>();
+		characTransform = GetComponent<Transform>();
 		state = GetComponent<CharacterState>();
 		if(state == null)
 		{
@@ -123,8 +120,8 @@ public class CharacterController2D : MonoBehaviour
 		jumpDefinition.init();
 		doubleJumpDefinition.init();
 
-		jumpDefinition.setDebugTransform(transform);
-		doubleJumpDefinition.setDebugTransform(transform);
+		jumpDefinition.setDebugTransform(characTransform);
+		doubleJumpDefinition.setDebugTransform(characTransform);
 
 		jumpDefinition.setName("First Jump");
 		doubleJumpDefinition.setName("Double Jump");
@@ -132,7 +129,6 @@ public class CharacterController2D : MonoBehaviour
 		jumpCollec.addJump(jumpDefinition);
 		jumpCollec.addJump(doubleJumpDefinition);
 		
-		gravityScale = rb.gravityScale;
 		jumpState = new Stack();
 		runDirStack = new Stack();
 		jumpWallStack = new Stack();
@@ -156,7 +152,6 @@ public class CharacterController2D : MonoBehaviour
 		state.updateState();
 		makeItRunRightOnGround();
 		//putCorrectGravityScale();
-		//updateSpeed();
 
 		updateActionTimer(ref jumpIn);
 		updateActionTimer(ref lastJumpFailedAttempt);
@@ -209,18 +204,18 @@ public class CharacterController2D : MonoBehaviour
 				offset.y = 0;
 			}
 
-			transform.position += offset;
+			characTransform.position += offset;
 		}
 		else
 		{
-			currentVelocity = Mathf.Lerp(currentVelocity, xSpeedPerFrame, Time.deltaTime * accelerationSmooth);
+			currentVelocity = Mathf.Lerp(currentVelocity, areWeGoingRight() ? xSpeedPerFrame : -xSpeedPerFrame, Time.deltaTime * accelerationSmooth);
 			
 			float xMoveForward = (collidingForward() || !running) ? 0.0f : areWeGoingRight() ? currentVelocity : -currentVelocity;
 			float gravity = grounded() ? 0.0f : wallSticking() ? -(gravityFactor / 2.0f) : -gravityFactor;
 
 			Vector3 offset = new Vector3(xMoveForward, gravity, 0.0f);
 
-			transform.position += offset;
+			characTransform.position += offset;
 		}
 
 		animator.SetBool("isRunning", running);
@@ -235,7 +230,7 @@ public class CharacterController2D : MonoBehaviour
 	{
 		if(jumpedThisFrame) // jumped this frame
 		{
-			jumpCollec.startJump(transform.position);
+			jumpCollec.startJump(characTransform.position);
 		}
 		else if(isJumping() && jumpCollec.jumpEnded()) // in jump mode && our jump has ended
 		{
@@ -280,7 +275,7 @@ public class CharacterController2D : MonoBehaviour
 		reinit();
 
 		health = maxHealth;
-		transform.position = new Vector2(x, y); 
+		characTransform.position = new Vector2(x, y); 
 	}
 
 	
@@ -299,21 +294,12 @@ public class CharacterController2D : MonoBehaviour
 		return false;
 	}
 
-	private void updateSpeed()
-	{
-		float percent = wallSticking() ? Time.deltaTime * accelerationSmooth : Time.deltaTime * accelerationSmooth;
-		_actualSpeed = Mathf.Lerp(_actualSpeed, _runSpeed, percent);
-	}
-
-
 	public void inverseXVelocity(float magnitude, float max)
 	{
-		float speed = _actualSpeed == 0 ? _runSpeedBeforeStop : _actualSpeed;
-		_actualSpeed = speed * -1 * magnitude;
+		currentVelocity = currentVelocity * -1 * magnitude;
 		
-		_actualSpeed = Mathf.Clamp(_actualSpeed, -max, max);
+		currentVelocity = Mathf.Clamp(currentVelocity, -max, max);
 
-		rb.velocity = new Vector2(_actualSpeed, rb.velocity.y);
 		run();
 	}
 
@@ -364,12 +350,12 @@ public class CharacterController2D : MonoBehaviour
 
 	public void accelerate()
 	{
-		_runSpeed *= 2;
+		currentVelocity *= 2;
 	}
 
 	public void decelerate()
 	{
-		_runSpeed /= 2;
+		currentVelocity /= 2;
 	}
 
 	public void run()
@@ -390,7 +376,7 @@ public class CharacterController2D : MonoBehaviour
 
 	public void dash()
 	{	
-		currentVelocity *= 2;
+		currentVelocity *= dashSpeedMul;
 		dashIn = dashTime;
 		//GetComponent<BoxCollider2D>().size = new Vector2(xColliderSize, yColliderSize / 2);
 		//GetComponent<BoxCollider2D>().offset = new Vector2(colliderOffset.x, colliderOffset.y - (yColliderSize / 4));
@@ -410,7 +396,7 @@ public class CharacterController2D : MonoBehaviour
 
 	public float runspeed()
 	{
-		return _runSpeed;
+		return currentVelocity;
 	}
 
 	public bool isJumping()
@@ -426,7 +412,7 @@ public class CharacterController2D : MonoBehaviour
 
 	public bool collidingForward()
 	{
-		return _runSpeed > 0 && state.isCollidingRight || _runSpeed < 0 && state.isCollidingLeft;
+		return currentVelocity > 0 && state.isCollidingRight || currentVelocity < 0 && state.isCollidingLeft;
 	}
 
 	public bool collidingRight()
@@ -461,7 +447,7 @@ public class CharacterController2D : MonoBehaviour
 
 	public bool areWeGoingRight()
 	{
-		return _runSpeed >= 0;
+		return currentVelocity >= 0;
 	}
 
 	public bool canJump()
@@ -476,7 +462,6 @@ public class CharacterController2D : MonoBehaviour
 			return false;
 		}
 
-
 		if(getMaxJumps() <= getCurrentJumpCount())
 		{
 			return false;
@@ -485,20 +470,11 @@ public class CharacterController2D : MonoBehaviour
 		{
 			return true;
 		}
-
-		return true;
 	}
 
 	public bool stopped()
 	{
 		return !running ;
-	}
-
-	private bool shallNullifySpeed()
-	{
-		bool answer =  (_runSpeed > 0 && _actualSpeed > 0 && collidingRight()) || (_runSpeed < 0 && _actualSpeed < 0 && collidingLeft());
-
-		return answer;
 	}
 
 	public bool isDead()
@@ -519,15 +495,15 @@ public class CharacterController2D : MonoBehaviour
 			run();
 		}
 
-		_runSpeed *= -1;
+		currentVelocity *= -1;
 	}
 
 	private void makeItRunRightOnGround()
 	{
 
 		if( 
-			((RunDirectionOnGround)runDirStack.Peek() == RunDirectionOnGround.AlwaysRight && grounded() && _runSpeed < 0 )
-		|| ((RunDirectionOnGround)runDirStack.Peek() == RunDirectionOnGround.AlwaysLeft && grounded() && _runSpeed > 0 ))
+			((RunDirectionOnGround)runDirStack.Peek() == RunDirectionOnGround.AlwaysRight && grounded() && currentVelocity < 0 )
+		|| ((RunDirectionOnGround)runDirStack.Peek() == RunDirectionOnGround.AlwaysLeft && grounded() && currentVelocity > 0 ))
 		{
 			changeDirection();
 		}
@@ -535,11 +511,9 @@ public class CharacterController2D : MonoBehaviour
 
 	public void reinit()
 	{
-		if(transform.localScale.x == -1)
+		if(characTransform.localScale.x == -1)
 			Flip();
 
-		_runSpeed = runSpeed;
-		_actualSpeed = 0;
 		jumpCollec.reset();
 		running = true;
 		currentVelocity = xSpeedPerFrame;
@@ -554,21 +528,21 @@ public class CharacterController2D : MonoBehaviour
 		jumpWallStack.Push(jumpWall);
 
 		gravity.Clear();
-		gravity.Push(gravityScale);
+		gravity.Push(gravityFactor);
 		health = maxHealth;
 	}
 
 	public bool flipped()
 	{
-		return transform.localScale.x < 0 ;
+		return characTransform.localScale.x < 0 ;
 	}
 
 	private void Flip()
 	{
 		facingRight = !facingRight;
-		Vector3 theScale = transform.localScale;
+		Vector3 theScale = characTransform.localScale;
 		theScale.x *= -1;
-		transform.localScale = theScale;
+		characTransform.localScale = theScale;
 	}
 
 	/* ------------------------------------------------------ Editor functions -------------------------------------------------------*/
