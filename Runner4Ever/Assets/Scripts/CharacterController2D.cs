@@ -74,7 +74,6 @@ public class CharacterController2D : MonoBehaviour
 	public float xSpeedPerFrame = 0.1f;
 	public float gravityFactor = 0.2f;
 
-	public float runSpeed = 0.1f;
 	public float accelerationSmooth = 1.0f;
 
 	public float dashSpeedMul = 2.5f;
@@ -177,10 +176,6 @@ public class CharacterController2D : MonoBehaviour
 			upSpeed = 0;
 		}
 
-		if(wallSticking() && !isJumping())
-		{
-			jumpCollec.reset();
-		}
 		
 		// ----------------------- Jump part ------------------------------
 		handleJump(jumped);
@@ -228,6 +223,11 @@ public class CharacterController2D : MonoBehaviour
 	
 	public void handleJump(bool jumpedThisFrame)
 	{
+		if(wallSticking() && !isJumping())
+		{
+			jumpCollec.reset();
+		}
+
 		if(jumpedThisFrame) // jumped this frame
 		{
 			jumpCollec.startJump(characTransform.position);
@@ -249,15 +249,6 @@ public class CharacterController2D : MonoBehaviour
 		health -= damage;
 	}
 
-	private void lockYPosition()
-	{
-		rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
-	}
-
-	private void unlockYPosition()
-	{
-		rb.constraints = RigidbodyConstraints2D.FreezeRotation;
-	}
 
 	private void putCorrectGravityScale()
 	{
