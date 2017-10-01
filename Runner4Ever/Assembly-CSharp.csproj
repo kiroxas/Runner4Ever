@@ -103,6 +103,7 @@
      <Compile Include="Assets\Scripts\JumpCharacs.cs" />
      <Compile Include="Assets\Scripts\JumpCollection.cs" />
      <Compile Include="Assets\Scripts\LevelGeneration\BasicLevelGenerator.cs" />
+     <Compile Include="Assets\Scripts\LevelGeneration\Pooler.cs" />
      <Compile Include="Assets\Scripts\LoopLevel.cs" />
      <Compile Include="Assets\Scripts\MoveBlockOnTrigger.cs" />
      <Compile Include="Assets\Scripts\ProgressionDisplay.cs" />
