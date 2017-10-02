@@ -40,15 +40,64 @@ public class PoolCollection
 	}
 }
 
+public class PoolIndexes
+{
+	// -------------- StateLess
+	public static int earthIndex = 0;
+	public static int inverseEarthIndex = 1;
+	public static int waterIndex = 2;
+	public static int hurtIndex = 3;
+
+	// -------------- StateFull
+	public static int objectIndex = 4;
+	public static int enemiesIndex = 5;
+	public static int disapearingIndex = 6;
+	public static int escalatorIndex = 7; 
+	public static int movingIndex = 8;
+	public static int killMovingIndex = 9;
+}
+
+public class Segment
+{
+	Dictionary<int, List<GameObject>> loaded;
+	bool initialLoad = true;
+
+	void init(int index)
+	{
+		loaded[index] = new List<GameObject>();
+	}
+
+	Segment()
+	{
+		loaded = new Dictionary<int, List<GameObject>>();
+		init(PoolIndexes.earthIndex);
+		init(PoolIndexes.inverseEarthIndex);
+		init(PoolIndexes.waterIndex);
+		init(PoolIndexes.hurtIndex);
+		init(PoolIndexes.objectIndex);
+		init(PoolIndexes.enemiesIndex);
+		init(PoolIndexes.disapearingIndex);
+		init(PoolIndexes.escalatorIndex);
+		init(PoolIndexes.movingIndex);
+		init(PoolIndexes.killMovingIndex);
+	}
+
+	void load(PoolCollection statePool, PoolCollection statelessPool)
+	{
+
+	}
+
+	void unload(PoolCollection statePool, PoolCollection statelessPool)
+	{
+
+	}
+}
+
 /*
  Class that holds pools of objects, and load/unload part of the level dynamicaly 
 */
 public class SegmentStreamer : MonoBehaviour 
 {
-	static int earthIndex = 0;
-	static int inverseEarthIndex = 1;
-	static int waterIndex = 2;
-
 	/* Origin prefab */
 	public GameObject instancePlayer;
 	public GameObject checkpoint;
@@ -65,14 +114,15 @@ public class SegmentStreamer : MonoBehaviour
 
 	/* Poolers */
 
-	PoolCollection tilePool;
+	PoolCollection statelessPool;
+	PoolCollection statePool;
 
 	public void Awake()
 	{
-		tilePool = new PoolCollection();
+		statelessPool = new PoolCollection();
 
-		tilePool.addPool(landTiles, earthIndex);
-		tilePool.addPool(inverseLandTiles, inverseEarthIndex);
-		tilePool.addPool(waterTiles, waterIndex);
+		statelessPool.addPool(landTiles, PoolIndexes.earthIndex);
+		statelessPool.addPool(inverseLandTiles, PoolIndexes.inverseEarthIndex);
+		statelessPool.addPool(waterTiles, PoolIndexes.waterIndex);
 	}
 }
