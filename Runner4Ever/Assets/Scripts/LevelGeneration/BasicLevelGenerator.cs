@@ -9,6 +9,29 @@ using Random = UnityEngine.Random;
 
 namespace FileUtils
 {
+	public class FileSize
+	{
+		public int xSize;
+		public int ySize;
+
+		public FileSize(int x, int y)
+		{
+			xSize = x;
+			ySize = y;
+		}
+
+		public FileSize()
+		{
+			xSize = 0;
+			ySize = 0;
+		}
+
+		public bool empty()
+		{
+			return xSize * ySize == 0;
+		}
+	}
+
 	[XmlRoot(ElementName="FileList")]
 	public class FileList
 	{
@@ -18,12 +41,18 @@ namespace FileUtils
 
 		public int index = 0;
 		
+		public List<FileSize> sizes{ get; set;}
 		public List<List<char>> loaded{ get; set;}
 		
 		public List<char> getOneRandom()
 		{
 			index = Random.Range(0, loaded.Count);
 			return loaded[index];
+		}
+
+		public FileSize getSize()
+		{
+			return sizes[index];
 		}
 
 		public List<char> getNextOne()
@@ -34,10 +63,28 @@ namespace FileUtils
 
 			return loaded[index];	
 		}
+
+		public int filesNumber()
+		{
+			return loaded.Count;
+		}
 	}
 }
 
-public class BasicLevelGenerator : MonoBehaviour 
+public abstract class ILayoutGenerator
+{
+	protected List<char> wholeLayout;
+
+	protected FileUtils.FileSize totalSize;
+
+	abstract public List<char> getLayout();
+
+	abstract public void generateLayout();
+
+	abstract public FileUtils.FileSize getLevelSize();
+}
+
+public class BasicLevelGenerator : ILayoutGenerator
 {
 	public enum GenerationStyle
 	{
@@ -45,42 +92,25 @@ public class BasicLevelGenerator : MonoBehaviour
 		InOrder
 	}
 
-	public int tileGroupsNumber = 4;
-	public int xTilePerSection = 6;
-	public int yTilePerSection = 6;
-
-	public float tileWidth = 1.28f;
-	public float tileHeight = 1.28f;
-
-	public float bottomLeftXPos = 0;
-	public float bottomLeftYPos = 0;
-
 	public GenerationStyle genStyle = GenerationStyle.Random;
 
-	public GameObject instancePlayer;
-	public GameObject checkpoint;
-	public GameObject[] landTiles;
-	public GameObject[] inverseLandTiles;
-	public GameObject[] waterTiles;
-	public GameObject[] objectTiles;
-	public GameObject[] hurtTiles;
-	public GameObject[] enemies;
-	public GameObject[] disapearingTile;
-	public GameObject[] escalator;
-	public GameObject[] movingTile;
-	public GameObject[] killMovingTile;
+	public override List<char> getLayout()
+	{
+		return wholeLayout;
+	}
+
+	public BasicLevelGenerator(GenerationStyle style)
+	{
+		genStyle = style;
+		wholeLayout = new List<char>();
+		totalSize = new FileUtils.FileSize();
+	}
 
 	FileUtils.FileList loadFileList(string folder)
 	{
-		//XmlSerializer serial = new XmlSerializer(typeof(FileUtils.FileList));
-       // Stream reader = new FileStream(folder + "file_list.xml", FileMode.Open);
-        //FileUtils.FileList list = (FileUtils.FileList)serial.Deserialize(reader);
 		String path = folder + "file_list";
         TextAsset data = Resources.Load(path) as TextAsset;
-        //XmlDocument xmldoc = new XmlDocument ();
-		//xmldoc.LoadXml ( data.text );
-		Debug.Log(path);
-		Debug.Log(data.text);
+
 		TextReader sr = new StringReader(data.text);
 
 		XmlSerializer serial = new XmlSerializer(typeof(FileUtils.FileList));
@@ -88,12 +118,43 @@ public class BasicLevelGenerator : MonoBehaviour
 
 		foreach(string f in list.files)
 		{
-			list.loaded.Add(toChar(loadTileGroup(folder, f)));	
+			string[] lines = loadTileGroup(folder, f);
+			list.loaded.Add(toChar(lines));	
+			list.sizes.Add(getSize(lines));
 		}
 		
 		return list;
 	}
 	
+	FileUtils.FileSize getSize(string[] lines)
+	{
+		int xSize = -1;
+		int ySize = 0;
+
+		foreach(string s in lines)
+		{
+			int xTemp = s.Length;
+			if(xTemp == 0)
+				continue;
+
+			ySize++;
+
+			if(xSize == -1)
+			{
+				xSize = xTemp;
+			}
+			else
+			{
+				if(xSize != xTemp)
+				{
+					Debug.LogError("The size of lines should be equal xSize : " + xSize + " new : " + xTemp);
+				}
+			}
+		}
+
+		return new FileUtils.FileSize(xSize, ySize);
+	}
+
 	List<char> toChar(string[] lines)
 	{
 		List<char> list = new List<char>();
@@ -108,6 +169,11 @@ public class BasicLevelGenerator : MonoBehaviour
 		
 		return list;
 	}
+
+	public override FileUtils.FileSize getLevelSize()
+	{
+		return totalSize;
+	}
 	
 	string[] loadTileGroup(string folder, string name)
 	{
@@ -115,7 +181,6 @@ public class BasicLevelGenerator : MonoBehaviour
 		TextAsset data = Resources.Load(path) as TextAsset;
 		string fs = data.text;
   		string[] lines = System.Text.RegularExpressions.Regex.Split ( fs, "\n|\r|\r\n" );
-		//string[] lines = System.IO.File.ReadAllLines(@folder + name);
 
 		 return lines;
 	}
@@ -137,6 +202,7 @@ public class BasicLevelGenerator : MonoBehaviour
 		UnityEngine.Object.Instantiate(instance, new Vector3(xPos, yPos, 0),  Quaternion.identity);
 	}
 
+/*
 	void createSection(List<char> toCreate, int xStart, int yStart)
 	{
 		
@@ -203,8 +269,9 @@ public class BasicLevelGenerator : MonoBehaviour
 			}
 		}
 	}
+	*/
 
-	void createPlayer(float x, float y)
+	/*void createPlayer(float x, float y)
 	{
 		GameObject player = UnityEngine.Object.Instantiate(instancePlayer, new Vector3(x , y , 0),  Quaternion.identity);
 		FindObjectOfType<CameraFollow>().target = player.GetComponent<Transform>();
@@ -213,16 +280,33 @@ public class BasicLevelGenerator : MonoBehaviour
 	void createCheckpoint(float x, float y)
 	{
 		UnityEngine.Object.Instantiate(checkpoint, new Vector3(x , y , 0),  Quaternion.identity);
+	}*/
+
+	private void addBlockSize(FileUtils.FileSize block)
+	{
+		if(totalSize.empty())
+		{
+			totalSize.xSize = block.xSize;
+			totalSize.ySize = block.ySize;
+		}
+		else
+		{
+			if(totalSize.ySize != block.ySize)
+			{
+				Debug.LogError("Blocks in LevelGeneration should have the same Y value");
+			}
+
+			totalSize.xSize += block.xSize;
+		}
 	}
 
-	// Use this for initialization
-	void Awake () 
+	public override void generateLayout()
 	{
 		FileUtils.FileList block = new FileUtils.FileList();
 		
 		block = loadFileList("LevelGeneration/");
 
-		for(int x = 0; x < tileGroupsNumber; ++x)
+		for(int x = 0; x < block.filesNumber(); ++x)
 		{
 			List<char> layout;
 			
@@ -235,14 +319,12 @@ public class BasicLevelGenerator : MonoBehaviour
 				layout = block.getNextOne();
 			}
 
-			int xStart = (int)(bottomLeftXPos + x * tileWidth * xTilePerSection);
-			createSection(layout, xStart, (int)bottomLeftYPos);
+			addBlockSize(block.getSize());
+
+			//int xStart = (int)(bottomLeftXPos + x * tileWidth * xTilePerSection);
+			//createSection(layout, xStart, (int)bottomLeftYPos);
+			wholeLayout.AddRange(layout);
 		}
 	}
-	
-	// Update is called once per frame
-	void Update () 
-	{
-		
-	}
+
 }
