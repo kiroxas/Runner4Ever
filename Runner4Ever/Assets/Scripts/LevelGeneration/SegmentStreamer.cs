@@ -104,6 +104,7 @@ public class Segment
 {
 	private Dictionary<int, List<GameObject>> loaded;
 	private bool initialLoad = true;
+	private bool enabled = false;
 
 	private List<char> layout;
 	private int xSize;
@@ -115,7 +116,33 @@ public class Segment
 	private float tileHeight;
 	private float tileWidth;
 
+	public int xGrid;
+	public int yGrid;
+
 	private string name;
+
+	public bool isEnabled()
+	{
+		return enabled;
+	}
+
+	public void enable(PoolCollection statePool)
+	{
+		if(!enabled)
+		{
+			load(statePool);
+			enabled = true;
+		}
+	}
+
+	public void disable(PoolCollection statePool)
+	{
+		if(enabled)
+		{
+			unload(statePool);
+			enabled = false;
+		}
+	}
 
 	void init(int[] indexes)
 	{
@@ -125,7 +152,7 @@ public class Segment
 		}
 	}
 
-	public Segment(int _xSize, int _ySize, float _xBegin, float _yBegin, List<char> _layout, float _tileWidth, float _tileHeight)
+	public Segment(int _xSize, int _ySize, float _xBegin, float _yBegin, List<char> _layout, float _tileWidth, float _tileHeight, int _xGrid, int _yGrid)
 	{
 		loaded = new Dictionary<int, List<GameObject>>();
 		init(PoolIndexes.statelessIndexes);
@@ -138,6 +165,8 @@ public class Segment
 		yBegin = _yBegin;
 		tileWidth = _tileWidth;
 		tileHeight = _tileHeight;
+		xGrid = _xGrid;
+		yGrid = _yGrid;
 
 		if(layout.Count != xSize * ySize)
 		{
@@ -145,7 +174,7 @@ public class Segment
 		} 
 	}
 
-	public void load(PoolCollection statePool)
+	private void load(PoolCollection statePool)
 	{
 		if(layout.Count != xSize * ySize)
 		{
@@ -178,7 +207,7 @@ public class Segment
 		}
 	}
 
-	public void unload(PoolCollection statePool)
+	private void unload(PoolCollection statePool)
 	{
 		foreach(int index in PoolIndexes.statelessIndexes)
 		{
@@ -215,6 +244,12 @@ public class Segment
 	{
 		return "I'm segment " + name + " at x:" + xBegin + ",y:" + yBegin + " with size x: " + xSize + " ,y: " + ySize + " /n " + layoutAsString(); 
 	}
+}
+
+public enum SegmentStrategy
+{
+	LoadAll,
+	NineGrid
 }
 
 /*
@@ -279,6 +314,9 @@ public class SegmentStreamer : MonoBehaviour
 
 	/* Poolers */
 	PoolCollection statePool;
+
+	public SegmentStrategy strat = SegmentStrategy.NineGrid;
+	private Vector2 oldPlayerPlacement;
 
 	private ILayoutGenerator generator;
 
@@ -370,7 +408,7 @@ public class SegmentStreamer : MonoBehaviour
 
 				bool verbose = false;
 
-				segments.Add(new Segment(xSize, ySize, xBegin, yBegin, extractSegmentList(level, x, y, verbose, xSize, ySize), tileWidth, tileHeight));
+				segments.Add(new Segment(xSize, ySize, xBegin, yBegin, extractSegmentList(level, x, y, verbose, xSize, ySize), tileWidth, tileHeight, x, y));
 				segments[segments.Count -1].setName(segmentNumber.ToString());
 
 				if(verbose)
@@ -380,7 +418,6 @@ public class SegmentStreamer : MonoBehaviour
 				segmentNumber++;
 			}
 		}
-
 	}
 
 	public void printSegments()
@@ -413,6 +450,91 @@ public class SegmentStreamer : MonoBehaviour
     	}
 	}
 
+	public Vector2 getPlayerSegment()
+	{
+		GameObject player = statePool.getUsedFromPool(PoolIndexes.playerIndex);
+		if(player == null || player.GetComponent<Transform>() == null)
+    	{
+    		return Vector2.zero;
+    	}
+
+		Vector3 position = player.GetComponent<Transform>().position;
+
+		float xSegmentSize = xTilePerSegment * tileWidth;
+		int xGridIndex = (int)Mathf.Floor(position.x / xSegmentSize);
+
+		float ySegmentSize = yTilePerSegment * tileHeight;
+		int yGridIndex = (int)Mathf.Floor(position.y / ySegmentSize);
+
+		return new Vector2(xGridIndex, yGridIndex);
+	}
+
+	public List<Segment> nineGridSegments(Vector2 gridPos)
+	{
+		List<Segment> seg = new List<Segment>();
+
+		foreach (Segment s in segments)
+		{
+			if(((s.xGrid == gridPos.x || s.xGrid == gridPos.x - 1 || s.xGrid == gridPos.x + 1) && s.yGrid == gridPos.y)
+			|| ((s.yGrid == gridPos.y || s.yGrid == gridPos.y - 1 || s.yGrid == gridPos.y + 1) && s.xGrid == gridPos.x))
+			{
+				seg.Add(s);
+			}
+		}
+
+		return seg;
+	}
+
+	public void loadInitSegments()
+	{
+		if(strat == SegmentStrategy.LoadAll)
+		{
+			/* load all */
+			foreach(Segment s in segments)
+			{
+				s.enable(statePool);
+			}
+		}
+		else if(strat == SegmentStrategy.NineGrid)
+		{
+			oldPlayerPlacement = getPlayerSegment();
+			foreach(Segment s in nineGridSegments(oldPlayerPlacement))
+			{
+				s.enable(statePool);
+			}
+		}
+	}
+
+	public void updateSegments()
+	{
+		 if(strat == SegmentStrategy.NineGrid)
+		 {
+		 	Vector2 gridIndex = getPlayerSegment();
+
+		 	if(gridIndex != oldPlayerPlacement)
+		 	{
+		 		oldPlayerPlacement = gridIndex;
+		 		var ngs = nineGridSegments(gridIndex);
+
+		 		// first disable, to liberate space in pool
+		 		foreach(Segment s in segments)
+		 		{
+		 			if(s.isEnabled() && ngs.Contains(s) == false)
+		 			{
+		 				s.disable(statePool);
+		 			}
+		 		}
+
+		 		// then enable
+		 		foreach(Segment s in ngs)
+		 		{
+		 			s.enable(statePool);
+		 		}
+		 	}
+
+		 }
+	}
+
 	public void Awake()
 	{
 		generator = new BasicLevelGenerator(BasicLevelGenerator.GenerationStyle.InOrder);
@@ -439,11 +561,13 @@ public class SegmentStreamer : MonoBehaviour
 
 		//printSegments();
 
-		foreach(Segment s in segments)
-		{
-			s.load(statePool);
-		}
+		loadInitSegments();
 
 		attachPlayerToCamera();
+	}
+
+	public void Update()
+	{
+		updateSegments();
 	}
 }
