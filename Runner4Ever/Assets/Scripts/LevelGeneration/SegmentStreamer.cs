@@ -22,11 +22,16 @@ public class PoolCollection
 
 	public void addPool(GameObject prefabInstance, int key)
 	{
+		addPool(prefabInstance, key, stackDefaultSize);
+	}
+
+	public void addPool(GameObject prefabInstance, int key, int stackSize)
+	{
 		if(pools.ContainsKey(key))
 		{
 			Debug.LogError("Already assigned a pool to this key : " + key);
 		}
-		pools[key] = new Pooler(prefabInstance, stackDefaultSize);
+		pools[key] = new Pooler(prefabInstance, stackSize);
 	}
 
 	public GameObject getFromPool(int index)
@@ -52,6 +57,11 @@ public class PoolCollection
 
 public class PoolIndexes
 {
+	public static int uniquePoolingStrategy = 1;
+	public static int smallPoolingStrategy = 10;
+	public static int mediumPoolingStrategy = 50;
+	public static int bigPoolingStrategy = 250;
+
 	// -------------- StateLess
 	public static int earthIndex = 0;
 	public static int inverseEarthIndex = 1;
@@ -358,7 +368,7 @@ public class SegmentStreamer : MonoBehaviour
 				float xBegin = x * xTilePerSegment * tileWidth + bottomLeftXPos;
 				float yBegin = y * yTilePerSegment * tileHeight + bottomLeftYPos;
 
-				bool verbose = true;
+				bool verbose = false;
 
 				segments.Add(new Segment(xSize, ySize, xBegin, yBegin, extractSegmentList(level, x, y, verbose, xSize, ySize), tileWidth, tileHeight));
 				segments[segments.Count -1].setName(segmentNumber.ToString());
@@ -414,18 +424,18 @@ public class SegmentStreamer : MonoBehaviour
 
 		statePool = new PoolCollection();
 
-		statePool.addPool(landTiles, PoolIndexes.earthIndex);
-		statePool.addPool(inverseLandTiles, PoolIndexes.inverseEarthIndex);
-		statePool.addPool(waterTiles, PoolIndexes.waterIndex);
-		statePool.addPool(hurtTiles, PoolIndexes.hurtIndex);
-		statePool.addPool(objectTiles, PoolIndexes.objectIndex);
-		statePool.addPool(enemies, PoolIndexes.enemiesIndex);
-		statePool.addPool(disapearingTile, PoolIndexes.disapearingIndex);
-		statePool.addPool(instancePlayer, PoolIndexes.playerIndex);
-		statePool.addPool(checkpoint, PoolIndexes.checkpointIndex);
-		statePool.addPool(escalator, PoolIndexes.escalatorIndex);
-		statePool.addPool(movingTile, PoolIndexes.movingIndex);
-		statePool.addPool(killMovingTile, PoolIndexes.killMovingIndex);
+		statePool.addPool(landTiles, PoolIndexes.earthIndex, PoolIndexes.bigPoolingStrategy);
+		statePool.addPool(inverseLandTiles, PoolIndexes.inverseEarthIndex, PoolIndexes.mediumPoolingStrategy);
+		statePool.addPool(waterTiles, PoolIndexes.waterIndex , PoolIndexes.mediumPoolingStrategy);
+		statePool.addPool(hurtTiles, PoolIndexes.hurtIndex, PoolIndexes.mediumPoolingStrategy);
+		statePool.addPool(objectTiles, PoolIndexes.objectIndex, PoolIndexes.mediumPoolingStrategy);
+		statePool.addPool(enemies, PoolIndexes.enemiesIndex, PoolIndexes.mediumPoolingStrategy);
+		statePool.addPool(disapearingTile, PoolIndexes.disapearingIndex, PoolIndexes.mediumPoolingStrategy);
+		statePool.addPool(instancePlayer, PoolIndexes.playerIndex , PoolIndexes.uniquePoolingStrategy);
+		statePool.addPool(checkpoint, PoolIndexes.checkpointIndex, PoolIndexes.smallPoolingStrategy);
+		statePool.addPool(escalator, PoolIndexes.escalatorIndex, PoolIndexes.smallPoolingStrategy);
+		statePool.addPool(movingTile, PoolIndexes.movingIndex, PoolIndexes.smallPoolingStrategy);
+		statePool.addPool(killMovingTile, PoolIndexes.killMovingIndex, PoolIndexes.smallPoolingStrategy);
 
 		//printSegments();
 
