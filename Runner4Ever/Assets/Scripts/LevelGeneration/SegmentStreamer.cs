@@ -132,12 +132,19 @@ public class Segment
 
 	public void load(PoolCollection statePool)
 	{
-		int index = 0;
-		for(int y =0; y < ySize; ++y)
+		if(layout.Count != xSize * ySize)
+		{
+			Debug.LogError("[Segment] Layout size (" + layout.Count + ") should be equal to x (" + xSize + ") * y (" + ySize + ")");
+		} 
+
+		int index =  (ySize - 1) * xSize;
+		for(int y = 0; y < ySize; ++y)
 		{
 			for(int x = 0; x < xSize; ++x)
 			{
+				Debug.Log("Index : " + index);
 				char value = layout[index];
+				index++;
 				if(value == PoolIndexes.emptyIndex)
 				{
 					continue;
@@ -146,10 +153,9 @@ public class Segment
 				int poolIndex = PoolIndexes.fileToPoolMapping[value];
 				Vector3 position = new Vector3(xBegin + x * tileWidth, yBegin + y * tileHeight, 0.0f); 
 
-				Debug.Log("index: " + poolIndex + " at position " + position + " x:y " + x + ":" + y);
-
 				loaded[poolIndex].Add(statePool.getFromPool(poolIndex, position));	
 			}
+			index -= 2* xSize;
 		}
 	}
 
@@ -183,6 +189,23 @@ public class Segment
 
 	public string layoutAsString()
 	{
+		return SegmentStreamer.layoutAsString(layout, xSize, ySize);
+	}
+
+	public string presentation()
+	{
+		return "I'm segment " + name + " at x:" + xBegin + ",y:" + yBegin + " with size x: " + xSize + " ,y: " + ySize + " /n " + layoutAsString(); 
+	}
+}
+
+/*
+ Class that holds pools of objects, and load/unload part of the level dynamicaly 
+*/
+public class SegmentStreamer : MonoBehaviour 
+{
+
+	public static string layoutAsString(List<char> layout, int xSize, int ySize)
+	{
 		StringBuilder sb = new StringBuilder();
 
 		int index = 0;
@@ -199,17 +222,6 @@ public class Segment
 		return sb.ToString();
 	}
 
-	public string presentation()
-	{
-		return "I'm segment " + name + " at x:" + xBegin + ",y:" + yBegin + " with size x: " + xSize + " ,y: " + ySize + " /n " + layoutAsString(); 
-	}
-}
-
-/*
- Class that holds pools of objects, and load/unload part of the level dynamicaly 
-*/
-public class SegmentStreamer : MonoBehaviour 
-{
 	[HideInInspector]
 	public int xTotalLevel = 6;
 	[HideInInspector]
@@ -253,24 +265,36 @@ public class SegmentStreamer : MonoBehaviour
 	private ILayoutGenerator generator;
 
 	// Extract the list corresponding to the subblock of the segment
-	private List<char> extractSegmentList(List<char> wholeLevel, int xSegment, int ySegment, bool verbose)
+	private List<char> extractSegmentList(List<char> wholeLevel, int xSegment, int ySegment, bool verbose, int xSize, int ySize)
 	{
 		List<char> subList = new List<char>();
 
-		int originX = xSegment * xTilePerSegment;
-		int originY = ySegment * yTilePerSegment;
-
-		int index = ((originY - 1 < 0 ? 0 : originY - 1) * xTotalLevel) + originX;
-
-		int thisSegmentX = xTotalLevel - originX;
-		thisSegmentX = Mathf.Clamp(thisSegmentX, 1, xTilePerSegment);
-
-		int thisSegmentY = yTotalLevel - originY;
-		thisSegmentY = Mathf.Clamp(thisSegmentY, 1, yTilePerSegment);
-
-		for(int y = 0; y < thisSegmentY; ++y)
+		if(verbose)
 		{
-			for(int x = 0; x < thisSegmentX; ++x)
+			Debug.Log("ySegments : " + ySegments + " ySegment " + ySegment );
+		}
+
+		int originX = xSegment * xTilePerSegment;
+		
+		int startY = (ySegments -1 - ySegment); // inverse the y
+		int originY = startY * yTilePerSegment + ySize - 1;
+
+		int index = (originY * xTotalLevel) + originX;
+
+		if(verbose)
+		{
+			Debug.Log("originX : " + originX + " originY " + originY + "index " + index + "total : " + wholeLevel.Count);
+			Debug.Log("xSize : " + xSize + " ySize " + ySize );
+		}
+
+		List<List<char>> lists = new List<List<char>>();
+		int subListIndex = 0;
+
+		for(int y = 0; y < ySize; ++y)
+		{
+			lists.Add(new List<char>());
+
+			for(int x = 0; x < xSize; ++x)
 			{
 				if(verbose)
 				{
@@ -279,14 +303,21 @@ public class SegmentStreamer : MonoBehaviour
 
 				if(index >= wholeLevel.Count)
 				{
-					Debug.LogError("Index : " + index + " segY : " + thisSegmentY + " segX : " + thisSegmentX + " origin : " + originX + "," + originY);
+					Debug.LogError("Index : " + index + " origin : " + originX + "," + originY);
 				}
-				subList.Add(wholeLevel[index]);
+				lists[subListIndex].Add(wholeLevel[index]);
 				++index;
-
 			}
-
-			index += xTotalLevel - thisSegmentX; 
+			index--; // remove the ++ of the end loop above
+			index -= (xSize - 1); // Should realign on the first of this line
+			index -= xTotalLevel; 
+			subListIndex++;
+		}
+		//subList.Reverse();
+		lists.Reverse();
+		foreach(List<char> lc in lists)
+		{
+			subList.AddRange(lc);
 		}
 
 		return subList;
@@ -298,6 +329,8 @@ public class SegmentStreamer : MonoBehaviour
 		FileUtils.FileSize levelSize = generator.getLevelSize();
 		xTotalLevel = levelSize.xSize;
 		yTotalLevel = levelSize.ySize;
+
+		Debug.Log(SegmentStreamer.layoutAsString(level, xTotalLevel, yTotalLevel));
 
 		xSegments = (int)Mathf.Ceil((float)xTotalLevel / (float)xTilePerSegment);
 		ySegments = (int)Mathf.Ceil((float)yTotalLevel / (float)yTilePerSegment);
@@ -321,7 +354,7 @@ public class SegmentStreamer : MonoBehaviour
 
 				bool verbose = x == 0 && y ==0;
 
-				segments.Add(new Segment(xSize, ySize, xBegin, yBegin, extractSegmentList(level, x, y, verbose), tileWidth, tileHeight));
+				segments.Add(new Segment(xSize, ySize, xBegin, yBegin, extractSegmentList(level, x, y, verbose, xSize, ySize), tileWidth, tileHeight));
 				segments[segments.Count -1].setName(segmentNumber.ToString());
 
 				if(verbose)

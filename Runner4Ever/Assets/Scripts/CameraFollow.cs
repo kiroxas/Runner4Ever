@@ -47,7 +47,7 @@ public class CameraFollow : MonoBehaviour {
 			size = new Vector3(xSize, ySize, 0);
 			float xMiddle = lg.bottomLeftXPos + size.x / 2.0f;
 			float yMiddle = lg.bottomLeftYPos + size.y / 2.0f;
-			center = new Vector3(xMiddle - lg.tileWidth / 2.0f, yMiddle + lg.tileHeight / 2.0f, 0); // Because the anchor point of tiles are centered
+			center = new Vector3(xMiddle - lg.tileWidth / 2.0f, yMiddle - lg.tileHeight / 2.0f , 0); // Because the anchor point of tiles are centered
 		}
 
 		containingBox = new Bounds(center, size);

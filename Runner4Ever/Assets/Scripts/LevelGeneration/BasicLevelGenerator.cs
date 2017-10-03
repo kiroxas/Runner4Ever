@@ -119,6 +119,7 @@ public class BasicLevelGenerator : ILayoutGenerator
 		foreach(string f in list.files)
 		{
 			string[] lines = loadTileGroup(folder, f);
+			//Array.Reverse(lines);
 			list.loaded.Add(toChar(lines));	
 			list.sizes.Add(getSize(lines));
 		}
@@ -293,11 +294,36 @@ public class BasicLevelGenerator : ILayoutGenerator
 		{
 			if(totalSize.ySize != block.ySize)
 			{
-				Debug.LogError("Blocks in LevelGeneration should have the same Y value");
+				Debug.LogError("Blocks in LevelGeneration should have the same Y value total : " + totalSize.ySize + " and merging one : " + block.ySize);
 			}
 
 			totalSize.xSize += block.xSize;
 		}
+	}
+
+	private void merge(List<char> layoutToMerge, FileUtils.FileSize size)
+	{
+		List<char> newLayout = new List<char>();
+
+		if(totalSize.ySize != 0 && size.ySize != totalSize.ySize)
+		{
+			Debug.LogError("Blocks in LevelGeneration should have the same Y value total : " + totalSize.ySize + " and merging one : " + size.ySize);
+		}
+
+		for(int y = 0; y < size.ySize; ++y)
+		{
+			for(int x = 0; x < totalSize.xSize; ++x)
+			{
+				newLayout.Add(wholeLayout[y * totalSize.xSize + x]);
+			}
+
+			for(int x = 0; x < size.xSize; ++x)
+			{
+				newLayout.Add(layoutToMerge[y * size.xSize + x]);
+			}
+		}
+
+		wholeLayout = newLayout;
 	}
 
 	public override void generateLayout()
@@ -319,11 +345,12 @@ public class BasicLevelGenerator : ILayoutGenerator
 				layout = block.getNextOne();
 			}
 
+			merge(layout, block.getSize());
 			addBlockSize(block.getSize());
 
 			//int xStart = (int)(bottomLeftXPos + x * tileWidth * xTilePerSection);
 			//createSection(layout, xStart, (int)bottomLeftYPos);
-			wholeLayout.AddRange(layout);
+			//wholeLayout.AddRange(layout);
 		}
 	}
 
