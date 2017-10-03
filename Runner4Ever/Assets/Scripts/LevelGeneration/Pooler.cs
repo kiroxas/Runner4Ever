@@ -9,6 +9,7 @@ public class Pooler
 {
 	protected Stack<GameObject> m_FreeInstances = new Stack<GameObject>();
 	protected GameObject m_Original;
+	protected List<GameObject> usedObjects = new List<GameObject>();
 
 	public Pooler(GameObject original, int initialSize)
 	{
@@ -36,6 +37,8 @@ public class Pooler
 		ret.transform.position = pos;
 		ret.transform.rotation = quat;
 
+		usedObjects.Add(ret);
+
 		return ret;
 	}
 
@@ -44,5 +47,28 @@ public class Pooler
 		obj.transform.SetParent(null);
 		obj.SetActive(false);
 		m_FreeInstances.Push(obj);
+		bool removed = usedObjects.Remove(obj);
+		if(!removed)
+		{
+			Debug.LogError("[Pooler] freeing an instance that was not get here");
+		}
+	}
+
+	public int useInstancesCount()
+	{
+		return usedObjects.Count;
+	}
+
+	public int freeInstancesCount()
+	{
+		return m_FreeInstances.Count;
+	}
+
+	public GameObject getUsedObject()
+	{
+		if(usedObjects.Count == 0)
+			return null;
+
+		return usedObjects[0];
 	}
 }

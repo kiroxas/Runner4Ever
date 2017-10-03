@@ -57,11 +57,13 @@ namespace FileUtils
 
 		public List<char> getNextOne()
 		{
-			index++;
+			int ind = index;
+
+			++index;
 			if(index >= loaded.Count)
 				index =0;
 
-			return loaded[index];	
+			return loaded[ind];	
 		}
 
 		public int filesNumber()
@@ -203,86 +205,6 @@ public class BasicLevelGenerator : ILayoutGenerator
 		UnityEngine.Object.Instantiate(instance, new Vector3(xPos, yPos, 0),  Quaternion.identity);
 	}
 
-/*
-	void createSection(List<char> toCreate, int xStart, int yStart)
-	{
-		
-		int index = 0;
-		for(int y =0; y < yTilePerSection; ++y)
-		{
-			for(int x = 0; x < xTilePerSection; ++x)
-			{
-				char tileType = toCreate[index];
-				float yPos = yStart + (yTilePerSection - y) * tileHeight;
-				float xPos = xStart + x * tileWidth;
-
-				if(tileType == '1') // ground tile
-				{
-					createTileType(landTiles, xPos, yPos);
-				} 
-				else if (tileType == '3') // random object
-				{
-					createTileType(objectTiles, xPos, yPos);
-				}
-				else if (tileType == '2') // water tile
-				{
-					createTileType(waterTiles, xPos, yPos);
-				}
-				else if(tileType == '4') // spawn player
-				{
-					createPlayer(xPos, yPos);
-					createCheckpoint(xPos, yPos);
-				}
-				else if(tileType == '5')
-				{
-					createCheckpoint(xPos, yPos);
-				}
-				else if(tileType == '6') // tile that inverse wall jump
-				{
-					createTileType(inverseLandTiles, xPos, yPos);
-				}
-				else if(tileType == '7') // tile that hurt player
-				{
-					createTileType(hurtTiles, xPos, yPos);
-				}
-				else if(tileType == '8') // enemy
-				{
-					createTileType(enemies, xPos, yPos);
-				}
-				else if(tileType == '9') // disapearing Tile
-				{
-					createTileType(disapearingTile, xPos, yPos);
-				}
-				else if(tileType == 'a') // escalator
-				{
-					createTileType(escalator, xPos, yPos);
-				}
-				else if(tileType == 'b') // moving tile
-				{
-					createTileType(movingTile, xPos, yPos);
-				}
-				else if(tileType == 'c') // kill moving tile
-				{
-					createTileType(killMovingTile, xPos, yPos);
-				}
-
-				++index;
-			}
-		}
-	}
-	*/
-
-	/*void createPlayer(float x, float y)
-	{
-		GameObject player = UnityEngine.Object.Instantiate(instancePlayer, new Vector3(x , y , 0),  Quaternion.identity);
-		FindObjectOfType<CameraFollow>().target = player.GetComponent<Transform>();
-	}
-
-	void createCheckpoint(float x, float y)
-	{
-		UnityEngine.Object.Instantiate(checkpoint, new Vector3(x , y , 0),  Quaternion.identity);
-	}*/
-
 	private void addBlockSize(FileUtils.FileSize block)
 	{
 		if(totalSize.empty())
@@ -347,10 +269,6 @@ public class BasicLevelGenerator : ILayoutGenerator
 
 			merge(layout, block.getSize());
 			addBlockSize(block.getSize());
-
-			//int xStart = (int)(bottomLeftXPos + x * tileWidth * xTilePerSection);
-			//createSection(layout, xStart, (int)bottomLeftYPos);
-			//wholeLayout.AddRange(layout);
 		}
 	}
 

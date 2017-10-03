@@ -43,6 +43,11 @@ public class PoolCollection
 	{
 		pools[index].Free(prefabInstance);
 	}
+
+	public GameObject getUsedFromPool(int index)
+	{
+		return pools[index].getUsedObject();
+	}
 }
 
 public class PoolIndexes
@@ -66,7 +71,7 @@ public class PoolIndexes
 	public static int playerIndex = 10;
 	public static int checkpointIndex = 11;
 
-	public static int[] stateIndexes = { objectIndex, enemiesIndex, disapearingIndex, escalatorIndex, movingIndex, killMovingIndex};
+	public static int[] stateIndexes = { objectIndex, enemiesIndex, disapearingIndex, escalatorIndex, movingIndex, killMovingIndex, checkpointIndex, playerIndex};
 
 	public static char emptyIndex = '0';
 	public static Dictionary<char, int> fileToPoolMapping = new Dictionary<char, int>
@@ -104,9 +109,9 @@ public class Segment
 
 	void init(int[] indexes)
 	{
-		for(int i =0; i < indexes.Length; ++i)
+		for(int i = 0; i < indexes.Length; ++i)
 		{
-			loaded[i] = new List<GameObject>();
+			loaded[indexes[i]] = new List<GameObject>();
 		}
 	}
 
@@ -142,7 +147,6 @@ public class Segment
 		{
 			for(int x = 0; x < xSize; ++x)
 			{
-				Debug.Log("Index : " + index);
 				char value = layout[index];
 				index++;
 				if(value == PoolIndexes.emptyIndex)
@@ -152,6 +156,11 @@ public class Segment
 
 				int poolIndex = PoolIndexes.fileToPoolMapping[value];
 				Vector3 position = new Vector3(xBegin + x * tileWidth, yBegin + y * tileHeight, 0.0f); 
+
+				if(loaded.ContainsKey(poolIndex) == false)
+				{
+					Debug.LogError("[Segment/Load] Cannot store gameobject of type :" + poolIndex);
+				}
 
 				loaded[poolIndex].Add(statePool.getFromPool(poolIndex, position));	
 			}
@@ -259,7 +268,6 @@ public class SegmentStreamer : MonoBehaviour
 	public GameObject killMovingTile;
 
 	/* Poolers */
-	PoolCollection statelessPool;
 	PoolCollection statePool;
 
 	private ILayoutGenerator generator;
@@ -272,18 +280,20 @@ public class SegmentStreamer : MonoBehaviour
 		if(verbose)
 		{
 			Debug.Log("ySegments : " + ySegments + " ySegment " + ySegment );
+			Debug.Log("xSegments : " + xSegments + " xSegment " + xSegment );
 		}
 
 		int originX = xSegment * xTilePerSegment;
 		
 		int startY = (ySegments -1 - ySegment); // inverse the y
 		int originY = startY * yTilePerSegment + ySize - 1;
+		originY = Mathf.Clamp(originY, 1, yTotalLevel - 1);
 
 		int index = (originY * xTotalLevel) + originX;
 
 		if(verbose)
 		{
-			Debug.Log("originX : " + originX + " originY " + originY + "index " + index + "total : " + wholeLevel.Count);
+			Debug.Log("startY " + startY + " originX : " + originX + " originY " + originY + " index " + index + " total : " + wholeLevel.Count);
 			Debug.Log("xSize : " + xSize + " ySize " + ySize );
 		}
 
@@ -330,12 +340,8 @@ public class SegmentStreamer : MonoBehaviour
 		xTotalLevel = levelSize.xSize;
 		yTotalLevel = levelSize.ySize;
 
-		Debug.Log(SegmentStreamer.layoutAsString(level, xTotalLevel, yTotalLevel));
-
 		xSegments = (int)Mathf.Ceil((float)xTotalLevel / (float)xTilePerSegment);
 		ySegments = (int)Mathf.Ceil((float)yTotalLevel / (float)yTilePerSegment);
-
-		Debug.Log("Level Size : " + xTotalLevel + ", " + yTotalLevel + " segments :" + xSegments + ", " + ySegments);
 
 		int segmentNumber = 1;
 
@@ -352,7 +358,7 @@ public class SegmentStreamer : MonoBehaviour
 				float xBegin = x * xTilePerSegment * tileWidth + bottomLeftXPos;
 				float yBegin = y * yTilePerSegment * tileHeight + bottomLeftYPos;
 
-				bool verbose = x == 0 && y ==0;
+				bool verbose = true;
 
 				segments.Add(new Segment(xSize, ySize, xBegin, yBegin, extractSegmentList(level, x, y, verbose, xSize, ySize), tileWidth, tileHeight));
 				segments[segments.Count -1].setName(segmentNumber.ToString());
@@ -375,9 +381,31 @@ public class SegmentStreamer : MonoBehaviour
 		}
 	}
 
+	public void attachPlayerToCamera()
+	{
+    	GameObject player = statePool.getUsedFromPool(PoolIndexes.playerIndex);
+
+    	if(player == null)
+    	{
+    		Debug.LogError("Could not find the player instance via the poolCoolection");
+    	}
+
+    	CameraFollow camera = FindObjectOfType<CameraFollow>();
+
+    	if(camera == null)
+    	{
+    		Debug.LogError("Could not find the cameraFollow script in the scene");
+    	}
+
+    	if(camera && player)
+    	{
+    		camera.target = player.GetComponent<Transform>(); 
+    	}
+	}
+
 	public void Awake()
 	{
-		generator = new BasicLevelGenerator(BasicLevelGenerator.GenerationStyle.Random);
+		generator = new BasicLevelGenerator(BasicLevelGenerator.GenerationStyle.InOrder);
 		generator.generateLayout();
 
 		segments = new List<Segment>();
@@ -399,12 +427,13 @@ public class SegmentStreamer : MonoBehaviour
 		statePool.addPool(movingTile, PoolIndexes.movingIndex);
 		statePool.addPool(killMovingTile, PoolIndexes.killMovingIndex);
 
-		printSegments();
+		//printSegments();
 
 		foreach(Segment s in segments)
 		{
 			s.load(statePool);
 		}
 
+		attachPlayerToCamera();
 	}
 }
