@@ -5,6 +5,7 @@ using System.Xml.Serialization;
 using System.Xml;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using Random = UnityEngine.Random;
 
 // How will we load the segments
@@ -59,6 +60,8 @@ public class SegmentStreamer : MonoBehaviour
 	/* Origin prefab */
 	public GameObject instancePlayer;
 	public GameObject checkpoint;
+
+	/* Stateless prefabs */
 	public GameObject landTiles;
 	public GameObject inverseLandTiles;
 	public GameObject waterTiles;
@@ -76,8 +79,6 @@ public class SegmentStreamer : MonoBehaviour
 	public GameObject killMovingTile;
 
 	/* Poolers */
-
-	PoolCollection statelessPool;
 	PoolCollection statePool;
 
 	public SegmentStrategy strat = SegmentStrategy.NineGrid;
@@ -298,7 +299,8 @@ public class SegmentStreamer : MonoBehaviour
 
 	public void Awake()
 	{
-		statelessPool = new PoolCollection();
+		generator = new BasicLevelGenerator(BasicLevelGenerator.GenerationStyle.InOrder);
+		generator.generateLayout();
 
 		segments = new List<Segment>();
 
