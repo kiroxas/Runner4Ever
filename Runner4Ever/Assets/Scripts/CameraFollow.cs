@@ -58,10 +58,6 @@ public class CameraFollow : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-		Debug.DrawLine(containingBox.min, upLeft, Color.blue);
-		Debug.DrawLine(upLeft, containingBox.max, Color.blue);
-		Debug.DrawLine(containingBox.max, downRight, Color.blue);
-		Debug.DrawLine(containingBox.min, downRight, Color.blue);
-
+		UnityUtils.drawGizmoSquare(containingBox.min, downRight, containingBox.max, upLeft, Color.blue);
 	}
 }
