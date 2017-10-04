@@ -237,8 +237,7 @@ public class SegmentStreamer : MonoBehaviour
 
 		foreach (Segment s in segments)
 		{
-			if(((s.xGrid == gridPos.x || s.xGrid == gridPos.x - 1 || s.xGrid == gridPos.x + 1) && s.yGrid == gridPos.y)
-			|| ((s.yGrid == gridPos.y || s.yGrid == gridPos.y - 1 || s.yGrid == gridPos.y + 1) && s.xGrid == gridPos.x))
+			if((s.xGrid == gridPos.x || s.xGrid == gridPos.x - 1 || s.xGrid == gridPos.x + 1) && (s.yGrid == gridPos.y || s.yGrid == gridPos.y - 1 || s.yGrid == gridPos.y + 1))
 			{
 				seg.Add(s);
 			}

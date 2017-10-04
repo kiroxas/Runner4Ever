@@ -96,23 +96,6 @@ public class BasicLevelGenerator : ILayoutGenerator
 
 	public GenerationStyle genStyle = GenerationStyle.Random;
 
-<<<<<<< HEAD
-	public GameObject instancePlayer;
-	public GameObject checkpoint;
-	public GameObject[] landTiles;
-	public GameObject[] inverseLandTiles;
-	public GameObject[] waterTiles;
-	public GameObject[] objectTiles;
-	public GameObject[] hurtTiles;
-	public GameObject[] enemies;
-	public GameObject[] disapearingTile;
-	public GameObject[] escalator;
-	public GameObject[] bumperTile;
-	public GameObject[] movingTile;
-	public GameObject[] killMovingTile;
-	public GameObject[] standOnTile;
-	public GameObject[] jumperTile;
-=======
 	public override List<char> getLayout()
 	{
 		return wholeLayout;
@@ -124,7 +107,6 @@ public class BasicLevelGenerator : ILayoutGenerator
 		wholeLayout = new List<char>();
 		totalSize = new FileUtils.FileSize();
 	}
->>>>>>> Pooling
 
 	FileUtils.FileList loadFileList(string folder)
 	{
@@ -234,77 +216,7 @@ public class BasicLevelGenerator : ILayoutGenerator
 		{
 			if(totalSize.ySize != block.ySize)
 			{
-<<<<<<< HEAD
-				char tileType = toCreate[index];
-				float yPos = yStart + (yTilePerSection - y) * tileHeight;
-				float xPos = xStart + x * tileWidth;
-
-				if(tileType == '1') // ground tile
-				{
-					createTileType(landTiles, xPos, yPos);
-				} 
-				else if (tileType == '3') // random object
-				{
-					createTileType(objectTiles, xPos, yPos);
-				}
-				else if (tileType == '2') // water tile
-				{
-					createTileType(waterTiles, xPos, yPos);
-				}
-				else if(tileType == '4') // spawn player
-				{
-					createPlayer(xPos, yPos);
-					createCheckpoint(xPos, yPos);
-				}
-				else if(tileType == '5')
-				{
-					createCheckpoint(xPos, yPos);
-				}
-				else if(tileType == '6') // tile that inverse wall jump
-				{
-					createTileType(inverseLandTiles, xPos, yPos);
-				}
-				else if(tileType == '7') // tile that hurt player
-				{
-					createTileType(hurtTiles, xPos, yPos);
-				}
-				else if(tileType == '8') // enemy
-				{
-					createTileType(enemies, xPos, yPos);
-				}
-				else if(tileType == '9') // disapearing Tile
-				{
-					createTileType(disapearingTile, xPos, yPos);
-				}
-				else if(tileType == 'A') // escalator
-				{
-					createTileType(escalator, xPos, yPos);
-				}
-				else if(tileType == 'B') // bumper tile
-				{
-					createTileType(bumperTile, xPos, yPos);
-				}
-				else if(tileType == 'C') // moving tile
-				{
-					createTileType(movingTile, xPos, yPos);
-				}
-				else if(tileType == 'D') // kill moving tile
-				{
-					createTileType(killMovingTile, xPos, yPos);
-				}
-				else if(tileType == 'E') // stand on tile
-				{
-					createTileType(standOnTile, xPos, yPos);
-				}
-				else if(tileType == 'F') // jumper tile
-				{
-					createTileType(jumperTile, xPos, yPos);
-				}
-
-				++index;
-=======
 				Debug.LogError("Blocks in LevelGeneration should have the same Y value total : " + totalSize.ySize + " and merging one : " + block.ySize);
->>>>>>> Pooling
 			}
 
 			totalSize.xSize += block.xSize;
