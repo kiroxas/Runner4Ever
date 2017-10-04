@@ -69,7 +69,6 @@ public class SegmentStreamer : MonoBehaviour
 
 	/* State prefabs */
 	public GameObject objectTiles;
-	public GameObject hurtTiles;
 	public GameObject enemies;
 	public GameObject disapearingTile;
 	public GameObject escalator;
