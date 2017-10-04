@@ -103,11 +103,16 @@
      <Compile Include="Assets\Scripts\JumpCharacs.cs" />
      <Compile Include="Assets\Scripts\JumpCollection.cs" />
      <Compile Include="Assets\Scripts\LevelGeneration\BasicLevelGenerator.cs" />
+     <Compile Include="Assets\Scripts\LevelGeneration\PoolCollection.cs" />
+     <Compile Include="Assets\Scripts\LevelGeneration\PoolIndexes.cs" />
      <Compile Include="Assets\Scripts\LevelGeneration\Pooler.cs" />
+     <Compile Include="Assets\Scripts\LevelGeneration\Segment.cs" />
      <Compile Include="Assets\Scripts\LevelGeneration\SegmentStreamer.cs" />
      <Compile Include="Assets\Scripts\LoopLevel.cs" />
      <Compile Include="Assets\Scripts\MoveBlockOnTrigger.cs" />
      <Compile Include="Assets\Scripts\ProgressionDisplay.cs" />
+     <Compile Include="Assets\Scripts\Utils\CheckpointUtils.cs" />
+     <Compile Include="Assets\Scripts\Utils\UnityUtils.cs" />
      <Compile Include="Assets\Scripts\WalkEnemyController2D.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\MultiKeyDictionary.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\Reporter.cs" />
