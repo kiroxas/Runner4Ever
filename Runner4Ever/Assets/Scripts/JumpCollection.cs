@@ -46,7 +46,8 @@ public class JumpCollection
 		currentIndex++;
 		if(jumps.Count <= currentIndex)
 		{
-			Debug.LogError("Cannot jump, no more jump registered, jumps : " + jumps.Count + ", index : " + currentIndex);
+			Debug.Log("Looping jumps");
+			currentIndex = 0;
 		}
 
 		cleanPrecedentJump();
@@ -117,12 +118,19 @@ public class JumpCollection
 
 	private void cleanPrecedentJump()
 	{
+		
+
 		if(jumps.Count == 0)
 		{
 			return;
 		}
 
 		int ind = currentIndex;
+		if(ind == 0)
+		{
+			ind = jumps.Count;
+		}
+		
 		ind--;
 		if(ind < 0)
 		{
