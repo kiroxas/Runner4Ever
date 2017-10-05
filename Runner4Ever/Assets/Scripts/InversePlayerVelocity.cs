@@ -36,35 +36,35 @@ public class InversePlayerVelocity : MonoBehaviour {
         return (r >= 0 && r <= 1) && (s >= 0 && s <= 1);
     }
 
-	void OnCollisionEnter2D(Collider2D other) 
+	void OnCollisionEnterCustom(RaycastCollision other) 
 	{
-        var state = other.GetComponent<CharacterController2D>();
-        if(state != null && other.gameObject.tag == "Player")
+        var state = other.other.GetComponent<CharacterController2D>();
+        if(state != null && other.other.gameObject.tag == "Player")
         {
         	var collider = GetComponent<Collider2D>();
 
-        	Vector2 topLeft = new Vector2(collider.bounds.min.x, collider.bounds.max.y);
+        	/*Vector2 topLeft = new Vector2(collider.bounds.min.x, collider.bounds.max.y);
         	Vector2 topRight = collider.bounds.max;
         	Vector2 bottomRigth = new Vector2(collider.bounds.max.x, collider.bounds.min.y);
-        	Vector2 bottomLeft = collider.bounds.min;
+        	Vector2 bottomLeft = collider.bounds.min;*/
 
         	// Is it from above ?
-        	if(IsIntersecting(collider.bounds.center, other.bounds.center, topRight, topLeft))
+        	if(other.point.y == collider.bounds.max.y)  //(IsIntersecting(collider.bounds.center, other.other.bounds.center, topRight, topLeft))
         	{
                 Debug.Log("Above");
         		state.inverseYVelocity(speedBonus, maxYVelocity);
         	}
-        	else if(IsIntersecting(collider.bounds.center, other.bounds.center, bottomLeft, bottomRigth)) // below
+        	else if(other.point.y == collider.bounds.min.y) //(IsIntersecting(collider.bounds.center, other.other.bounds.center, bottomLeft, bottomRigth)) // below
         	{
                 Debug.Log("Below");
         		state.inverseYVelocity(speedBonus, maxYVelocity);
         	}
-        	else if(IsIntersecting(collider.bounds.center, other.bounds.center, topLeft, bottomLeft)) // left
+        	else if(other.point.x == collider.bounds.min.x) //(IsIntersecting(collider.bounds.center, other.other.bounds.center, topLeft, bottomLeft)) // left
         	{
                 Debug.Log("Left");
         		state.inverseXVelocity(speedBonus, maxXVelocity);
         	}
-        	else if(IsIntersecting(collider.bounds.center, other.bounds.center, topRight, bottomRigth)) // right
+        	else if(other.point.x == collider.bounds.max.x) //(IsIntersecting(collider.bounds.center, other.other.bounds.center, topRight, bottomRigth)) // right
         	{
                 Debug.Log("Right");
         		state.inverseXVelocity(speedBonus, maxXVelocity);

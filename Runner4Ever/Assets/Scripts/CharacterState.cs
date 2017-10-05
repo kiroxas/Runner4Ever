@@ -4,6 +4,19 @@ using Lean.Touch;
 using System.Collections.Generic;
 using System.Linq; 
 
+public class RaycastCollision
+{
+	public Collider2D other;
+	public Vector3 point;
+
+	public RaycastCollision(Collider2D o, Vector3 p)
+	{
+		other = o;
+		point = p;
+	}
+}
+
+
 public class CharacterState : MonoBehaviour
 {
 
@@ -38,11 +51,18 @@ public class CharacterState : MonoBehaviour
 	{
 		public Collider2D instance;
 		public int count;
+		public Vector3 hitPoint;
 
-		public ColliderInstances(Collider2D ins)
+		public ColliderInstances(Collider2D ins, Vector3 hit)
 		{
 			instance = ins;
 			count = 1;
+			hitPoint = hit;
+		}
+
+		public RaycastCollision get()
+		{
+			return new RaycastCollision(instance, hitPoint);
 		}
 	}
 
@@ -88,12 +108,12 @@ public class CharacterState : MonoBehaviour
 		return false;
 	}
 
-	private void addCollider(Collider2D col)
+	private void addCollider(Collider2D col, Vector3 hitpoint)
 	{
 		ColliderInstances ins = colliderHitThisFrame.Find(c => col == c.instance);
 		if(ins == null)
 		{
-			colliderHitThisFrame.Add(new ColliderInstances(col));
+			colliderHitThisFrame.Add(new ColliderInstances(col, hitpoint));
 		}
 		else
 		{
@@ -123,13 +143,13 @@ public class CharacterState : MonoBehaviour
 				{
 					if(effector2D.useOneWay && myCollider.bounds.min.y > raycastHit.collider.bounds.center.y ) // Only allowed if above
 					{
-						addCollider(raycastHit.collider);
+						addCollider(raycastHit.collider, raycastHit.point);
 						isGrounded = true;
 					}
 				}
 				else
 				{
-					addCollider(raycastHit.collider);
+					addCollider(raycastHit.collider, raycastHit.point);
 					isGrounded = true;
 				}
 			}
@@ -145,13 +165,13 @@ public class CharacterState : MonoBehaviour
 				{
 					if(effector2D.useOneWay && myCollider.bounds.min.y > raycastHit.collider.bounds.center.y ) // Only allowed if above
 					{
-						addCollider(raycastHit.collider);
+						addCollider(raycastHit.collider, raycastHit.point);
 						isGrounded = true;
 					}
 				}
 				else
 				{
-					addCollider(raycastHit.collider);
+					addCollider(raycastHit.collider, raycastHit.point);
 					isGrounded = true;
 				}
 			}
@@ -169,13 +189,13 @@ public class CharacterState : MonoBehaviour
 				{
 					if(effector2D.useOneWay && myCollider.bounds.min.y > raycastHit.collider.bounds.center.y ) // Only allowed if above
 					{
-						addCollider(raycastHit.collider);
+						addCollider(raycastHit.collider, raycastHit.point);
 						isGrounded = true;
 					}
 				}
 				else
 				{
-					addCollider(raycastHit.collider);
+					addCollider(raycastHit.collider, raycastHit.point);
 					isGrounded = true;
 				}
 			}
@@ -205,13 +225,13 @@ public class CharacterState : MonoBehaviour
 				{
 					if(effector2D.useOneWay && myCollider.bounds.min.y > raycastHit.collider.bounds.center.y ) // Only allowed if above
 					{
-						addCollider(raycastHit.collider);
+						addCollider(raycastHit.collider, raycastHit.point);
 						isCollidingAbove = true;
 					}
 				}
 				else
 				{
-					addCollider(raycastHit.collider);
+					addCollider(raycastHit.collider, raycastHit.point);
 					isCollidingAbove = true;
 				}
 			}
@@ -227,13 +247,13 @@ public class CharacterState : MonoBehaviour
 				{
 					if(effector2D.useOneWay && myCollider.bounds.min.y > raycastHit.collider.bounds.center.y ) // Only allowed if above
 					{
-						addCollider(raycastHit.collider);
+						addCollider(raycastHit.collider, raycastHit.point);
 						isCollidingAbove = true;
 					}
 				}
 				else
 				{
-					addCollider(raycastHit.collider);
+					addCollider(raycastHit.collider, raycastHit.point);
 					isCollidingAbove = true;
 				}
 			}
@@ -251,13 +271,13 @@ public class CharacterState : MonoBehaviour
 				{
 					if(effector2D.useOneWay && myCollider.bounds.min.y > raycastHit.collider.bounds.center.y ) // Only allowed if above
 					{
-						addCollider(raycastHit.collider);
+						addCollider(raycastHit.collider, raycastHit.point);
 						isCollidingAbove = true;
 					}
 				}
 				else
 				{
-					addCollider(raycastHit.collider);
+					addCollider(raycastHit.collider, raycastHit.point);
 					isCollidingAbove = true;
 				}
 			}
@@ -334,9 +354,7 @@ public class CharacterState : MonoBehaviour
 
 	private void handleCollided()
 	{
-		Debug.Log("Hit " + colliderHitThisFrame.Count);
 		colliderHitThisFrame = colliderHitThisFrame.OrderBy(c => c.count).ToList(); // most hitted first
-		Debug.Log("Hit After " + colliderHitThisFrame.Count);
 
 		// New collisions
 		foreach(ColliderInstances collider in colliderHitThisFrame)
@@ -345,22 +363,22 @@ public class CharacterState : MonoBehaviour
 			{
 				if(collider.instance.isTrigger)
 				{
-					collider.instance.SendMessage("OnTriggerEnter2D", myCollider , SendMessageOptions.DontRequireReceiver); 
+					collider.instance.SendMessage("OnTriggerEnterCustom", new RaycastCollision(myCollider, collider.hitPoint) , SendMessageOptions.DontRequireReceiver); 
 				}
 				else
 				{
-					collider.instance.SendMessage("OnCollisionEnter2D", myCollider, SendMessageOptions.DontRequireReceiver);
+					collider.instance.SendMessage("OnCollisionEnterCustom", new RaycastCollision(myCollider, collider.hitPoint), SendMessageOptions.DontRequireReceiver);
 				}
 			}
 			else
 			{
 				if(collider.instance.isTrigger)
 				{
-					collider.instance.SendMessage("OnTriggerStay2D", myCollider , SendMessageOptions.DontRequireReceiver); 
+					collider.instance.SendMessage("OnTriggerStayCustom", new RaycastCollision(myCollider, collider.hitPoint) , SendMessageOptions.DontRequireReceiver); 
 				}
 				else
 				{
-					collider.instance.SendMessage("OnCollisionStay2D", myCollider, SendMessageOptions.DontRequireReceiver);
+					collider.instance.SendMessage("OnCollisionStayCustom", new RaycastCollision(myCollider, collider.hitPoint), SendMessageOptions.DontRequireReceiver);
 				}
 			}
 		}
@@ -372,11 +390,11 @@ public class CharacterState : MonoBehaviour
 			{
 				if(collider.instance.isTrigger)
 				{
-					collider.instance.SendMessage("OnTriggerExit2D", myCollider , SendMessageOptions.DontRequireReceiver); 
+					collider.instance.SendMessage("OnTriggerExitCustom", new RaycastCollision(myCollider, collider.hitPoint) , SendMessageOptions.DontRequireReceiver); 
 				}
 				else
 				{
-					collider.instance.SendMessage("OnCollisionExit2D", myCollider, SendMessageOptions.DontRequireReceiver);
+					collider.instance.SendMessage("OnCollisionExitCustom", new RaycastCollision(myCollider, collider.hitPoint), SendMessageOptions.DontRequireReceiver);
 				}
 			}	
 		}
@@ -404,7 +422,7 @@ public class CharacterState : MonoBehaviour
 			Debug.DrawRay(rayVector, dir * rcCastDistance, Color.red);
 			if (raycastHit)
 			{
-				addCollider(raycastHit.collider);
+				addCollider(raycastHit.collider, raycastHit.point);
 				isCollidingLeft = true;
 			}
 		}
@@ -417,7 +435,7 @@ public class CharacterState : MonoBehaviour
 			if (raycastHit)
 			{
 				isCollidingLeft = true;
-				addCollider(raycastHit.collider);
+				addCollider(raycastHit.collider, raycastHit.point);
 			}
 		}
 
@@ -443,7 +461,7 @@ public class CharacterState : MonoBehaviour
 			if (raycastHit)
 			{
 				isCollidingRight = true;
-				addCollider(raycastHit.collider);
+				addCollider(raycastHit.collider, raycastHit.point);
 			}
 		}
 
@@ -455,7 +473,7 @@ public class CharacterState : MonoBehaviour
 			if (raycastHit)
 			{
 				isCollidingRight = true;
-				addCollider(raycastHit.collider);
+				addCollider(raycastHit.collider, raycastHit.point);
 			}
 		}
 

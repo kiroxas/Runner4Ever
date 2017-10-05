@@ -21,10 +21,10 @@ public class ExploseTile : MonoBehaviour
       Invoke("Activate", timeToReappear);
   }
 
-	void OnCollisionEnter2D(Collider2D other) 
+	void OnCollisionEnterCustom(RaycastCollision other) 
 	{
-        var state = other.GetComponent<CharacterController2D>();
-        if(state != null && other.gameObject.tag == "Player")
+        var state = other.other.GetComponent<CharacterController2D>();
+        if(state != null && other.other.gameObject.tag == "Player")
         {
         	StartCoroutine(setInactive());
         }

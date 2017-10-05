@@ -6,9 +6,9 @@ public class GoldCollectible : MonoBehaviour
 {
 	public GameObject Effect;
 	
-	public void OnTriggerEnter2D(Collider2D other)
+	public void OnTriggerEnterCustom(RaycastCollision other)
 	{
-		if(other.GetComponent<CharacterController2D>() == null)
+		if(other.other.GetComponent<CharacterController2D>() == null)
 			return;
 
 		Instantiate(Effect, transform.position, transform.rotation);

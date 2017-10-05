@@ -17,19 +17,19 @@ public class InverseJumpWall : MonoBehaviour
 		
 	}
 
-	void OnCollisionEnter2D(Collider2D other) 
+	void OnCollisionEnterCustom(RaycastCollision other) 
 	{
-        var state = other.GetComponent<CharacterController2D>();
-        if(state != null && other.gameObject.tag == "Player")
+        var state = other.other.GetComponent<CharacterController2D>();
+        if(state != null && other.other.gameObject.tag == "Player")
         {
         	state.jumpWallStack.Push(strat);
         }
     }
 
-    void OnCollisionExit2D(Collider2D other) 
+    void OnCollisionExitCustom(RaycastCollision other) 
 	{
-        var state = other.GetComponent<CharacterController2D>();
-        if(state != null && other.gameObject.tag == "Player")
+        var state = other.other.GetComponent<CharacterController2D>();
+        if(state != null && other.other.gameObject.tag == "Player")
         {
         	state.jumpWallStack.Pop();
         }

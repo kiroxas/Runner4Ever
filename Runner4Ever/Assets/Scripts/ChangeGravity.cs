@@ -16,19 +16,19 @@ public class ChangeGravity : MonoBehaviour
 		
 	}
 
-	void OnTriggerEnter2D(Collider2D other) 
+	void OnTriggerEnterCustom(RaycastCollision other) 
 	{
-        var state = other.GetComponent<CharacterController2D>();
-        if(state != null && other.gameObject.tag == "Player")
+        var state = other.other.GetComponent<CharacterController2D>();
+        if(state != null && other.other.gameObject.tag == "Player")
         {
         	state.gravity.Push(gravity);
         }
     }
 
-    void OnTriggerExit2D(Collider2D other) 
+    void OnTriggerExitCustom(RaycastCollision other) 
 	{
-        var state = other.GetComponent<CharacterController2D>();
-        if(state != null && other.gameObject.tag == "Player")
+        var state = other.other.GetComponent<CharacterController2D>();
+        if(state != null && other.other.gameObject.tag == "Player")
         {
         	state.gravity.Pop();
         }
