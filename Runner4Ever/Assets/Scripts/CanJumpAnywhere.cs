@@ -28,7 +28,14 @@ public class CanJumpAnywhere : MonoBehaviour {
         var state = other.GetComponent<CharacterController2D>();
         if(state != null && other.gameObject.tag == "Player")
         {
-        	state.jumpState.Pop();
+        	if(state.jumpState.Count == 0)
+        	{
+        		Debug.Log("Trying to pop an empty stack");
+        	}
+        	else
+        	{
+        		state.jumpState.Pop();
+        	}
         }
     }
 }

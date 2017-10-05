@@ -68,7 +68,7 @@ public class CharacterController2D : MonoBehaviour
 	public Stack runDirStack;
 	private bool facingRight = true;
 	private bool canBeRepelled = true;
-	private float timeBetweenRepelledAgain = 0.15f;
+	private float timeBetweenRepelledAgain = 0.1f;
 
 	// RunSpeed Related
 	private bool running = true;
@@ -184,10 +184,11 @@ public class CharacterController2D : MonoBehaviour
 		
 		// ----------------------- Jump part ------------------------------
 		handleJump(jumped);
+		Vector3 offset;
 
 		if(isJumping())
 		{
-			Vector3 offset = jumpCollec.getNext();
+			offset = jumpCollec.getNext();
 			if(collidingForward()) // if colliding, move only on Y
 			{
 				offset.x = 0;
@@ -203,16 +204,6 @@ public class CharacterController2D : MonoBehaviour
 			{
 				offset.y = 0;
 			}
-
-			Vector2 offs = new Vector2(offset.x, offset.y);
-
-			/*if(state.isThisColliding(offs, 0.2f))
-			{
-				offset.x = Mathf.Min(offset.x, offset.y);
-				offset.y = Mathf.Min(offset.x, offset.y);
-			}*/
-
-			characTransform.position += offset;
 		}
 		else
 		{
@@ -222,17 +213,12 @@ public class CharacterController2D : MonoBehaviour
 			float xMoveForward = (collidingForward() || !running) ? 0.0f : currentVelocity;
 			float gravity = (grounded() && currentGravity > 0) ? 0.0f : wallSticking() ? -(currentGravity / 2.0f) : -currentGravity;
 
-			Vector3 offset = new Vector3(xMoveForward, gravity, 0.0f);
-			Vector2 offs = new Vector2(xMoveForward, gravity);
-
-			/*if(state.isThisColliding(offs, 0.2f))
-			{
-				offset.x = Mathf.Min(offset.x, offset.y);
-				offset.y = Mathf.Min(offset.x, offset.y);
-			}*/
-
-			characTransform.position += offset;
+			offset = new Vector3(xMoveForward, gravity, 0.0f);
 		}
+
+		//offset = adjustOffsetCheckingCollision(offset);
+
+		characTransform.position += offset;
 
 		animator.SetBool("isRunning", running);
 		animator.SetBool("isJumping", jumpIn > 0);
@@ -241,6 +227,18 @@ public class CharacterController2D : MonoBehaviour
 	}
 		
 	/* ------------------------------------------------------ Functions -------------------------------------------------------*/
+
+	public Vector3 adjustOffsetCheckingCollision(Vector3 offset)
+	{
+		Vector2 off = new Vector2(offset.x, offset.y);
+
+		if(state.isThisColliding(off, off.magnitude))
+		{
+			offset = Vector2.right;
+		}
+
+		return offset;
+	}
 	
 	public void invokeFunctionIn(string functionName, float time)
 	{

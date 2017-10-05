@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using Lean.Touch;
 using System.Collections.Generic;
+using System.Linq; 
 
 public class CharacterState : MonoBehaviour
 {
@@ -33,15 +34,27 @@ public class CharacterState : MonoBehaviour
 	public int rightCollisionRayCasts = 16;
 	public LayerMask PlatformMask;
 
-	private List<Collider2D> colliderHitLastFrame; 
-	private List<Collider2D> colliderHitThisFrame; 
+	private class ColliderInstances
+	{
+		public Collider2D instance;
+		public int count;
+
+		public ColliderInstances(Collider2D ins)
+		{
+			instance = ins;
+			count = 1;
+		}
+	}
+
+	private List<ColliderInstances> colliderHitLastFrame; 
+	private List<ColliderInstances> colliderHitThisFrame; 
 
 	public EdgeGrabingStrategy edgeStrategy = EdgeGrabingStrategy.None;
 
 	public void Start()
 	{
-		colliderHitThisFrame = new List<Collider2D>();
-		colliderHitLastFrame = new List<Collider2D>();
+		colliderHitThisFrame = new List<ColliderInstances>();
+		colliderHitLastFrame = new List<ColliderInstances>();
 
 		rb = GetComponent<Rigidbody2D>();
 		myCollider = GetComponent<Collider2D>();
@@ -65,21 +78,28 @@ public class CharacterState : MonoBehaviour
 
 	public bool isThisColliding(Vector2 rayDirection, float distance)
 	{
-		float xValue = rayDirection.x > 0 ? myCollider.bounds.max.x : myCollider.bounds.min.x;
-		float yValue = rayDirection.y > 0 ? myCollider.bounds.max.y : myCollider.bounds.min.y;
+		/*Vector2 topLeft = new Vector2(myCollider.bounds.min.x, myCollider.bounds.max.y);
+		Vector2 bottomRight = new Vector2(myCollider.bounds.max.x, myCollider.bounds.min.y);
 
 		Vector2 rayVector = new Vector2(xValue, yValue);
 		var raycastHit = Physics2D.Raycast(rayVector, rayDirection, distance, PlatformMask);
 		
-		return raycastHit;
+		return raycastHit;*/
+		return false;
 	}
 
 	private void addCollider(Collider2D col)
 	{
-		if(colliderHitThisFrame.Find(c => col == c) == false)
+		ColliderInstances ins = colliderHitThisFrame.Find(c => col == c.instance);
+		if(ins == null)
 		{
-			colliderHitThisFrame.Add(col);
+			colliderHitThisFrame.Add(new ColliderInstances(col));
 		}
+		else
+		{
+			ins.count++;
+		}
+
 	}
 
 	public bool updateGrounded()
@@ -93,7 +113,7 @@ public class CharacterState : MonoBehaviour
 		{
 			Vector2 dir = rayDirection;
 			dir.x = -0.0f;
-			Vector2 rayVector = new Vector2(myCollider.bounds.min.x , myCollider.bounds.min.y);
+			Vector2 rayVector = myCollider.bounds.min;
 			var raycastHit = Physics2D.Raycast(rayVector, dir, rcCastDistance, PlatformMask);
 			Debug.DrawRay(rayVector, dir * groundedCastDistance, Color.green);
 			if (raycastHit)
@@ -314,52 +334,55 @@ public class CharacterState : MonoBehaviour
 
 	private void handleCollided()
 	{
-		
+		Debug.Log("Hit " + colliderHitThisFrame.Count);
+		colliderHitThisFrame = colliderHitThisFrame.OrderBy(c => c.count).ToList(); // most hitted first
+		Debug.Log("Hit After " + colliderHitThisFrame.Count);
+
 		// New collisions
-		foreach(Collider2D collider in colliderHitThisFrame)
+		foreach(ColliderInstances collider in colliderHitThisFrame)
 		{
-			if(colliderHitLastFrame.Find(c => c == collider) == false) // new collision
+			if(colliderHitLastFrame.Find(c => c.instance == collider.instance) == null) // new collision
 			{
-				if(collider.isTrigger)
+				if(collider.instance.isTrigger)
 				{
-					collider.SendMessage("OnTriggerEnter2D", myCollider , SendMessageOptions.DontRequireReceiver); 
+					collider.instance.SendMessage("OnTriggerEnter2D", myCollider , SendMessageOptions.DontRequireReceiver); 
 				}
 				else
 				{
-					collider.SendMessage("OnCollisionEnter2D", myCollider, SendMessageOptions.DontRequireReceiver);
+					collider.instance.SendMessage("OnCollisionEnter2D", myCollider, SendMessageOptions.DontRequireReceiver);
 				}
 			}
 			else
 			{
-				if(collider.isTrigger)
+				if(collider.instance.isTrigger)
 				{
-					collider.SendMessage("OnTriggerStay2D", myCollider , SendMessageOptions.DontRequireReceiver); 
+					collider.instance.SendMessage("OnTriggerStay2D", myCollider , SendMessageOptions.DontRequireReceiver); 
 				}
 				else
 				{
-					collider.SendMessage("OnCollisionStay2D", myCollider, SendMessageOptions.DontRequireReceiver);
+					collider.instance.SendMessage("OnCollisionStay2D", myCollider, SendMessageOptions.DontRequireReceiver);
 				}
 			}
 		}
 
 		// Collisons not happening
-		foreach(Collider2D collider in colliderHitLastFrame)
+		foreach(ColliderInstances collider in colliderHitLastFrame)
 		{
-			if(colliderHitThisFrame.Find(c => c == collider) == false) // new collision
+			if(colliderHitThisFrame.Find(c => c.instance == collider.instance) == null) // new collision
 			{
-				if(collider.isTrigger)
+				if(collider.instance.isTrigger)
 				{
-					collider.SendMessage("OnTriggerExit2D", myCollider , SendMessageOptions.DontRequireReceiver); 
+					collider.instance.SendMessage("OnTriggerExit2D", myCollider , SendMessageOptions.DontRequireReceiver); 
 				}
 				else
 				{
-					collider.SendMessage("OnCollisionExit2D", myCollider, SendMessageOptions.DontRequireReceiver);
+					collider.instance.SendMessage("OnCollisionExit2D", myCollider, SendMessageOptions.DontRequireReceiver);
 				}
 			}	
 		}
 
 		colliderHitLastFrame.Clear();
-		colliderHitLastFrame = new List<Collider2D>(colliderHitThisFrame);
+		colliderHitLastFrame = new List<ColliderInstances>(colliderHitThisFrame);
 	}
 
 
