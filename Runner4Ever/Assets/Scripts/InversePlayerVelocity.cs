@@ -79,12 +79,10 @@ public class InversePlayerVelocity : MonoBehaviour {
     private void reactivateCollider()
     {
         GetComponent<BoxCollider2D>().size = new Vector2(1.0f, 1.0f);
-        Debug.Log("reactivate col");
     }
 
     public void disableColliderFor(float time)
     {
-        Debug.Log("deactivate collider");
          GetComponent<BoxCollider2D>().size = new Vector2(0.0f, 0.0f);
          Invoke("reactivateCollider", time);
     }
