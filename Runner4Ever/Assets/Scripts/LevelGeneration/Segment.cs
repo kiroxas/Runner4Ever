@@ -13,7 +13,9 @@ using Random = UnityEngine.Random;
 public class Segment
 {
 	private Dictionary<int, List<GameObject>> loaded; // All gameobject loaded in the segment
+	private Dictionary<int, List<GameObject>> stateLoaded; // All gameobject loaded in the segment
 	private bool enabled = false; // is this segment enabled
+	private bool firstLoad = true; // first time loading ?
 
 	private List<char> layout; // the layout in char format
 	private int xSize; // x size of the segment
@@ -55,19 +57,21 @@ public class Segment
 		}
 	}
 
-	void init(int[] indexes)
+	void init(int[] indexes, Dictionary<int, List<GameObject>> loadedList)
 	{
 		for(int i = 0; i < indexes.Length; ++i)
 		{
-			loaded[indexes[i]] = new List<GameObject>();
+			loadedList[indexes[i]] = new List<GameObject>();
 		}
 	}
 
 	public Segment(int _xSize, int _ySize, float _xBegin, float _yBegin, List<char> _layout, float _tileWidth, float _tileHeight, int _xGrid, int _yGrid)
 	{
 		loaded = new Dictionary<int, List<GameObject>>();
-		init(PoolIndexes.statelessIndexes);
-		init(PoolIndexes.stateIndexes);
+		stateLoaded = new  Dictionary<int, List<GameObject>>();
+
+		init(PoolIndexes.statelessIndexes, loaded);
+		init(PoolIndexes.stateIndexes, stateLoaded);
 
 		layout = new List<char>(_layout);
 		xSize = _xSize;
@@ -112,15 +116,38 @@ public class Segment
 				int poolIndex = PoolIndexes.fileToPoolMapping[value];
 				Vector3 position = new Vector3(xBegin + x * tileWidth, yBegin + y * tileHeight, 0.0f); 
 
-				if(loaded.ContainsKey(poolIndex) == false)
+				bool loadedContains = loaded.ContainsKey(poolIndex);
+				bool stateLoadedContains = stateLoaded.ContainsKey(poolIndex);
+
+				if(loadedContains == false && stateLoadedContains == false)
 				{
 					Debug.LogError("[Segment/Load] Cannot store gameobject of type :" + poolIndex);
 				}
 
-				loaded[poolIndex].Add(statePool.getFromPool(poolIndex, position));	
+				if(loadedContains)
+				{
+					loaded[poolIndex].Add(statePool.getFromPool(poolIndex, position));	
+				}
+				else if(stateLoadedContains && firstLoad)
+				{
+					stateLoaded[poolIndex].Add(statePool.getFromPool(poolIndex, position));
+				}
 			}
 			index -= 2* xSize;
 		}
+
+		if(!firstLoad) // if not first load, just reactivate the state tiles
+		{
+			foreach(int ind in PoolIndexes.stateIndexes)
+			{
+				foreach(GameObject obj in stateLoaded[ind])
+				{
+					obj.SetActive(true);
+				}
+			}
+		}
+
+		firstLoad = false;
 	}
 
 	private void unload(PoolCollection statePool)
@@ -137,12 +164,10 @@ public class Segment
 
 		foreach(int index in PoolIndexes.stateIndexes)
 		{
-			foreach(GameObject obj in loaded[index])
+			foreach(GameObject obj in stateLoaded[index])
 			{
 				obj.SetActive(false);
 			}
-
-			loaded[index].Clear();
 		}
 	}
 
