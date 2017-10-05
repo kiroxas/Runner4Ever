@@ -67,6 +67,8 @@ public class CharacterController2D : MonoBehaviour
 	public RunDirectionOnGround runDir = RunDirectionOnGround.KeepTheAirOne;
 	public Stack runDirStack;
 	private bool facingRight = true;
+	private bool canBeRepelled = true;
+	private float timeBetweenRepelledAgain = 0.2f;
 
 	// RunSpeed Related
 	private bool running = true;
@@ -205,7 +207,7 @@ public class CharacterController2D : MonoBehaviour
 		{
 			currentVelocity = Mathf.Lerp(currentVelocity, areWeGoingRight() ? xSpeedPerFrame : -xSpeedPerFrame, Time.deltaTime * accelerationSmooth);
 			
-			float xMoveForward = (collidingForward() || !running) ? 0.0f : areWeGoingRight() ? currentVelocity : -currentVelocity;
+			float xMoveForward = (collidingForward() || !running) ? 0.0f : currentVelocity;
 			float gravity = grounded() ? 0.0f : wallSticking() ? -(gravityFactor / 2.0f) : -gravityFactor;
 
 			Vector3 offset = new Vector3(xMoveForward, gravity, 0.0f);
@@ -221,6 +223,26 @@ public class CharacterController2D : MonoBehaviour
 		
 	/* ------------------------------------------------------ Functions -------------------------------------------------------*/
 	
+	public void invokeFunctionIn(string functionName, float time)
+	{
+		Invoke(functionName, time);
+	}
+
+	public void doNotRunRight()
+	{		
+		runDirStack.Push(RunDirectionOnGround.KeepTheAirOne);
+	}
+
+	public void popGroundRunDirection()
+	{
+		runDirStack.Pop();
+	}
+
+	public void popGroundRunDirectionIn(float time)
+	{
+		invokeFunctionIn("popGroundRunDirection", time);
+	}
+
 	public void handleJump(bool jumpedThisFrame)
 	{
 		if(wallSticking() && !isJumping())
@@ -285,13 +307,27 @@ public class CharacterController2D : MonoBehaviour
 		return false;
 	}
 
+	public void canBeRepelledEnable()
+	{
+		canBeRepelled = true;
+	}
+
+
 	public void inverseXVelocity(float magnitude, float max)
 	{
-		currentVelocity = currentVelocity * -1 * magnitude;
+		if(canBeRepelled)
+		{
+			canBeRepelled = false;
+			currentVelocity = currentVelocity * -1 * magnitude;
 		
-		currentVelocity = Mathf.Clamp(currentVelocity, -max, max);
+			currentVelocity = Mathf.Clamp(currentVelocity, -max, max);
 
-		run();
+			jumpDefinition.flip();
+			doubleJumpDefinition.flip();
+
+			run();
+			invokeFunctionIn("canBeRepelledEnable", timeBetweenRepelledAgain);
+		}
 	}
 
 	public void inverseYVelocity(float magnitude, float max)
@@ -477,7 +513,13 @@ public class CharacterController2D : MonoBehaviour
 	
 	public void changeDirection()
 	{
-		Flip(); // display
+		bool runningRight = currentVelocity > 0;
+
+		if(runningRight ==facingRight)
+		{
+			Flip(); // display
+		}
+
 		jumpDefinition.flip();
 		doubleJumpDefinition.flip();
 
@@ -491,9 +533,7 @@ public class CharacterController2D : MonoBehaviour
 
 	private void makeItRunRightOnGround()
 	{
-
-		if( 
-			((RunDirectionOnGround)runDirStack.Peek() == RunDirectionOnGround.AlwaysRight && grounded() && currentVelocity < 0 )
+		if(((RunDirectionOnGround)runDirStack.Peek() == RunDirectionOnGround.AlwaysRight && grounded() && currentVelocity < 0 )
 		|| ((RunDirectionOnGround)runDirStack.Peek() == RunDirectionOnGround.AlwaysLeft && grounded() && currentVelocity > 0 ))
 		{
 			changeDirection();
@@ -508,6 +548,7 @@ public class CharacterController2D : MonoBehaviour
 		jumpCollec.reset();
 		running = true;
 		currentVelocity = xSpeedPerFrame;
+		canBeRepelled = true;
 
 		runDirStack.Clear();
 		runDirStack.Push(runDir);
@@ -521,6 +562,8 @@ public class CharacterController2D : MonoBehaviour
 		gravity.Clear();
 		gravity.Push(gravityFactor);
 		health = maxHealth;
+
+		CancelInvoke(); // cancel all invokes
 	}
 
 	public bool flipped()

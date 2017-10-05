@@ -46,7 +46,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\InversePlayerVelocity.cs" />
      <Compile Include="Assets\LeanTouch\Examples\Scripts\LeanCameraMove.cs" />
      <Compile Include="Assets\LeanTouch\Examples\Scripts\LeanCameraMoveSmooth.cs" />
      <Compile Include="Assets\LeanTouch\Examples\Scripts\LeanCameraZoom.cs" />
@@ -100,6 +99,7 @@
      <Compile Include="Assets\Scripts\HurtPlayer.cs" />
      <Compile Include="Assets\Scripts\InputHandler.cs" />
      <Compile Include="Assets\Scripts\InverseJumpWall.cs" />
+     <Compile Include="Assets\Scripts\InversePlayerVelocity.cs" />
      <Compile Include="Assets\Scripts\JumpCharacs.cs" />
      <Compile Include="Assets\Scripts\JumpCollection.cs" />
      <Compile Include="Assets\Scripts\LevelGeneration\BasicLevelGenerator.cs" />

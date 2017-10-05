@@ -10,16 +10,16 @@ public class ExploseTile : MonoBehaviour
 
 	void Activate()
 	{
-		gameObject.SetActive(true);
+		  gameObject.SetActive(true);
 	}
 
 	IEnumerator setInactive()
-    {
-        yield return new WaitForSeconds(timeToWait);
+  {
+      yield return new WaitForSeconds(timeToWait);
        	
-       	gameObject.SetActive(false);
-       	Invoke("Activate", timeToReappear);
-    }
+      gameObject.SetActive(false);
+      Invoke("Activate", timeToReappear);
+  }
 
 	void OnCollisionEnter2D(Collider2D other) 
 	{
