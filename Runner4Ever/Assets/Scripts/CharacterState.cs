@@ -63,6 +63,17 @@ public class CharacterState : MonoBehaviour
 		handleCollided();
 	}
 
+	public bool isThisColliding(Vector2 rayDirection, float distance)
+	{
+		float xValue = rayDirection.x > 0 ? myCollider.bounds.max.x : myCollider.bounds.min.x;
+		float yValue = rayDirection.y > 0 ? myCollider.bounds.max.y : myCollider.bounds.min.y;
+
+		Vector2 rayVector = new Vector2(xValue, yValue);
+		var raycastHit = Physics2D.Raycast(rayVector, rayDirection, distance, PlatformMask);
+		
+		return raycastHit;
+	}
+
 	private void addCollider(Collider2D col)
 	{
 		if(colliderHitThisFrame.Find(c => col == c) == false)

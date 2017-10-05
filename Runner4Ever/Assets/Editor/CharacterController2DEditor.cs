@@ -66,6 +66,7 @@ public class CharacterController2DEditor : Editor
         myScript.xSpeedPerFrame = EditorGUILayout.FloatField("runSpeed", myScript.xSpeedPerFrame);
         myScript.gravityFactor = EditorGUILayout.FloatField("gravityFactor", myScript.gravityFactor);
         myScript.accelerationSmooth = EditorGUILayout.FloatField("accelerationSmooth", myScript.accelerationSmooth);
+        myScript.gravitySmooth = EditorGUILayout.FloatField("gravitySmooth", myScript.gravitySmooth);
         myScript.dashSpeedMul = EditorGUILayout.FloatField("dashSpeedMul", myScript.dashSpeedMul);
         myScript.timeBetweenJumps = EditorGUILayout.FloatField("timeBetweenJumps", myScript.timeBetweenJumps);
         myScript.jumpStrategy = (CharacterController2D.JumpStrat)EditorGUILayout.EnumPopup("jumpStrategy", myScript.jumpStrategy);
@@ -79,22 +80,5 @@ public class CharacterController2DEditor : Editor
             EditorUtility.SetDirty(target);
             UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(((GameObject)myScript.gameObject).scene);
         }*/
-
-        infosFold = EditorGUILayout.Foldout(infosFold, "Infos");
-        if (infosFold)
-        {
-            EditorGUI.indentLevel++;
-            /*EditorGUILayout.LabelField("CollidingRight ", myScript.collidingRight() ? "true" : "false");
-            EditorGUILayout.LabelField("CollidingLeft ", myScript.collidingLeft() ? "true" : "false");
-            EditorGUILayout.LabelField("Grounded ", myScript.grounded() ? "true" : "false");
-            EditorGUILayout.LabelField("isGrabingEdge ", myScript.grabingEdge() ? "true" : "false");
-            EditorGUILayout.LabelField("isWallSticking ", myScript.wallSticking() ? "true" : "false");
-            EditorGUILayout.LabelField("runSpeed ", myScript.runspeed().ToString());
-            EditorGUILayout.LabelField("jumpWallDir ", myScript.jumpWallStack.Peek().ToString());*/
-            int jumps = myScript.getCurrentJumpCount();
-            EditorGUILayout.LabelField("jumps", jumps.ToString());
-
-            EditorGUI.indentLevel--;
-        }
 	}
 }

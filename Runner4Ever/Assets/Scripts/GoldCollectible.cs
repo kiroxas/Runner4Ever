@@ -12,6 +12,6 @@ public class GoldCollectible : MonoBehaviour
 			return;
 
 		Instantiate(Effect, transform.position, transform.rotation);
-		Destroy(this.gameObject);
+		GetComponent<Transform>().gameObject.SetActive(false);
 	}
 }

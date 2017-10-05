@@ -98,6 +98,14 @@ public class JumpCollection
 		return ret;
 	}
 
+	public void reinit()
+	{
+		foreach(JumpCharacs ju in jumps)
+		{
+			ju.reinit();
+		}
+	}
+
 	// -------------------------------------- Private functions
 	private void resetIfNecessary()
 	{

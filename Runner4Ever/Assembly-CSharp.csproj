@@ -121,6 +121,7 @@
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\Test\Rotate.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\Test\TestReporter.cs" />
      <None Include="Assets\LeanTouch\Examples\Fonts\OFL.txt" />
+     <None Include="Assets\Resources\LevelGeneration\level_test_03.txt" />
      <None Include="Assets\Resources\LevelGeneration\file_list.xml" />
      <None Include="Assets\Resources\LevelGeneration\two.txt" />
      <None Include="Assets\StreamingAssets\build_info.txt" />

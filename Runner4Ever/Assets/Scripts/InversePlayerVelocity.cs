@@ -51,18 +51,22 @@ public class InversePlayerVelocity : MonoBehaviour {
         	// Is it from above ?
         	if(IsIntersecting(collider.bounds.center, other.bounds.center, topRight, topLeft))
         	{
+                Debug.Log("Above");
         		state.inverseYVelocity(speedBonus, maxYVelocity);
         	}
         	else if(IsIntersecting(collider.bounds.center, other.bounds.center, bottomLeft, bottomRigth)) // below
         	{
+                Debug.Log("Below");
         		state.inverseYVelocity(speedBonus, maxYVelocity);
         	}
         	else if(IsIntersecting(collider.bounds.center, other.bounds.center, topLeft, bottomLeft)) // left
         	{
+                Debug.Log("Left");
         		state.inverseXVelocity(speedBonus, maxXVelocity);
         	}
         	else if(IsIntersecting(collider.bounds.center, other.bounds.center, topRight, bottomRigth)) // right
         	{
+                Debug.Log("Right");
         		state.inverseXVelocity(speedBonus, maxXVelocity);
         	}
         	else

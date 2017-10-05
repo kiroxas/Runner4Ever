@@ -173,6 +173,11 @@ public class JumpCharacs
 		inJump = false;
 	}
 
+	public void reinit()
+	{
+		goingRight = true;
+	}
+
 	// --------------------------------- Editor Functions -----------------------------------------------
 
 	public void setName(string n)

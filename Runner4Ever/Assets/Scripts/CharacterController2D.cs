@@ -68,15 +68,18 @@ public class CharacterController2D : MonoBehaviour
 	public Stack runDirStack;
 	private bool facingRight = true;
 	private bool canBeRepelled = true;
-	private float timeBetweenRepelledAgain = 0.2f;
+	private float timeBetweenRepelledAgain = 0.15f;
 
 	// RunSpeed Related
 	private bool running = true;
 	private float currentVelocity;
+	private float yVelocity;
 	public float xSpeedPerFrame = 0.1f;
 	public float gravityFactor = 0.2f;
+	private float currentGravity;
 
 	public float accelerationSmooth = 1.0f;
+	public float gravitySmooth = 1.0f;
 
 	public float dashSpeedMul = 2.5f;
 	private float upSpeed = 0;
@@ -201,16 +204,32 @@ public class CharacterController2D : MonoBehaviour
 				offset.y = 0;
 			}
 
+			Vector2 offs = new Vector2(offset.x, offset.y);
+
+			/*if(state.isThisColliding(offs, 0.2f))
+			{
+				offset.x = Mathf.Min(offset.x, offset.y);
+				offset.y = Mathf.Min(offset.x, offset.y);
+			}*/
+
 			characTransform.position += offset;
 		}
 		else
 		{
 			currentVelocity = Mathf.Lerp(currentVelocity, areWeGoingRight() ? xSpeedPerFrame : -xSpeedPerFrame, Time.deltaTime * accelerationSmooth);
+			currentGravity = Mathf.Lerp(currentGravity, gravityFactor, Time.deltaTime * gravitySmooth);
 			
 			float xMoveForward = (collidingForward() || !running) ? 0.0f : currentVelocity;
-			float gravity = grounded() ? 0.0f : wallSticking() ? -(gravityFactor / 2.0f) : -gravityFactor;
+			float gravity = (grounded() && currentGravity > 0) ? 0.0f : wallSticking() ? -(currentGravity / 2.0f) : -currentGravity;
 
 			Vector3 offset = new Vector3(xMoveForward, gravity, 0.0f);
+			Vector2 offs = new Vector2(xMoveForward, gravity);
+
+			/*if(state.isThisColliding(offs, 0.2f))
+			{
+				offset.x = Mathf.Min(offset.x, offset.y);
+				offset.y = Mathf.Min(offset.x, offset.y);
+			}*/
 
 			characTransform.position += offset;
 		}
@@ -325,6 +344,11 @@ public class CharacterController2D : MonoBehaviour
 			jumpDefinition.flip();
 			doubleJumpDefinition.flip();
 
+			if(isJumping())
+			{
+				jumpCollec.reset();
+			}
+
 			run();
 			invokeFunctionIn("canBeRepelledEnable", timeBetweenRepelledAgain);
 		}
@@ -332,13 +356,21 @@ public class CharacterController2D : MonoBehaviour
 
 	public void inverseYVelocity(float magnitude, float max)
 	{
-		float ySpeed =  rb.velocity.y * -1 * magnitude;
+		if(canBeRepelled)
+		{
+			canBeRepelled = false;
+			currentGravity =  currentGravity * -1 * magnitude;
 
-		ySpeed = Mathf.Clamp(ySpeed, -max, max);
+			currentGravity = Mathf.Clamp(currentGravity, -max, max);
 
-		rb.velocity = new Vector2(rb.velocity.x, ySpeed);
-		run();
-		//consecutiveJumps = 1;
+			if(isJumping())
+			{
+				jumpCollec.reset();
+			}
+	
+			run();
+			invokeFunctionIn("canBeRepelledEnable", timeBetweenRepelledAgain);
+		}
 	}
 
 
@@ -479,6 +511,9 @@ public class CharacterController2D : MonoBehaviour
 
 	public bool canJump()
 	{
+		if(collidingAbove())
+			return false;
+
 		JumpRestrictions jump = (JumpRestrictions)jumpState.Peek();
 		if(jump == JumpRestrictions.Anywhere)
 		{
@@ -515,7 +550,7 @@ public class CharacterController2D : MonoBehaviour
 	{
 		bool runningRight = currentVelocity > 0;
 
-		if(runningRight ==facingRight)
+		if(runningRight == facingRight)
 		{
 			Flip(); // display
 		}
@@ -546,8 +581,10 @@ public class CharacterController2D : MonoBehaviour
 			Flip();
 
 		jumpCollec.reset();
+		jumpCollec.reinit();
 		running = true;
 		currentVelocity = xSpeedPerFrame;
+		currentGravity = gravityFactor;
 		canBeRepelled = true;
 
 		runDirStack.Clear();
