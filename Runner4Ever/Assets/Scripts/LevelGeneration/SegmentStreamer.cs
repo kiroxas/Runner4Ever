@@ -337,9 +337,12 @@ public class SegmentStreamer : MonoBehaviour
 
 	public void OnDrawGizmos() 
 	{
-		foreach(Segment s in segments)
+		if(segments != null)
 		{
-			s.OnDrawGizmos();
+			foreach(Segment s in segments)
+			{
+				s.OnDrawGizmos();
+			}
 		}
     }
 }

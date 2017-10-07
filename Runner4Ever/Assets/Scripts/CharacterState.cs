@@ -30,6 +30,7 @@ public class CharacterState : MonoBehaviour
 
 	private Rigidbody2D rb;
 	private Collider2D myCollider;
+	private Transform transform;
 
 	public bool isGrounded { get; private set; }
 	public bool isCollidingAbove { get; private set; }
@@ -78,6 +79,7 @@ public class CharacterState : MonoBehaviour
 
 		rb = GetComponent<Rigidbody2D>();
 		myCollider = GetComponent<Collider2D>();
+		transform = GetComponent<Transform>();
 		isGrounded = false;
 		isCollidingRight = false;
 		isCollidingLeft = false;
@@ -96,16 +98,52 @@ public class CharacterState : MonoBehaviour
 		handleCollided();
 	}
 
-	public bool isThisColliding(Vector2 rayDirection, float distance)
+	public bool isThisColliding(Vector2 rayDirection, ref float distance)
 	{
-		/*Vector2 topLeft = new Vector2(myCollider.bounds.min.x, myCollider.bounds.max.y);
+		Vector2 rayDirectionNorm = rayDirection.normalized;
+		Vector2 topLeft = new Vector2(myCollider.bounds.min.x, myCollider.bounds.max.y);
 		Vector2 bottomRight = new Vector2(myCollider.bounds.max.x, myCollider.bounds.min.y);
 
-		Vector2 rayVector = new Vector2(xValue, yValue);
-		var raycastHit = Physics2D.Raycast(rayVector, rayDirection, distance, PlatformMask);
+		var raycastHitTL = Physics2D.Raycast(topLeft, rayDirectionNorm, distance, PlatformMask);
+		var raycastHitTR = Physics2D.Raycast(myCollider.bounds.max, rayDirectionNorm, distance, PlatformMask);
+		var raycastHitBR = Physics2D.Raycast(bottomRight, rayDirectionNorm, distance, PlatformMask);
+		var raycastHitBL = Physics2D.Raycast(myCollider.bounds.min, rayDirectionNorm, distance, PlatformMask);
+		var raycastHitC = Physics2D.Raycast(myCollider.bounds.center, rayDirectionNorm, distance, PlatformMask);
+
+		Debug.DrawRay(topLeft, rayDirectionNorm * distance, Color.green);
+		//Debug.DrawLine(topLeft, topLeftArrival, Color.blue);
+		Debug.DrawRay(myCollider.bounds.max, rayDirectionNorm * distance, Color.green);
+		Debug.DrawRay(bottomRight, rayDirectionNorm * distance, Color.green);
+		Debug.DrawRay(myCollider.bounds.min, rayDirectionNorm * distance, Color.green);
+		Debug.DrawRay(myCollider.bounds.center, rayDirectionNorm * distance, Color.green);
+
+		if(raycastHitTL && rayDirection.y > 0)
+		{
+			distance = Mathf.Min(distance, Vector2.Distance(topLeft, raycastHitTL.point));
+		}
+
+		if(raycastHitTR && rayDirection.y > 0)
+		{
+			distance = Mathf.Min(distance, Vector2.Distance(myCollider.bounds.max, raycastHitTR.point));
+		}
+
+		if(raycastHitBL && rayDirection.y < 0)
+		{
+			distance = Mathf.Min(distance, Vector2.Distance(myCollider.bounds.min, raycastHitBL.point));
+		}
+
+		if(raycastHitBR && rayDirection.y < 0)
+		{
+			distance = Mathf.Min(distance, Vector2.Distance(bottomRight, raycastHitBR.point));
+		}
+
+		if(raycastHitC)
+		{
+			distance = Mathf.Min(distance, Vector2.Distance(myCollider.bounds.center, raycastHitC.point));
+		}
 		
-		return raycastHit;*/
-		return false;
+		
+		return raycastHitTL || raycastHitTR || raycastHitBL || raycastHitBR || raycastHitC;
 	}
 
 	private void addCollider(Collider2D col, Vector3 hitpoint)

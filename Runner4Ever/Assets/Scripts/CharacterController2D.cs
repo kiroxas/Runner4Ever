@@ -216,7 +216,7 @@ public class CharacterController2D : MonoBehaviour
 			offset = new Vector3(xMoveForward, gravity, 0.0f);
 		}
 
-		//offset = adjustOffsetCheckingCollision(offset);
+		offset = adjustOffsetCheckingCollision(offset);
 
 		characTransform.position += offset;
 
@@ -232,9 +232,11 @@ public class CharacterController2D : MonoBehaviour
 	{
 		Vector2 off = new Vector2(offset.x, offset.y);
 
-		if(state.isThisColliding(off, off.magnitude))
+		float magnitude = off.magnitude;
+
+		if(state.isThisColliding(off, ref magnitude))
 		{
-			offset = Vector2.right;
+			offset = Vector3.ClampMagnitude(offset, magnitude);
 		}
 
 		return offset;
