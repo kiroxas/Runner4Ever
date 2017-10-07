@@ -49,29 +49,29 @@ public class InversePlayerVelocity : MonoBehaviour {
         	Vector2 bottomLeft = collider.bounds.min;*/
 
         	// Is it from above ?
-        	if(other.point.y == collider.bounds.max.y)  //(IsIntersecting(collider.bounds.center, other.other.bounds.center, topRight, topLeft))
+        	if(Mathf.Approximately(other.point.y, collider.bounds.max.y))  //(IsIntersecting(collider.bounds.center, other.other.bounds.center, topRight, topLeft))
         	{
                 Debug.Log("Above");
         		state.inverseYVelocity(speedBonus, maxYVelocity);
         	}
-        	else if(other.point.y == collider.bounds.min.y) //(IsIntersecting(collider.bounds.center, other.other.bounds.center, bottomLeft, bottomRigth)) // below
+        	else if(Mathf.Approximately(other.point.y, collider.bounds.min.y)) //(IsIntersecting(collider.bounds.center, other.other.bounds.center, bottomLeft, bottomRigth)) // below
         	{
                 Debug.Log("Below");
         		state.inverseYVelocity(speedBonus, maxYVelocity);
         	}
-        	else if(other.point.x == collider.bounds.min.x) //(IsIntersecting(collider.bounds.center, other.other.bounds.center, topLeft, bottomLeft)) // left
+        	else if(Mathf.Approximately(other.point.x, collider.bounds.min.x)) //(IsIntersecting(collider.bounds.center, other.other.bounds.center, topLeft, bottomLeft)) // left
         	{
                 Debug.Log("Left");
         		state.inverseXVelocity(speedBonus, maxXVelocity);
         	}
-        	else if(other.point.x == collider.bounds.max.x) //(IsIntersecting(collider.bounds.center, other.other.bounds.center, topRight, bottomRigth)) // right
+        	else if(Mathf.Approximately(other.point.x, collider.bounds.max.x)) //(IsIntersecting(collider.bounds.center, other.other.bounds.center, topRight, bottomRigth)) // right
         	{
                 Debug.Log("Right");
         		state.inverseXVelocity(speedBonus, maxXVelocity);
         	}
         	else
         	{
-        		Debug.Log("Weird, collision from nowhere");
+        		Debug.Log("Weird, collision from nowhere Point : " + other.point + " min : " + collider.bounds.min +  " max : " + collider.bounds.max);
         	}
 
             state.doNotRunRight();

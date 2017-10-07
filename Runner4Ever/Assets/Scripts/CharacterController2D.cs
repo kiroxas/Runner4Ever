@@ -152,6 +152,8 @@ public class CharacterController2D : MonoBehaviour
 			return;
 		}
 
+		canBeRepelledEnable();
+
 		// ------------ Update all states and variables -------------------------------
 		state.updateState();
 		makeItRunRightOnGround();
@@ -350,7 +352,7 @@ public class CharacterController2D : MonoBehaviour
 			}
 
 			run();
-			invokeFunctionIn("canBeRepelledEnable", timeBetweenRepelledAgain);
+			//invokeFunctionIn("canBeRepelledEnable", timeBetweenRepelledAgain);
 		}
 	}
 
@@ -359,6 +361,10 @@ public class CharacterController2D : MonoBehaviour
 		if(canBeRepelled)
 		{
 			canBeRepelled = false;
+			if(currentGravity == 0)
+			{
+				currentGravity = 0.01f;
+			}
 			currentGravity =  currentGravity * -1 * magnitude;
 
 			currentGravity = Mathf.Clamp(currentGravity, -max, max);
@@ -369,7 +375,7 @@ public class CharacterController2D : MonoBehaviour
 			}
 	
 			run();
-			invokeFunctionIn("canBeRepelledEnable", timeBetweenRepelledAgain);
+			//invokeFunctionIn("canBeRepelledEnable", timeBetweenRepelledAgain);
 		}
 	}
 
