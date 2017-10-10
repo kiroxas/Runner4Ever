@@ -236,7 +236,7 @@ public class CharacterController2D : MonoBehaviour
 	{
 		if(outsideForce.magnitude != 0.0f)
 		{
-			float yForce = offset.y > 0 ? outsideForce.y : outsideForce.y + offset.y;
+			float yForce = offset.y < 0.0f ? outsideForce.y : outsideForce.y + offset.y;
 			offset = new Vector3(offset.x + outsideForce.x, yForce, 0.0f);
 			outsideForce = Vector2.zero;
 		}
@@ -410,7 +410,7 @@ public class CharacterController2D : MonoBehaviour
 	public void jump()
 	{
 		if(canJump())
-		{		
+		{	
 			if((JumpDirectionOnWallOrEdge)jumpWallStack.Peek() == JumpDirectionOnWallOrEdge.Inverse && (grabingEdge() || wallSticking()))
 			{
 				changeDirection();
