@@ -77,6 +77,7 @@ public class CharacterController2D : MonoBehaviour
 	public float xSpeedPerFrame = 0.1f;
 	public float gravityFactor = 0.2f;
 	private float currentGravity;
+	private Vector2 outsideForce;
 
 	public float accelerationSmooth = 1.0f;
 	public float gravitySmooth = 1.0f;
@@ -218,6 +219,7 @@ public class CharacterController2D : MonoBehaviour
 			offset = new Vector3(xMoveForward, gravity, 0.0f);
 		}
 
+		applyOutsideForce(ref offset);
 		offset = adjustOffsetCheckingCollision(offset);
 
 		characTransform.position += offset;
@@ -229,6 +231,21 @@ public class CharacterController2D : MonoBehaviour
 	}
 		
 	/* ------------------------------------------------------ Functions -------------------------------------------------------*/
+
+	private void applyOutsideForce(ref Vector3 offset)
+	{
+		if(outsideForce.magnitude != 0.0f)
+		{
+			float yForce = offset.y > 0 ? outsideForce.y : outsideForce.y + offset.y;
+			offset = new Vector3(offset.x + outsideForce.x, yForce, 0.0f);
+			outsideForce = Vector2.zero;
+		}
+	}
+
+	public void addOutsideForce(Vector2 offset)
+	{
+		outsideForce = offset;
+	}
 
 	public Vector3 adjustOffsetCheckingCollision(Vector3 offset)
 	{

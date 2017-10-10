@@ -428,7 +428,7 @@ public class CharacterState : MonoBehaviour
 			{
 				if(collider.instance.isTrigger)
 				{
-					collider.instance.SendMessage("OnTriggerExitCustom", new RaycastCollision(myCollider, collider.hitPoint) , SendMessageOptions.DontRequireReceiver); 
+					collider.instance.SendMessage("OnTriggerExitCustom", new RaycastCollision(myCollider, collider.hitPoint), SendMessageOptions.DontRequireReceiver); 
 				}
 				else
 				{

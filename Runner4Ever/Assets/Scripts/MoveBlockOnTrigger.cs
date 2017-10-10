@@ -27,6 +27,8 @@ public class MoveBlockOnTrigger : MonoBehaviour
 
 	// Private
 
+	private CharacterController2D player;
+	private Vector2 offsetByUpdate;
 	private Vector2 originalPos;
 	private Transform transform;
 	private Collider2D myCollider;
@@ -42,6 +44,7 @@ public class MoveBlockOnTrigger : MonoBehaviour
 		transform = GetComponent<Transform>();
 		rb = GetComponent<Rigidbody2D>();
 		originalPos = transform.position;
+		offsetByUpdate = new Vector2(0,0);
 	}
 
 	public bool TriggerRight()
@@ -109,16 +112,43 @@ public class MoveBlockOnTrigger : MonoBehaviour
 		}
 	}
 
-	public void Update()
+	private void goBack()
+	{
+		comingBack = true;
+		_vel *= -1;
+	}
+
+	void OnCollisionEnterCustom(RaycastCollision other) 
+	{
+		var state = other.other.GetComponent<CharacterController2D>();
+        if(state != null && other.other.gameObject.tag == "Player")
+        {
+        	player = state;
+        }
+	}
+
+	void OnCollisionExitCustom(RaycastCollision notHitted) 
+	{
+		player = null;
+	}
+
+	public void FixedUpdate()
 	{
 		if(triggered)
 		{
 			rb.velocity = Vector2.Lerp(rb.velocity, _vel, Time.deltaTime * accelerationSmooth);
+			int FPS =  UnityUtils.getFPS();
+			offsetByUpdate = new Vector2(rb.velocity.x / FPS, rb.velocity.y / FPS);
+
+			if(player)
+			{
+				Debug.Log("Add Outside " + offsetByUpdate);
+				player.addOutsideForce(offsetByUpdate);
+			}
 
 			if(!comingBack && Vector2.Distance(transform.position, originalPos) > maxDistance) // STAPH
 			{
-				comingBack = true;
-				_vel *= -1;
+				goBack();
 			}
 			else if(comingBack&& Vector2.Distance(transform.position, originalPos) < 0.1f)
 			{

@@ -43,30 +43,22 @@ public class InversePlayerVelocity : MonoBehaviour {
         {
         	var collider = GetComponent<Collider2D>();
 
-        	/*Vector2 topLeft = new Vector2(collider.bounds.min.x, collider.bounds.max.y);
-        	Vector2 topRight = collider.bounds.max;
-        	Vector2 bottomRigth = new Vector2(collider.bounds.max.x, collider.bounds.min.y);
-        	Vector2 bottomLeft = collider.bounds.min;*/
+            UnityUtils.CollisionDirection direction = UnityUtils.getCollisionDirection(collider.bounds, other.point);
 
-        	// Is it from above ?
-        	if(Mathf.Approximately(other.point.y, collider.bounds.max.y))  //(IsIntersecting(collider.bounds.center, other.other.bounds.center, topRight, topLeft))
+        	if(direction == UnityUtils.CollisionDirection.Above) 
         	{
-                Debug.Log("Above");
         		state.inverseYVelocity(speedBonus, maxYVelocity);
         	}
-        	else if(Mathf.Approximately(other.point.y, collider.bounds.min.y)) //(IsIntersecting(collider.bounds.center, other.other.bounds.center, bottomLeft, bottomRigth)) // below
+        	else if(direction == UnityUtils.CollisionDirection.Below) 
         	{
-                Debug.Log("Below");
         		state.inverseYVelocity(speedBonus, maxYVelocity);
         	}
-        	else if(Mathf.Approximately(other.point.x, collider.bounds.min.x)) //(IsIntersecting(collider.bounds.center, other.other.bounds.center, topLeft, bottomLeft)) // left
+        	else if(direction == UnityUtils.CollisionDirection.Left)
         	{
-                Debug.Log("Left");
         		state.inverseXVelocity(speedBonus, maxXVelocity);
         	}
-        	else if(Mathf.Approximately(other.point.x, collider.bounds.max.x)) //(IsIntersecting(collider.bounds.center, other.other.bounds.center, topRight, bottomRigth)) // right
+        	else if(direction == UnityUtils.CollisionDirection.Right) 
         	{
-                Debug.Log("Right");
         		state.inverseXVelocity(speedBonus, maxXVelocity);
         	}
         	else
@@ -76,7 +68,6 @@ public class InversePlayerVelocity : MonoBehaviour {
 
             state.doNotRunRight();
             state.popGroundRunDirectionIn(timeBeforeRetakeCorrectDirection);
-            //disableColliderFor(disableColliderTime);
         }
     }
 
