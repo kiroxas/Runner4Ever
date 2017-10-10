@@ -197,9 +197,17 @@ public class CharacterController2D : MonoBehaviour
 		handleJump(jumped);
 		Vector3 offset;
 
+		currentVelocity = Mathf.Lerp(currentVelocity, areWeGoingRight() ? xSpeedPerFrame : -xSpeedPerFrame, Time.deltaTime * accelerationSmooth);
+		currentGravity = Mathf.Lerp(currentGravity, gravityFactor, Time.deltaTime * gravitySmooth);
+
+		float xMoveForward = (collidingForward() || !running) ? 0.0f : currentVelocity;
+		float gravity = (grounded() && currentGravity > 0) ? 0.0f : wallSticking() ? -(currentGravity / 2.0f) : -currentGravity;
+
 		if(isJumping())
 		{
 			offset = jumpCollec.getNext();
+			offset.x = xMoveForward;
+			
 			if(collidingForward()) // if colliding, move only on Y
 			{
 				offset.x = 0;
@@ -218,12 +226,6 @@ public class CharacterController2D : MonoBehaviour
 		}
 		else
 		{
-			currentVelocity = Mathf.Lerp(currentVelocity, areWeGoingRight() ? xSpeedPerFrame : -xSpeedPerFrame, Time.deltaTime * accelerationSmooth);
-			currentGravity = Mathf.Lerp(currentGravity, gravityFactor, Time.deltaTime * gravitySmooth);
-			
-			float xMoveForward = (collidingForward() || !running) ? 0.0f : currentVelocity;
-			float gravity = (grounded() && currentGravity > 0) ? 0.0f : wallSticking() ? -(currentGravity / 2.0f) : -currentGravity;
-
 			offset = new Vector3(xMoveForward, gravity, 0.0f);
 		}
 
