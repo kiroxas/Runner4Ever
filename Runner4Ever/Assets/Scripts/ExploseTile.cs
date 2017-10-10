@@ -18,7 +18,7 @@ public class ExploseTile : MonoBehaviour
       yield return new WaitForSeconds(timeToWait);
        	
       gameObject.SetActive(false);
-      Invoke("Activate", timeToReappear);
+      //Invoke("Activate", timeToReappear);
   }
 
 	void OnCollisionEnterCustom(RaycastCollision other) 
