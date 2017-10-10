@@ -460,8 +460,8 @@ public class CharacterController2D : MonoBehaviour
 	{	
 		currentVelocity *= dashSpeedMul;
 		dashIn = dashTime;
-		//GetComponent<BoxCollider2D>().size = new Vector2(xColliderSize, yColliderSize / 2);
-		//GetComponent<BoxCollider2D>().offset = new Vector2(colliderOffset.x, colliderOffset.y - (yColliderSize / 4));
+		GetComponent<BoxCollider2D>().size = new Vector2(xColliderSize, yColliderSize / 2);
+		GetComponent<BoxCollider2D>().offset = new Vector2(colliderOffset.x, colliderOffset.y - (yColliderSize / 4));
 	}
 
 	/* ------------------------------------------------------ Function to inquiry the state -------------------------------------------------------*/
