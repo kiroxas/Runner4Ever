@@ -164,8 +164,16 @@ public class CharacterController2D : MonoBehaviour
 		updateActionTimer(ref lastJumpFailedAttempt);
 		if(updateActionTimer(ref dashIn))
 		{
-			GetComponent<BoxCollider2D>().size = new Vector2(xColliderSize, yColliderSize);
-			GetComponent<BoxCollider2D>().offset = new Vector2(colliderOffset.x, colliderOffset.y);
+			float upDistance = yColliderSize / 2.0f;
+			if(collidingAbove() || state.isThisColliding(Vector2.up, ref upDistance)) // if still colliding at end of slide, keep sliding
+			{
+				dashIn = dashTime / 2.0f;
+			}
+			else
+			{
+				GetComponent<BoxCollider2D>().size = new Vector2(xColliderSize, yColliderSize);
+				GetComponent<BoxCollider2D>().offset = new Vector2(colliderOffset.x, colliderOffset.y);
+			}
 		}
 
 		// ------------------------------- Frame actions -------------------------------
