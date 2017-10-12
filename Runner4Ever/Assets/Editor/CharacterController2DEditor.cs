@@ -63,7 +63,7 @@ public class CharacterController2DEditor : Editor
             EditorGUI.indentLevel--;
         }
        
-        myScript.xSpeedPerFrame = EditorGUILayout.FloatField("runSpeed", myScript.xSpeedPerFrame);
+        myScript.xSpeedBySecond = EditorGUILayout.FloatField("runSpeed", myScript.xSpeedBySecond);
         myScript.gravityFactor = EditorGUILayout.FloatField("gravityFactor", myScript.gravityFactor);
         myScript.accelerationSmooth = EditorGUILayout.FloatField("accelerationSmooth", myScript.accelerationSmooth);
         myScript.gravitySmooth = EditorGUILayout.FloatField("gravitySmooth", myScript.gravitySmooth);

@@ -74,7 +74,7 @@ public class CharacterController2D : MonoBehaviour
 	private bool running = true;
 	private float currentVelocity;
 	private float yVelocity;
-	public float xSpeedPerFrame = 0.1f;
+	public float xSpeedBySecond = 0.1f;
 	public float gravityFactor = 0.2f;
 	private float currentGravity;
 	private Vector2 outsideForce;
@@ -197,10 +197,17 @@ public class CharacterController2D : MonoBehaviour
 		handleJump(jumped);
 		Vector3 offset;
 
-		currentVelocity = Mathf.Lerp(currentVelocity, areWeGoingRight() ? xSpeedPerFrame : -xSpeedPerFrame, Time.deltaTime * accelerationSmooth);
+		currentVelocity = Mathf.Lerp(currentVelocity, areWeGoingRight() ? xSpeedBySecond : -xSpeedBySecond, Time.deltaTime * accelerationSmooth);
 		currentGravity = Mathf.Lerp(currentGravity, gravityFactor, Time.deltaTime * gravitySmooth);
 
 		float xMoveForward = (collidingForward() || !running) ? 0.0f : currentVelocity;
+
+		if(Mathf.Approximately(xMoveForward, xSpeedBySecond))
+		{
+			xMoveForward = xSpeedBySecond;
+		}
+
+		xMoveForward *= Time.deltaTime; // keep this line or it will be framerate dependant
 		float gravity = (grounded() && currentGravity > 0) ? 0.0f : wallSticking() ? -(currentGravity / 2.0f) : -currentGravity;
 
 		if(isJumping())
@@ -616,7 +623,7 @@ public class CharacterController2D : MonoBehaviour
 		jumpCollec.reset();
 		jumpCollec.reinit();
 		running = true;
-		currentVelocity = xSpeedPerFrame;
+		currentVelocity = 0.0f; // start stop
 		currentGravity = gravityFactor;
 		canBeRepelled = true;
 
