@@ -86,6 +86,14 @@ public class SegmentStreamer : MonoBehaviour
 
 	private ILayoutGenerator generator; // abstract class to generate the layout
 
+	private int getSmallestYCell()
+	{
+		int yCellsBestCase = yTilePerSegment * ySegments;
+		int difference = yCellsBestCase - yTotalLevel;
+
+		return yTilePerSegment - difference;
+	}
+
 	// Extract the list corresponding to the subblock of the segment
 	private List<char> extractSegmentList(List<char> wholeLevel, int xSegment, int ySegment, bool verbose, int xSize, int ySize)
 	{
@@ -100,7 +108,16 @@ public class SegmentStreamer : MonoBehaviour
 		int originX = xSegment * xTilePerSegment;
 		
 		int startY = (ySegments -1 - ySegment); // inverse the y
-		int originY = startY * yTilePerSegment + ySize - 1;
+
+		int fullYCells = startY - 1 > 0 ? startY - 1 : 0;
+		int smallestYCell = startY > 0 ? 1 : 0;
+
+		if(verbose)
+		{
+			Debug.Log("fullYCells : " + fullYCells + " smallestYCell  : " + smallestYCell + " smallestSize : " + getSmallestYCell());
+		}
+
+		int originY = (smallestYCell * getSmallestYCell()) + (fullYCells * yTilePerSegment) + ySize - 1;
 		originY = Mathf.Clamp(originY, 1, yTotalLevel - 1);
 
 		int index = (originY * xTotalLevel) + originX;
@@ -120,11 +137,6 @@ public class SegmentStreamer : MonoBehaviour
 
 			for(int x = 0; x < xSize; ++x)
 			{
-				if(verbose)
-				{
-					Debug.Log("index : " + index + " value " + wholeLevel[index]);
-				}
-
 				if(index >= wholeLevel.Count)
 				{
 					Debug.LogError("Index : " + index + " origin : " + originX + "," + originY);
@@ -172,7 +184,7 @@ public class SegmentStreamer : MonoBehaviour
 				float xBegin = x * xTilePerSegment * tileWidth + bottomLeftXPos;
 				float yBegin = y * yTilePerSegment * tileHeight + bottomLeftYPos;
 
-				bool verbose = false;
+				bool verbose = true;//x == 7 && y == 1;
 
 				segments.Add(new Segment(xSize, ySize, xBegin, yBegin, extractSegmentList(level, x, y, verbose, xSize, ySize), tileWidth, tileHeight, x, y));
 				segments[segments.Count -1].setName(segmentNumber.ToString());
@@ -290,6 +302,7 @@ public class SegmentStreamer : MonoBehaviour
 		 		foreach(Segment s in ngs)
 		 		{
 		 			s.enable(statePool);
+		 			//Debug.Log(s.presentation());
 		 		}
 		 	}
 

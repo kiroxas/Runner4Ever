@@ -146,7 +146,7 @@ public class CharacterController2D : MonoBehaviour
 		colliderOffset = GetComponent<BoxCollider2D>().offset;
 	}
 
-	public void LateUpdate()
+	public void Update()
 	{
 		if(isDead())
 		{
@@ -207,7 +207,7 @@ public class CharacterController2D : MonoBehaviour
 		{
 			offset = jumpCollec.getNext();
 			offset.x = xMoveForward;
-			
+
 			if(collidingForward()) // if colliding, move only on Y
 			{
 				offset.x = 0;
