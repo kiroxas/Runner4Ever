@@ -39,7 +39,7 @@ public class ProgressionDisplay : MonoBehaviour
 
 	public void Update()
 	{
-		if(xStart == xEnd)
+		if(xStart == xEnd || cursor == null)
 			return;
 
 		int xPlayer = (int)player.GetComponent<Transform>().position.x;

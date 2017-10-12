@@ -31,6 +31,7 @@ public class JumpCharacs
 	private float timeClock = 0.0f; // current time in the animation curve
 	private bool goingRight = true; // Are we going right, true by default
 
+	private float lastY = 0.0f;
 	private bool inJump = false;
 	private string name; // can name it for log
 
@@ -56,7 +57,7 @@ public class JumpCharacs
 		startTime = jumpShape[0].time;
 		jumpTime = jumpShape[jumpShape.length - 1].time - startTime;
 
-		int FPS = (int)(1f / Time.unscaledDeltaTime);
+		int FPS = UnityUtils.getFPS();
 		float time = jumpTime * FPS;
 
 		expectedVelocity = xDistance / time;
@@ -91,12 +92,12 @@ public class JumpCharacs
 
 	public void startJump(Vector2 origin)
 	{
-		//Debug.Log("Start jump for : " + name);
 		timeClock = 0.0f;
 		shapeIndex = startTime;
 		currentJumpStart = origin;
 		index = 0;
 		inJump = true;
+		lastY = 0.0f;
 	}
 
 	
@@ -124,10 +125,24 @@ public class JumpCharacs
 	{
 		int ind = index;
 		index++;
+		shapeIndex += Time.deltaTime;
 		timeClock += Time.deltaTime;
 
-		if(index >= offsets.Count)
+		float y = jumpShape.Evaluate(shapeIndex) * yDistance;
+		float toRet = y - lastY;
+		lastY = y;
+
+		if(timeClock >= jumpTime)
 		{
+			Debug.Log( "[" + name + "] : " + "Time spent in air : " + timeClock + " (on : " + jumpTime + ") in " + index + " steps");
+			endJump();
+		}
+
+		return new Vector3(0.0f, toRet, 0.0f);
+
+		/*if(index >= offsets.Count)
+		{
+			Debug.Log( "[" + name + "] : " + "Time spent in air : " + timeClock + " (on : " + jumpTime + ") in " + index + " steps");
 			endJump();
 			return Vector3.zero;
 		}
@@ -139,7 +154,7 @@ public class JumpCharacs
 			ret = new Vector3(ret.x * -1, ret.y, ret.z);
 		}
 
-		return ret;
+		return ret;*/
 	}
 
 	// For now let's impose speed
@@ -150,7 +165,6 @@ public class JumpCharacs
 
 		if(timeClock >= jumpTime)
 		{
-			shapeIndex = jumpShape[jumpShape.length - 1].time;
 			endJump();
 		}
 
@@ -159,18 +173,20 @@ public class JumpCharacs
 
 		++index;
 
-		Vector3 offset = new Vector3(expectedX, expectedY, 0.0f);
-
-		return  offset; 
+		return  new Vector3(expectedX, expectedY, 0.0f); 
 	}
 
 	public void endJump()
 	{
-		//Debug.Log("End jump for : " + name);
+		if(timeClock > 0.0f)
+		{
+			Debug.Log( "[" + name + "] : " + "Time spent in air : " + timeClock + " (on : " + jumpTime + ") in " + index + " steps");
+		}
 		shapeIndex = jumpTime;
 		currentJumpStart = Vector2.zero;
 		index = 0;
 		inJump = false;
+		lastY = 0.0f;
 	}
 
 	public void reinit()

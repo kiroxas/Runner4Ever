@@ -168,9 +168,9 @@ public class CharacterState : MonoBehaviour
 
 		Vector2 rayDirection = Vector2.down;
 
-		{
+		/*{
 			Vector2 dir = rayDirection;
-			dir.x = -0.0f;
+			//dir.x = -0.0f;
 			Vector2 rayVector = myCollider.bounds.min;
 			var raycastHit = Physics2D.Raycast(rayVector, dir, rcCastDistance, PlatformMask);
 			Debug.DrawRay(rayVector, dir * groundedCastDistance, Color.green);
@@ -192,7 +192,7 @@ public class CharacterState : MonoBehaviour
 				}
 			}
 		
-			dir.x = 0.0f;
+			//dir.x = 0.0f;
 			rayVector = new Vector2(myCollider.bounds.max.x , myCollider.bounds.min.y);
 			raycastHit = Physics2D.Raycast(rayVector, dir, rcCastDistance, PlatformMask);
 			Debug.DrawRay(rayVector, dir * groundedCastDistance, Color.green);
@@ -213,9 +213,9 @@ public class CharacterState : MonoBehaviour
 					isGrounded = true;
 				}
 			}
-		}
+		}*/
 
-		for(int i = -1; i <= groundedRayCasts; ++i)
+		for(int i = -1; i <= groundedRayCasts + 1; ++i)
 		{
 			Vector2 rayVector = new Vector2(myCollider.bounds.min.x + i * step, myCollider.bounds.min.y);
 			var raycastHit = Physics2D.Raycast(rayVector, rayDirection, groundedCastDistance, PlatformMask);

@@ -184,7 +184,7 @@ public class SegmentStreamer : MonoBehaviour
 				float xBegin = x * xTilePerSegment * tileWidth + bottomLeftXPos;
 				float yBegin = y * yTilePerSegment * tileHeight + bottomLeftYPos;
 
-				bool verbose = true;//x == 7 && y == 1;
+				bool verbose = false;
 
 				segments.Add(new Segment(xSize, ySize, xBegin, yBegin, extractSegmentList(level, x, y, verbose, xSize, ySize), tileWidth, tileHeight, x, y));
 				segments[segments.Count -1].setName(segmentNumber.ToString());
