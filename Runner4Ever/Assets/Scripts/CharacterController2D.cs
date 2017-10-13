@@ -210,6 +210,8 @@ public class CharacterController2D : MonoBehaviour
 		xMoveForward *= Time.deltaTime; // keep this line or it will be framerate dependant
 		float gravity = (grounded() && currentGravity > 0) ? 0.0f : wallSticking() ? -(currentGravity / 2.0f) : -currentGravity;
 
+		gravity *= Time.deltaTime;
+
 		if(isJumping())
 		{
 			offset = jumpCollec.getNext();
