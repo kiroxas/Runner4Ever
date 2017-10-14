@@ -112,6 +112,8 @@ public class PlayerData
 
         m_Instance.saveFile = Application.persistentDataPath + "/save.bin";
 
+        Debug.Log(m_Instance.saveFile);
+
         if (File.Exists(m_Instance.saveFile))
         {
             // If we have a save, we read it.

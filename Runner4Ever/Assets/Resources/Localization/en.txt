@@ -3,4 +3,5 @@
 		  {"key":"single_run", "value":"single run"}, 
 		  {"key":"distance_unit", "value":"m"},
 		  {"key":"pickup", "value":"pick-up"},
-		  {"key":"normalObject", "value":"orb"}]}
+		  {"key":"normalObject", "value":"orb"},
+		  {"key":"mission", "value":"mission"}]}

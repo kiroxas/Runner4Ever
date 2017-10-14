@@ -3,4 +3,5 @@
 		  {"key":"single_run", "value":"une seule partie"}, 
 		  {"key":"distance_unit", "value":"m"},
 		  {"key":"pickup", "value":"Collectible"},
-		  {"key":"normalObject", "value":"orbe"}]}
+		  {"key":"normalObject", "value":"orbe"},
+		  {"key":"mission", "value":"Réalisations"}]}

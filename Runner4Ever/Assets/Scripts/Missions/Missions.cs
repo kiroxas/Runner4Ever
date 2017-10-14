@@ -15,8 +15,6 @@ public abstract class MissionBase
         SINGLE_RUN,
         PICKUP,
         OBSTACLE_JUMP,
-        SLIDING,
-        MULTIPLIER,
         MAX
     }
 

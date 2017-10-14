@@ -40,10 +40,12 @@ public class LocalizationManager : MonoBehaviour
     public void LoadLocalizedText(string fileName)
     {
         localizedText = new Dictionary<string, string> ();
-        string filePath = Path.Combine (Application.streamingAssetsPath, fileName);
+        TextAsset data = Resources.Load(fileName) as TextAsset;
+        //string filePath = Path.Combine (Application.streamingAssetsPath, fileName);
 
-        if (File.Exists (filePath)) {
-            string dataAsJson = File.ReadAllText (filePath);
+        if (data) 
+        {
+            string dataAsJson = data.text;
             LocalizationData loadedData = JsonUtility.FromJson<LocalizationData> (dataAsJson);
 
             for (int i = 0; i < loadedData.items.Length; i++) 
@@ -52,9 +54,10 @@ public class LocalizationManager : MonoBehaviour
             }
 
             Debug.Log ("Data loaded, dictionary contains: " + localizedText.Count + " entries");
-        } else 
+        } 
+        else 
         {
-            Debug.LogError ("Cannot find file!");
+            Debug.LogError ("Cannot find file : " + fileName);
         }
 
         isReady = true;

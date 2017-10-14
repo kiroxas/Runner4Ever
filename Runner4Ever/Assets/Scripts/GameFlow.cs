@@ -22,6 +22,9 @@ public class GameFlow : MonoBehaviour
         s_Instance = this;
         
     	DontDestroyOnLoad(gameObject);
+
+        PlayerData.Create();
+        LocalizationManager.get().LoadLocalizedText("Localization/fr");
     }
 
 	public void LoadLevel(string name)
@@ -34,8 +37,13 @@ public class GameFlow : MonoBehaviour
     	LoadLevel("MainGame");
     }
 
-     public void LoadMainMenu()
+    public void LoadMainMenu()
     {
         LoadLevel("MainMenu");
+    }
+
+    public void Update()
+    {
+        PlayerData.instance.UpdateMissions(TrackingManager.get());
     }
 }
