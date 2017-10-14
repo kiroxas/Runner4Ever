@@ -221,6 +221,8 @@ public class SegmentStreamer : MonoBehaviour
     	{
     		GameObject player = statePool.getFromPool(PoolIndexes.playerIndex, firstCheckpoint.GetComponent<Transform>().position);
     		camera.target = player.GetComponent<Transform>(); 
+
+    		EventManager.TriggerEvent(GameConstants.playerSpawnEvent);
     	}
 	}
 

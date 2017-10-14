@@ -71,6 +71,7 @@ public class CharacterController2D : MonoBehaviour
 	private float timeBetweenRepelledAgain = 0.1f;
 
 	// RunSpeed Related
+	private float totalDistanceRun = 0.0f;
 	private bool running = true;
 	private float currentVelocity;
 	private float yVelocity;
@@ -93,6 +94,7 @@ public class CharacterController2D : MonoBehaviour
 	private float yColliderSize = 0.0f;
 
 	private Vector2 colliderOffset;
+	private int objectsCollected = 0;
 
 	/* ------------------------------------------------------ Monobehaviour Functions -------------------------------------------------------*/
 
@@ -241,6 +243,7 @@ public class CharacterController2D : MonoBehaviour
 		applyOutsideForce(ref offset);
 		offset = adjustOffsetCheckingCollision(offset);
 
+		totalDistanceRun += Mathf.Abs(offset.x);
 		characTransform.position += offset;
 
 		animator.SetBool("isRunning", running);
@@ -422,6 +425,11 @@ public class CharacterController2D : MonoBehaviour
 		inverseYVelocity(magnitude, maxY);
 	}
 
+	public void acquireObject()
+	{
+		objectsCollected++;
+	}
+
 	
 
 	/* ------------------------------------------------------ Player's actions -------------------------------------------------------*/
@@ -484,6 +492,21 @@ public class CharacterController2D : MonoBehaviour
 	}
 
 	/* ------------------------------------------------------ Function to inquiry the state -------------------------------------------------------*/
+
+	public int getObjectsAcquiredCount()
+	{
+		return objectsCollected;
+	}
+
+	public float getRunDistance()
+	{
+		return totalDistanceRun;
+	}
+
+	public int getNumberOfJumps()
+	{
+		return jumpCollec.getNumberOfJumps();
+	}
 
 	public int getCurrentJumpCount()
 	{

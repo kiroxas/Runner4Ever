@@ -75,10 +75,10 @@ public class CharacterController2DEditor : Editor
         myScript.dashTime = EditorGUILayout.FloatField("dashTime", myScript.dashTime);
 
        
-        /*if (GUI.changed)
+        if (GUI.changed)
         {
             EditorUtility.SetDirty(target);
             UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(((GameObject)myScript.gameObject).scene);
-        }*/
+        }
 	}
 }

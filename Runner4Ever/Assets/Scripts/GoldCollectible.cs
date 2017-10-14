@@ -11,6 +11,7 @@ public class GoldCollectible : MonoBehaviour
 		if(other.other.GetComponent<CharacterController2D>() == null)
 			return;
 
+		other.other.GetComponent<CharacterController2D>().acquireObject();
 		Instantiate(Effect, transform.position, transform.rotation);
 		GetComponent<Transform>().gameObject.SetActive(false);
 	}

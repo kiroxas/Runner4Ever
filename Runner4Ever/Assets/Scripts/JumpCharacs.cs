@@ -134,7 +134,7 @@ public class JumpCharacs
 
 		if(timeClock >= jumpTime)
 		{
-			Debug.Log( "[" + name + "] : " + "Time spent in air : " + timeClock + " (on : " + jumpTime + ") in " + index + " steps");
+			//Debug.Log( "[" + name + "] : " + "Time spent in air : " + timeClock + " (on : " + jumpTime + ") in " + index + " steps");
 			endJump();
 		}
 
@@ -178,10 +178,6 @@ public class JumpCharacs
 
 	public void endJump()
 	{
-		if(timeClock > 0.0f)
-		{
-			Debug.Log( "[" + name + "] : " + "Time spent in air : " + timeClock + " (on : " + jumpTime + ") in " + index + " steps");
-		}
 		shapeIndex = jumpTime;
 		currentJumpStart = Vector2.zero;
 		index = 0;

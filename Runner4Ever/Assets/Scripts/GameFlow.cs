@@ -33,4 +33,9 @@ public class GameFlow : MonoBehaviour
     {
     	LoadLevel("MainGame");
     }
+
+     public void LoadMainMenu()
+    {
+        LoadLevel("MainMenu");
+    }
 }

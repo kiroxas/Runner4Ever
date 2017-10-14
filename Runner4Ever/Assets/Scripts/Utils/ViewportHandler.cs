@@ -125,9 +125,12 @@ public class ViewportHandler : MonoBehaviour
     {
         float leftX, rightX, topY, bottomY;
 
-        if(constraint == Constraint.Landscape){
+        if(constraint == Constraint.Landscape)
+        {
             camera.orthographicSize = 1f / camera.aspect * UnitsSize / 2f;    
-        }else{
+        }
+        else
+        {
             camera.orthographicSize = UnitsSize / 2f;
         }
 
@@ -164,16 +167,20 @@ public class ViewportHandler : MonoBehaviour
         #endif
     }
 
-    void OnDrawGizmos() {
+    void OnDrawGizmos() 
+    {
         Gizmos.color = wireColor;
 
         Matrix4x4 temp = Gizmos.matrix;
         Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
-        if (camera.orthographic) {
+        if (camera.orthographic) 
+        {
             float spread = camera.farClipPlane - camera.nearClipPlane;
             float center = (camera.farClipPlane + camera.nearClipPlane)*0.5f;
             Gizmos.DrawWireCube(new Vector3(0,0,center), new Vector3(camera.orthographicSize*2*camera.aspect, camera.orthographicSize*2, spread));
-        } else {
+        } 
+        else 
+        {
             Gizmos.DrawFrustum(Vector3.zero, camera.fieldOfView, camera.farClipPlane, camera.nearClipPlane, camera.aspect);
         }
         Gizmos.matrix = temp;
