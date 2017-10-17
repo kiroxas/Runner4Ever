@@ -115,6 +115,8 @@
      <Compile Include="Assets\Scripts\Localization\LocalizationManager.cs" />
      <Compile Include="Assets\Scripts\Localization\LocalizedText.cs" />
      <Compile Include="Assets\Scripts\LoopLevel.cs" />
+     <Compile Include="Assets\Scripts\Missions\MissionEntry.cs" />
+     <Compile Include="Assets\Scripts\Missions\MissionUI.cs" />
      <Compile Include="Assets\Scripts\Missions\Missions.cs" />
      <Compile Include="Assets\Scripts\MoveBlockOnTrigger.cs" />
      <Compile Include="Assets\Scripts\PlayerData.cs" />
