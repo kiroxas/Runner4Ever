@@ -4,4 +4,5 @@
 		  {"key":"distance_unit", "value":"m"},
 		  {"key":"pickup", "value":"Collectible"},
 		  {"key":"normalObject", "value":"orbe"},
-		  {"key":"mission", "value":"Réalisations"}]}
+		  {"key":"mission", "value":"Réalisations"},
+		  {"key":"settings", "value":"Réglages"}]}

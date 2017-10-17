@@ -111,6 +111,7 @@
      <Compile Include="Assets\Scripts\LevelGeneration\Pooler.cs" />
      <Compile Include="Assets\Scripts\LevelGeneration\Segment.cs" />
      <Compile Include="Assets\Scripts\LevelGeneration\SegmentStreamer.cs" />
+     <Compile Include="Assets\Scripts\Localization\LanguagesButton.cs" />
      <Compile Include="Assets\Scripts\Localization\LocalizationData.cs" />
      <Compile Include="Assets\Scripts\Localization\LocalizationManager.cs" />
      <Compile Include="Assets\Scripts\Localization\LocalizedText.cs" />
@@ -121,6 +122,7 @@
      <Compile Include="Assets\Scripts\MoveBlockOnTrigger.cs" />
      <Compile Include="Assets\Scripts\PlayerData.cs" />
      <Compile Include="Assets\Scripts\ProgressionDisplay.cs" />
+     <Compile Include="Assets\Scripts\SettingsUI.cs" />
      <Compile Include="Assets\Scripts\Utils\CheckpointUtils.cs" />
      <Compile Include="Assets\Scripts\Utils\GameConstants.cs" />
      <Compile Include="Assets\Scripts\Utils\TrackingManager.cs" />

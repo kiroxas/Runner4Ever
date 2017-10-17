@@ -7,10 +7,19 @@ public class LocalizedText : MonoBehaviour
 {
     public string key;
 
-    // Use this for initialization
-    void Start () 
+    void OnEnable()
     {
-        Text text = GetComponent<Text> ();
+    	EventManager.StartListening (GameConstants.languageChangedEvent, changeText);
+    }
+
+    void OnDisable ()
+    {
+        EventManager.StopListening (GameConstants.languageChangedEvent, changeText);
+    }
+
+    void changeText()
+    {
+    	Text text = GetComponent<Text> ();
         text.text = LocalizationManager.GetValue(key);
     }
 

@@ -11,4 +11,5 @@ public class GameConstants
 	// Events
 
 	static public string playerSpawnEvent = "pse";
+	static public string languageChangedEvent = "lce";
 }

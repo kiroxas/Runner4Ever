@@ -4,4 +4,5 @@
 		  {"key":"distance_unit", "value":"m"},
 		  {"key":"pickup", "value":"pick-up"},
 		  {"key":"normalObject", "value":"orb"},
-		  {"key":"mission", "value":"mission"}]}
+		  {"key":"mission", "value":"mission"},
+		  {"key":"settings", "value":"Settings"}]}
