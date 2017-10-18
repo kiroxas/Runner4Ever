@@ -7,40 +7,21 @@ using UnityEngine.UI;
 
 public class LanguagesButton : MonoBehaviour 
 {
-	public enum Languages
-	{
-		en, // english
-		fr  // french
-	}
+    public LocalizationUtils.Languages lang = LocalizationUtils.Languages.en;
 
-	static Languages GetNext(Languages value)
-	{
-    	return (from Languages val in System.Enum.GetValues(typeof (Languages)) 
-            where val > value 
-            orderby val 
-            select val).DefaultIfEmpty().First();
-	}
-
-    public Languages lang = Languages.en;
-
-    public void setLang(Languages l)
+    public void setLang(LocalizationUtils.Languages l)
     {
     	lang = l;
 
-    	string spritePath = "UI/" + lang.ToString();
-    	string locPath = "Localization/" + lang.ToString();
+    	string spritePath = LocalizationUtils.getFlagSpritePath(lang);
 
     	GetComponent<Image>().sprite = Resources.Load<Sprite>(spritePath);
-    	LocalizationManager.get().LoadLocalizedText(locPath);
-
-    	EventManager.TriggerEvent (GameConstants.languageChangedEvent);
+    	GameFlow.instance.setLang(lang);
     }
 
     public void OnCLick()
     {
-    	Languages l = GetNext(lang);
-
-    	setLang(l);
+    	setLang(LocalizationUtils.GetNext(lang));
     }
 
     public void Start()

@@ -1,0 +1,8 @@
+{"items":[{"key":"game_title", "value":"CoursPourToujours"}, 
+		  {"key":"run", "value":"走る延々"}, 
+		  {"key":"single_run", "value":"個人戦"}, 
+		  {"key":"distance_unit", "value":"m"},
+		  {"key":"pickup", "value":"収集品"},
+		  {"key":"normalObject", "value":"玉"},
+		  {"key":"mission", "value":"達成"},
+		  {"key":"settings", "value":"設定"}]}

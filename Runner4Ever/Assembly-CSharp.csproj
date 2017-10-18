@@ -125,6 +125,7 @@
      <Compile Include="Assets\Scripts\SettingsUI.cs" />
      <Compile Include="Assets\Scripts\Utils\CheckpointUtils.cs" />
      <Compile Include="Assets\Scripts\Utils\GameConstants.cs" />
+     <Compile Include="Assets\Scripts\Utils\LocalizationUtils.cs" />
      <Compile Include="Assets\Scripts\Utils\TrackingManager.cs" />
      <Compile Include="Assets\Scripts\Utils\UnityUtils.cs" />
      <Compile Include="Assets\Scripts\Utils\ViewportHandler.cs" />
@@ -146,6 +147,7 @@
      <None Include="Assets\LeanTouch\Examples\Shaders\Skybox.shader" />
      <None Include="Assets\LeanTouch\Examples\Shaders\Smooth.shader" />
      <None Include="Assets\Resources\LevelGeneration\three.txt" />
+     <None Include="Assets\Resources\Localization\jp.txt" />
      <None Include="Assets\Resources\Localization\en.txt" />
      <None Include="Assets\Resources\LevelGeneration\level_test_02.txt" />
      <None Include="Assets\Resources\LevelGeneration\five.txt" />

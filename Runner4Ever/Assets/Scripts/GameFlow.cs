@@ -46,4 +46,12 @@ public class GameFlow : MonoBehaviour
     {
         PlayerData.instance.UpdateMissions(TrackingManager.get());
     }
+
+    public void setLang(LocalizationUtils.Languages lang)
+    {
+        string locPath = LocalizationUtils.getLocFilePath(lang);
+        LocalizationManager.get().LoadLocalizedText(locPath);
+
+        EventManager.TriggerEvent (GameConstants.languageChangedEvent);
+    }
 }

@@ -63,6 +63,7 @@
      <None Include="Assets\LeanTouch\Examples\Shaders\Skybox.shader" />
      <None Include="Assets\LeanTouch\Examples\Shaders\Smooth.shader" />
      <None Include="Assets\Resources\LevelGeneration\three.txt" />
+     <None Include="Assets\Resources\Localization\jp.txt" />
      <None Include="Assets\Resources\Localization\en.txt" />
      <None Include="Assets\Resources\LevelGeneration\level_test_02.txt" />
      <None Include="Assets\Resources\LevelGeneration\five.txt" />
@@ -132,6 +133,10 @@
  <Reference Include="UnityEditor.WindowsStandalone.Extensions">
  <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/windowsstandalonesupport/UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
  </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp.csproj">
+      <Project>{5FB9B409-2FFA-019F-4538-DAF8A104A120}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

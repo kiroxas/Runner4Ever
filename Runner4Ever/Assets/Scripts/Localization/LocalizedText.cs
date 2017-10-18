@@ -10,6 +10,7 @@ public class LocalizedText : MonoBehaviour
     void OnEnable()
     {
     	EventManager.StartListening (GameConstants.languageChangedEvent, changeText);
+    	changeText();
     }
 
     void OnDisable ()
@@ -22,5 +23,4 @@ public class LocalizedText : MonoBehaviour
     	Text text = GetComponent<Text> ();
         text.text = LocalizationManager.GetValue(key);
     }
-
 }
