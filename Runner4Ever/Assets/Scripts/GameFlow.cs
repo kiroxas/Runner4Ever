@@ -11,6 +11,8 @@ public class GameFlow : MonoBehaviour
 	static protected GameFlow s_Instance;
 	static public GameFlow instance { get { return s_Instance; } }
 
+    private ScreenOrientation orientation;
+
  	void Awake()
     {
     	if (s_Instance != null)
@@ -25,6 +27,7 @@ public class GameFlow : MonoBehaviour
 
         PlayerData.Create();
         setLang(PlayerData.get().lang);
+        orientation = Screen.orientation;
     }
 
 	public void LoadLevel(string name)
@@ -45,6 +48,17 @@ public class GameFlow : MonoBehaviour
     public void Update()
     {
         PlayerData.instance.UpdateMissions(TrackingManager.get());
+        updateOrientation();
+    }
+
+    public void updateOrientation()
+    {
+        if(DeviceUtils.getDeviceType() == DeviceUtils.Device.Mobile && orientation != Screen.orientation)
+        {
+            orientation = Screen.orientation;
+            EventManager.TriggerEvent (GameConstants.orientationChangedEvent);
+            Debug.Log("Orientation Changed : " + orientation);
+        }
     }
 
     public void setLang(LocalizationUtils.Languages lang)

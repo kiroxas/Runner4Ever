@@ -12,4 +12,6 @@ public class GameConstants
 
 	static public string playerSpawnEvent = "pse";
 	static public string languageChangedEvent = "lce";
+	static public string resolutionChangedEvent = "rce";
+	static public string orientationChangedEvent = "oce";
 }

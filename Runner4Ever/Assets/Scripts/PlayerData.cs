@@ -216,8 +216,6 @@ public class PlayerData
 
         lang = (LocalizationUtils.Languages)r.ReadInt32();
 
-        Debug.Log("Reading lang : " + lang);
-
         r.Close();
     }
 
@@ -265,8 +263,6 @@ public class PlayerData
         // ver 2
 
         w.Write((int)lang);
-
-        Debug.Log("Writing lang : " + lang);
 
         w.Close();
     }

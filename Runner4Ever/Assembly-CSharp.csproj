@@ -124,6 +124,7 @@
      <Compile Include="Assets\Scripts\ProgressionDisplay.cs" />
      <Compile Include="Assets\Scripts\SettingsUI.cs" />
      <Compile Include="Assets\Scripts\Utils\CheckpointUtils.cs" />
+     <Compile Include="Assets\Scripts\Utils\DeviceUtils.cs" />
      <Compile Include="Assets\Scripts\Utils\GameConstants.cs" />
      <Compile Include="Assets\Scripts\Utils\LocalizationUtils.cs" />
      <Compile Include="Assets\Scripts\Utils\TrackingManager.cs" />
