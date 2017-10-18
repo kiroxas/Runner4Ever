@@ -5,4 +5,7 @@
 		  {"key":"pickup", "value":"Collectible"},
 		  {"key":"normalObject", "value":"orbe"},
 		  {"key":"mission", "value":"Réalisations"},
-		  {"key":"settings", "value":"Réglages"}]}
+		  {"key":"settings", "value":"Réglages"},
+		  {"key":"master", "value":"Son"},
+		  {"key":"music", "value":"Musique"},
+		  {"key":"sfx", "value":"Bruitages"}]}

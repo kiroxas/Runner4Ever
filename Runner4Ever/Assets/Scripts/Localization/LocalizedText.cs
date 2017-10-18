@@ -21,6 +21,14 @@ public class LocalizedText : MonoBehaviour
     void changeText()
     {
     	Text text = GetComponent<Text> ();
-        text.text = LocalizationManager.GetValue(key);
+
+        if(text == null)
+        {
+            Debug.LogError("Cannot find a text component for key : " + key + " on gameobject " + transform.name);
+        }
+        else
+        {
+            text.text = LocalizationManager.GetValue(key);
+        }
     }
 }

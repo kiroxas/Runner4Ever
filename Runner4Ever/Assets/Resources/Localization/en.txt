@@ -5,4 +5,7 @@
 		  {"key":"pickup", "value":"pick-up"},
 		  {"key":"normalObject", "value":"orb"},
 		  {"key":"mission", "value":"mission"},
-		  {"key":"settings", "value":"Settings"}]}
+		  {"key":"settings", "value":"Settings"},
+		  {"key":"master", "value":"Master"},
+		  {"key":"music", "value":"Music"},
+		  {"key":"sfx", "value":"SFX"}]}

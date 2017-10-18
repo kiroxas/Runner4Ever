@@ -5,4 +5,7 @@
 		  {"key":"pickup", "value":"収集品"},
 		  {"key":"normalObject", "value":"玉"},
 		  {"key":"mission", "value":"達成"},
-		  {"key":"settings", "value":"設定"}]}
+		  {"key":"settings", "value":"設定"},
+		  {"key":"master", "value":"音"},
+		  {"key":"music", "value":"音楽"},
+		  {"key":"sfx", "value":"SFX"}]}
