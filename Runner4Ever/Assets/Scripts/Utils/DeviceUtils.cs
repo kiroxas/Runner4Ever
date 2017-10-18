@@ -25,4 +25,14 @@ public class DeviceUtils
 			default : return Device.Unknown;
 		}
 	}
+
+	static public bool isPortrait(ScreenOrientation s)
+	{
+		return s == ScreenOrientation.Portrait || s == ScreenOrientation.PortraitUpsideDown;
+	}
+
+	static public bool isLandscape(ScreenOrientation s)
+	{
+		return s == ScreenOrientation.LandscapeLeft || s == ScreenOrientation.LandscapeRight;
+	}
 }

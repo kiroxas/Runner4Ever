@@ -30,6 +30,16 @@ public class GameFlow : MonoBehaviour
         orientation = Screen.orientation;
     }
 
+    static public GameFlow get()
+    {
+        return instance;
+    }
+
+    public ScreenOrientation getOrientation()
+    {
+        return orientation;
+    }
+
 	public void LoadLevel(string name)
     {
         SceneManager.LoadScene(name);
