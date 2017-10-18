@@ -24,7 +24,7 @@ public class GameFlow : MonoBehaviour
     	DontDestroyOnLoad(gameObject);
 
         PlayerData.Create();
-        LocalizationManager.get().LoadLocalizedText("Localization/fr");
+        setLang(PlayerData.get().lang);
     }
 
 	public void LoadLevel(string name)
@@ -51,6 +51,12 @@ public class GameFlow : MonoBehaviour
     {
         string locPath = LocalizationUtils.getLocFilePath(lang);
         LocalizationManager.get().LoadLocalizedText(locPath);
+
+        if(PlayerData.get().lang != lang)
+        {
+            PlayerData.get().lang = lang;
+            PlayerData.get().Save();
+        }
 
         EventManager.TriggerEvent (GameConstants.languageChangedEvent);
     }

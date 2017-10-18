@@ -66,11 +66,9 @@ public class EventManager : MonoBehaviour {
 
     public static void TriggerEvent (string eventName)
     {
-    	Debug.Log("TriggerEvent");
         UnityEvent thisEvent = null;
         if (instance.eventDictionary.TryGetValue (eventName, out thisEvent))
         {
-        	Debug.Log("Triggered !!!!!");
             thisEvent.Invoke ();
         }
     }

@@ -25,6 +25,7 @@ public class PlayerData
     public List<MissionBase> missions = new List<MissionBase>();
 
 	public string previousName = "Kiro";
+    public LocalizationUtils.Languages lang;
 
     public bool licenceAccepted;
 
@@ -33,7 +34,9 @@ public class PlayerData
     // This will allow us to add data even after production, and so keep all existing save STILL valid. See loading & saving for how it work.
     // Note in a real production it would probably reset that to 1 before release (as all dev save don't have to be compatible w/ final product)
     // Then would increment again with every subsequent patches. We kept it to its dev value here for teaching purpose. 
-    static int s_Version = 1; 
+    static int s_Version = 2; 
+
+    // version 2, Added language
 
     public void AddCharacter(string name)
     {
@@ -101,6 +104,11 @@ public class PlayerData
         Save();
     }
 
+    static public PlayerData get()
+    {
+         return instance;
+    }
+
     // File management
 
     static public void Create()
@@ -111,8 +119,6 @@ public class PlayerData
 		}
 
         m_Instance.saveFile = Application.persistentDataPath + "/save.bin";
-
-        Debug.Log(m_Instance.saveFile);
 
         if (File.Exists(m_Instance.saveFile))
         {
@@ -140,6 +146,8 @@ public class PlayerData
 		m_Instance.characters.Add(GameConstants.defaultCharac);
 		m_Instance.themes.Add(GameConstants.defaultTheme);
 
+        m_Instance.lang = LocalizationUtils.getDeviceLanguage();
+
         m_Instance.CheckMissionsCount();
 
 		m_Instance.Save();
@@ -151,7 +159,7 @@ public class PlayerData
 
         int ver = r.ReadInt32();
 
-		if(ver < 0)
+		if(ver < s_Version)
 		{
 			r.Close();
 
@@ -204,6 +212,12 @@ public class PlayerData
 		musicVolume = r.ReadSingle ();
 		masterSFXVolume = r.ReadSingle ();
 
+        // v2
+
+        lang = (LocalizationUtils.Languages)r.ReadInt32();
+
+        Debug.Log("Reading lang : " + lang);
+
         r.Close();
     }
 
@@ -247,6 +261,12 @@ public class PlayerData
 		w.Write (masterVolume);
 		w.Write (musicVolume);
 		w.Write (masterSFXVolume);
+
+        // ver 2
+
+        w.Write((int)lang);
+
+        Debug.Log("Writing lang : " + lang);
 
         w.Close();
     }

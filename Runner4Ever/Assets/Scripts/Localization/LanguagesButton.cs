@@ -9,6 +9,24 @@ public class LanguagesButton : MonoBehaviour
 {
     public LocalizationUtils.Languages lang = LocalizationUtils.Languages.en;
 
+    void OnEnable()
+    {
+    	EventManager.StartListening (GameConstants.languageChangedEvent, changeLang);
+    }
+
+    void OnDisable ()
+    {
+        EventManager.StopListening (GameConstants.languageChangedEvent, changeLang);
+    }
+
+    public void changeLang()
+    {
+    	if(lang != PlayerData.get().lang)
+    	{
+    		setLang(PlayerData.get().lang);
+    	}
+    }
+
     public void setLang(LocalizationUtils.Languages l)
     {
     	lang = l;
@@ -26,7 +44,7 @@ public class LanguagesButton : MonoBehaviour
 
     public void Start()
     {
-    	setLang(lang);
+    	changeLang();
     }
 }
 

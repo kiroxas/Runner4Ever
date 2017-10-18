@@ -14,6 +14,16 @@ public class LocalizationUtils
 		jp   // japanese
 	}
 
+	static public Languages getDeviceLanguage()
+	{
+		switch(Application.systemLanguage)
+		{
+			case SystemLanguage.French : return Languages.fr;
+			case SystemLanguage.Japanese : return Languages.jp;
+			default : return Languages.en;
+		}
+	}
+
 	static public Languages GetNext(Languages value)
 	{
     	return (from Languages val in System.Enum.GetValues(typeof (Languages)) 
