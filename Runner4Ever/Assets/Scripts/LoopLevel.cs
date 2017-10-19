@@ -15,7 +15,7 @@ public class LoopLevel : MonoBehaviour
 	private float yStart = 0;
 	private float xEnd = 0;
 
-	private CameraFollow cam;
+	private SegmentStreamer cam;
 
 	public void Start()
 	{
@@ -30,7 +30,7 @@ public class LoopLevel : MonoBehaviour
 			xEnd = lastCheckpoint.GetComponent<Transform>().position.x;
 		}
 
-		cam = FindObjectOfType<CameraFollow>();
+		cam = FindObjectOfType<SegmentStreamer>();
 	}
 
 	public void Update()

@@ -80,6 +80,7 @@ public class SegmentStreamer : MonoBehaviour
 
 	/* Poolers */
 	PoolCollection statePool;
+	public Bounds containingBox;
 
 	public SegmentStrategy strat = SegmentStrategy.NineGrid;
 	private Vector2 oldPlayerPlacement; // player placement at precedent frame, int he segment grid
@@ -311,6 +312,22 @@ public class SegmentStreamer : MonoBehaviour
 		 }
 	}
 
+	
+
+	public void fillContainingBox()
+	{
+		Vector3 center, size;
+		
+		float xSize = xTotalLevel * tileWidth;
+		float ySize = yTotalLevel * tileHeight;
+		size = new Vector3(xSize, ySize, 0);
+		float xMiddle = bottomLeftXPos + size.x / 2.0f;
+		float yMiddle = bottomLeftYPos + size.y / 2.0f;
+		center = new Vector3(xMiddle - tileWidth / 2.0f, yMiddle - tileHeight / 2.0f , 0); // Because the anchor point of tiles are centered
+
+		containingBox = new Bounds(center, size);
+	}
+
 	public void Awake()
 	{
 		generator = new BasicLevelGenerator(BasicLevelGenerator.GenerationStyle.InOrder);
@@ -341,6 +358,7 @@ public class SegmentStreamer : MonoBehaviour
 		//printSegments();
 
 		loadInitSegments();
+		fillContainingBox();
 
 		createPlayerAndAttachCamera();
 	}

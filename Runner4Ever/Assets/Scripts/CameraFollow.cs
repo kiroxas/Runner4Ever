@@ -8,7 +8,7 @@ public class CameraFollow : MonoBehaviour {
 	public Vector3 offset;
 	public Vector2 smoothing;
 
-	public Bounds containingBox;
+	private Bounds containingBox;
 	private Vector3 upLeft, downRight;
 
 	public void LateUpdate()
@@ -33,24 +33,17 @@ public class CameraFollow : MonoBehaviour {
 	void Start () 
 	{
 		var lg = FindObjectOfType<SegmentStreamer>();
-		Vector3 center, size;
+
 		if(lg == null)
 		{
 			Debug.Log("Couldn't find levelGenerator, add one to the scene");
-			center = new Vector3(0,0,0);
-			size = new Vector3(0,0,0);
+			containingBox = new Bounds(Vector3.zero, Vector3.zero);
 		}
 		else
 		{
-			float xSize = lg.xTotalLevel * lg.tileWidth;
-			float ySize = lg.yTotalLevel * lg.tileHeight;
-			size = new Vector3(xSize, ySize, 0);
-			float xMiddle = lg.bottomLeftXPos + size.x / 2.0f;
-			float yMiddle = lg.bottomLeftYPos + size.y / 2.0f;
-			center = new Vector3(xMiddle - lg.tileWidth / 2.0f, yMiddle - lg.tileHeight / 2.0f , 0); // Because the anchor point of tiles are centered
+			containingBox = lg.containingBox;
 		}
 
-		containingBox = new Bounds(center, size);
 		upLeft = new Vector3(containingBox.min.x, containingBox.max.y);
 		downRight = new Vector3(containingBox.max.x, containingBox.min.y);
 	}
