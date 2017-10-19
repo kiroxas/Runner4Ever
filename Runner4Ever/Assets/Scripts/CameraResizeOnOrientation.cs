@@ -41,7 +41,7 @@ public class CameraResizeOnOrientation : MonoBehaviour
 
     void Update()
     {
-        if(aimedSize != currentSize)
+        if(DeviceUtils.getDeviceType() == DeviceUtils.Device.Mobile && aimedSize != currentSize)
         {
             currentSize = Mathf.Lerp(currentSize, aimedSize, Time.deltaTime * smoothing);
             GetComponent<Camera>().orthographicSize = currentSize;
