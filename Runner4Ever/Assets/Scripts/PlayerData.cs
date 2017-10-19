@@ -25,7 +25,7 @@ public class PlayerData
     public List<MissionBase> missions = new List<MissionBase>();
 
 	public string previousName = "Kiro";
-    public LocalizationUtils.Languages lang;
+    
 
     public bool licenceAccepted;
 
@@ -37,6 +37,7 @@ public class PlayerData
     static int s_Version = 2; 
 
     // version 2, Added language
+    public LocalizationUtils.Languages lang;
 
     public void AddCharacter(string name)
     {
@@ -211,7 +212,6 @@ public class PlayerData
 		masterVolume = r.ReadSingle ();
 		musicVolume = r.ReadSingle ();
 		masterSFXVolume = r.ReadSingle ();
-
         // v2
 
         lang = (LocalizationUtils.Languages)r.ReadInt32();
@@ -259,7 +259,6 @@ public class PlayerData
 		w.Write (masterVolume);
 		w.Write (musicVolume);
 		w.Write (masterSFXVolume);
-
         // ver 2
 
         w.Write((int)lang);

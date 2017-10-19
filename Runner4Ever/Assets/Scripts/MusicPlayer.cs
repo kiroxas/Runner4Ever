@@ -41,13 +41,13 @@ public class MusicPlayer : MonoBehaviour
 		{
 			mixer.SetFloat ("MasterVolume", PlayerData.instance.masterVolume);
 			mixer.SetFloat ("MusicVolume", PlayerData.instance.musicVolume);
-			mixer.SetFloat ("MasterSFXVolume", PlayerData.instance.masterSFXVolume);
+			mixer.SetFloat ("SFXVolume", PlayerData.instance.masterSFXVolume);
 		}
         else 
 		{
 			mixer.GetFloat ("MasterVolume", out PlayerData.instance.masterVolume);
 			mixer.GetFloat ("MusicVolume", out PlayerData.instance.musicVolume);
-			mixer.GetFloat ("MasterSFXVolume", out PlayerData.instance.masterSFXVolume);
+			mixer.GetFloat ("SFXVolume", out PlayerData.instance.masterSFXVolume);
 
 			PlayerData.instance.Save ();
 		}
