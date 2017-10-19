@@ -1,9 +1,18 @@
 fileFormatVersion: 2
 guid: b447aa063b6ee0b439156c6d30cb462c
-timeCreated: 1508427747
+timeCreated: 1508434032
 licenseType: Pro
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: small_plant_forest
+    21300002: small_forest_rock
+    21300004: smallest_forest_tree
+    21300006: assets_bg_3
+    21300008: small_bush_forest
+    21300010: assets_bg_5
+    21300012: big_forest_tree
+    21300014: log_forest
+    21300016: small_forest_tree
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -34,7 +43,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -58,9 +67,150 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+  - buildTarget: Standalone
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Android
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: WebGL
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: small_plant_forest
+      rect:
+        serializedVersion: 2
+        x: 83
+        y: 1853
+        width: 124
+        height: 117
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: small_forest_rock
+      rect:
+        serializedVersion: 2
+        x: 441
+        y: 1584
+        width: 454
+        height: 392
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: smallest_forest_tree
+      rect:
+        serializedVersion: 2
+        x: 964
+        y: 1500
+        width: 274
+        height: 528
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: assets_bg_3
+      rect:
+        serializedVersion: 2
+        x: 42
+        y: 1667
+        width: 10
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: small_bush_forest
+      rect:
+        serializedVersion: 2
+        x: 59
+        y: 1628
+        width: 278
+        height: 169
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: assets_bg_5
+      rect:
+        serializedVersion: 2
+        x: 42
+        y: 1645
+        width: 12
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: big_forest_tree
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 14
+        width: 1146
+        height: 1386
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: log_forest
+      rect:
+        serializedVersion: 2
+        x: 1672
+        y: 901
+        width: 277
+        height: 538
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: small_forest_tree
+      rect:
+        serializedVersion: 2
+        x: 1349
+        y: 16
+        width: 671
+        height: 789
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
     outline: []
   spritePackingTag: 
   userData: 

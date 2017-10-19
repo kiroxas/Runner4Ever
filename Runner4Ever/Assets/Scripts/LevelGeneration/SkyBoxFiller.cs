@@ -32,7 +32,7 @@ public class SkyBoxFiller : MonoBehaviour
 
         for(int i = 0; i < (int)Mathf.Ceil(xSize); ++i)
         {
-            Vector3 position = new Vector3(containingBox.min.x + i * skySize.x + (skySize.x / 2.0f), containingBox.min.y + (skySize.y / 2.0f), 0.0f); 
+            Vector3 position = new Vector3(containingBox.min.x + i * skySize.x , containingBox.min.y, 0.0f); 
             skies.getFromPool(0, position);
         }
     }
