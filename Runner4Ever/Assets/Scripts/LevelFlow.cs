@@ -17,18 +17,16 @@ public class LevelFlow : MonoBehaviour
 
     void OnEnable ()
     {
-        Debug.Log("StartListening");
-        EventManager.StartListening (GameConstants.playerSpawnEvent, startTrackingPlayer);
+        EventManager.StartListening (EventManager.get().playerSpawnEvent, startTrackingPlayer);
     }
 
     void OnDisable ()
     {
-        EventManager.StopListening (GameConstants.playerSpawnEvent, startTrackingPlayer);
+        EventManager.StopListening (EventManager.get().playerSpawnEvent, startTrackingPlayer);
     }
 
-    void startTrackingPlayer()
+    void startTrackingPlayer(GameConstants.PlayerSpawnArgument arg)
     {
-        Debug.Log("startTrackingPlayer");
         var player = FindObjectOfType<CharacterController2D>();
         if(player == null)
         {

@@ -12,23 +12,25 @@ public class CameraResizeOnOrientation : MonoBehaviour
     private float currentSize;
     private float aimedSize;
 
+    //public UnityAction<GameConstants.OrientationChangedEvent> myCallback;
+
     void OnEnable()
     {
-    	EventManager.StartListening (GameConstants.orientationChangedEvent, changeSize);
+    	EventManager.StartListening( EventManager.get().orientationChangedEvent, changeSize);
     }
 
     void OnDisable ()
     {
-        EventManager.StopListening (GameConstants.orientationChangedEvent, changeSize);
+        EventManager.StopListening(EventManager.get().orientationChangedEvent, changeSize);
     }
 
-    void changeSize()
+    void changeSize(GameConstants.OrientationChangedArgument arg)
     {
         if(DeviceUtils.getDeviceType() != DeviceUtils.Device.Mobile)
             return;
             
     	Camera cam = GetComponent<Camera> ();
-        bool isPortrait = DeviceUtils.isPortrait(GameFlow.get().getOrientation());
+        bool isPortrait = DeviceUtils.isPortrait(arg.orientation);
 
        aimedSize = isPortrait ? portraitSize : landscapeSize;
     }
@@ -36,7 +38,7 @@ public class CameraResizeOnOrientation : MonoBehaviour
     void Start()
     {
         currentSize = GetComponent<Camera> ().orthographicSize;
-        changeSize();
+        changeSize(new GameConstants.OrientationChangedArgument(GameFlow.get().getOrientation()));
     }
 
     void Update()

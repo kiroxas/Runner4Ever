@@ -9,16 +9,16 @@ public class LocalizedText : MonoBehaviour
 
     void OnEnable()
     {
-    	EventManager.StartListening (GameConstants.languageChangedEvent, changeText);
-    	changeText();
+    	EventManager.StartListening (EventManager.get().languageChangedEvent, changeText);
+    	changeText(new GameConstants.LanguageChangedArgument(PlayerData.instance.lang));
     }
 
     void OnDisable ()
     {
-        EventManager.StopListening (GameConstants.languageChangedEvent, changeText);
+        EventManager.StopListening (EventManager.get().languageChangedEvent, changeText);
     }
 
-    void changeText()
+    void changeText( GameConstants.LanguageChangedArgument arg)
     {
     	Text text = GetComponent<Text> ();
 

@@ -10,27 +10,27 @@ public class ImageSelectorOnOrientation : MonoBehaviour
 
     void OnEnable()
     {
-    	EventManager.StartListening (GameConstants.orientationChangedEvent, changeImage);
+    	EventManager.StartListening (EventManager.get().orientationChangedEvent, changeImage);
     }
 
     void OnDisable ()
     {
-        EventManager.StopListening (GameConstants.orientationChangedEvent, changeImage);
+        EventManager.StopListening (EventManager.get().orientationChangedEvent, changeImage);
     }
 
-    void changeImage()
+    void changeImage(GameConstants.OrientationChangedArgument arg)
     {
         if(DeviceUtils.getDeviceType() != DeviceUtils.Device.Mobile)
             return;
             
     	Image image = GetComponent<Image> ();
-        bool isPortrait = DeviceUtils.isPortrait(GameFlow.get().getOrientation());
+        bool isPortrait = DeviceUtils.isPortrait(arg.orientation);
 
         image.sprite = isPortrait ? portrait : landscape;
     }
 
     void Start()
     {
-        changeImage();
+        changeImage(new GameConstants.OrientationChangedArgument(GameFlow.get().getOrientation()));
     }
 }

@@ -2,12 +2,16 @@ using UnityEngine;
 using UnityEngine.Events;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
-public class EventManager : MonoBehaviour {
-
-    private Dictionary <string, UnityEvent> eventDictionary;
-
+public class EventManager : MonoBehaviour 
+{
     private static EventManager eventManager;
+
+    public GameConstants.PlayerSpawnEvent playerSpawnEvent { get; private set;}
+    public GameConstants.LanguageChangedEvent languageChangedEvent { get; private set;}
+    public GameConstants.ResolutionChangedEvent resolutionChangedEvent { get; private set;}
+    public GameConstants.OrientationChangedEvent orientationChangedEvent { get; private set;}
 
     public static EventManager instance
     {
@@ -31,46 +35,35 @@ public class EventManager : MonoBehaviour {
         }
     }
 
+    public static EventManager get()
+    {
+        return instance;
+    }
+
     void Init ()
     {
-        if (eventDictionary == null)
+        if (playerSpawnEvent == null || languageChangedEvent == null || resolutionChangedEvent == null || orientationChangedEvent == null)
         {
-            eventDictionary = new Dictionary<string, UnityEvent>();
+            playerSpawnEvent = new GameConstants.PlayerSpawnEvent();
+            languageChangedEvent = new GameConstants.LanguageChangedEvent();
+            resolutionChangedEvent = new GameConstants.ResolutionChangedEvent();
+            orientationChangedEvent = new GameConstants.OrientationChangedEvent();
         }
     }
 
-    public static void StartListening (string eventName, UnityAction listener)
+    public static void StartListening<Event>(UnityEvent<Event> ev, UnityAction<Event> listener)
     {
-        UnityEvent thisEvent = null;
-        if (instance.eventDictionary.TryGetValue (eventName, out thisEvent))
-        {
-            thisEvent.AddListener (listener);
-        } 
-        else
-        {
-            thisEvent = new UnityEvent ();
-            thisEvent.AddListener (listener);
-            instance.eventDictionary.Add (eventName, thisEvent);
-        }
+       ev.AddListener(listener);
     }
 
-    public static void StopListening (string eventName, UnityAction listener)
+    public static void StopListening<Event>(UnityEvent<Event> ev, UnityAction<Event> listener)
     {
-        if (eventManager == null) return;
-        UnityEvent thisEvent = null;
-        if (instance.eventDictionary.TryGetValue (eventName, out thisEvent))
-        {
-            thisEvent.RemoveListener (listener);
-        }
+        ev.RemoveListener(listener);
     }
 
-    public static void TriggerEvent (string eventName)
+    public static void TriggerEvent<Event> (UnityEvent<Event> ev, Event arg)
     {
-        UnityEvent thisEvent = null;
-        if (instance.eventDictionary.TryGetValue (eventName, out thisEvent))
-        {
-            thisEvent.Invoke ();
-        }
+       ev.Invoke(arg);
     }
 }
 

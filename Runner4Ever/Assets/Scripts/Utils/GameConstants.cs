@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.Events;
+using System.Collections.Generic;
 
 public class GameConstants 
 {
@@ -8,10 +10,62 @@ public class GameConstants
 	static public string[] themes = { "Normal", "Oldie" };
 	static public string defaultTheme = themes[0];
 
-	// Events
+	public class  PlayerSpawnArgument 
+	{
+		public float xPosition;
+		public float yPosition;
 
-	static public string playerSpawnEvent = "pse";
-	static public string languageChangedEvent = "lce";
-	static public string resolutionChangedEvent = "rce";
-	static public string orientationChangedEvent = "oce";
+		public PlayerSpawnArgument(float x, float y)
+		{
+			xPosition = x;
+			yPosition = y;
+		}
+	}
+
+	public class ResolutionChangedArgument
+	{
+		public float width;
+		public float height;
+
+		public ResolutionChangedArgument(float width, float height)
+		{
+			width = width;
+			height = height;
+		}
+	}
+
+	public class OrientationChangedArgument
+	{
+		public ScreenOrientation orientation;
+
+		public OrientationChangedArgument(ScreenOrientation or)
+		{
+			orientation = or;
+		}
+	}
+
+	public class LanguageChangedArgument
+	{
+		public LocalizationUtils.Languages lang;
+
+		public LanguageChangedArgument(LocalizationUtils.Languages l)
+		{
+			lang = l;
+		}
+	}
+
+	// Events
+	public class PlayerSpawnEvent : UnityEvent<PlayerSpawnArgument>
+	{}
+
+	public class LanguageChangedEvent : UnityEvent<LanguageChangedArgument>
+	{}
+
+	public class ResolutionChangedEvent : UnityEvent<ResolutionChangedArgument>
+	{}
+
+	public class OrientationChangedEvent : UnityEvent<OrientationChangedArgument>
+	{}
+
+	
 }

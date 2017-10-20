@@ -11,19 +11,19 @@ public class LanguagesButton : MonoBehaviour
 
     void OnEnable()
     {
-    	EventManager.StartListening (GameConstants.languageChangedEvent, changeLang);
+    	EventManager.StartListening(EventManager.get().languageChangedEvent, changeLang);
     }
 
     void OnDisable ()
     {
-        EventManager.StopListening (GameConstants.languageChangedEvent, changeLang);
+        EventManager.StopListening(EventManager.get().languageChangedEvent, changeLang);
     }
 
-    public void changeLang()
+    public void changeLang(GameConstants.LanguageChangedArgument arg)
     {
-    	if(lang != PlayerData.get().lang)
+    	if(lang != arg.lang)
     	{
-    		setLang(PlayerData.get().lang);
+    		setLang(arg.lang);
     	}
     }
 
@@ -44,7 +44,7 @@ public class LanguagesButton : MonoBehaviour
 
     public void Start()
     {
-    	changeLang();
+    	changeLang(new GameConstants.LanguageChangedArgument(PlayerData.instance.lang));
     }
 }
 

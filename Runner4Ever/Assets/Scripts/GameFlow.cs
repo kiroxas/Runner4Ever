@@ -66,8 +66,7 @@ public class GameFlow : MonoBehaviour
         if(DeviceUtils.getDeviceType() == DeviceUtils.Device.Mobile && orientation != Screen.orientation)
         {
             orientation = Screen.orientation;
-            EventManager.TriggerEvent (GameConstants.orientationChangedEvent);
-            Debug.Log("Orientation Changed : " + orientation);
+            EventManager.TriggerEvent( EventManager.get().orientationChangedEvent, new GameConstants.OrientationChangedArgument(orientation));
         }
     }
 
@@ -82,6 +81,6 @@ public class GameFlow : MonoBehaviour
             PlayerData.get().Save();
         }
 
-        EventManager.TriggerEvent (GameConstants.languageChangedEvent);
+        EventManager.TriggerEvent(EventManager.get().languageChangedEvent, new GameConstants.LanguageChangedArgument(lang));
     }
 }
