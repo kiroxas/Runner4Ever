@@ -41,16 +41,18 @@ public class Segment
 
 	public void enable(PoolCollection statePool)
 	{
-		if(!enabled)
+		if(!isEnabled())
 		{
 			load(statePool);
 			enabled = true;
+
+			EventManager.TriggerEvent(EventManager.get().segmentEnabledEvent, new GameConstants.SegmentEnabledArgument(bottomRight, topLeft));
 		}
 	}
 
 	public void disable(PoolCollection statePool)
 	{
-		if(enabled)
+		if(isEnabled())
 		{
 			unload(statePool);
 			enabled = false;

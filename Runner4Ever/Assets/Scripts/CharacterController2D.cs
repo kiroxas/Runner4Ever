@@ -68,7 +68,7 @@ public class CharacterController2D : MonoBehaviour
 	public Stack runDirStack;
 	private bool facingRight = true;
 	private bool canBeRepelled = true;
-	private float timeBetweenRepelledAgain = 0.1f;
+	//private float timeBetweenRepelledAgain = 0.1f;
 
 	// RunSpeed Related
 	private float totalDistanceRun = 0.0f;

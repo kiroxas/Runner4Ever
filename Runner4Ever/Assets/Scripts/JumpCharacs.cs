@@ -20,7 +20,7 @@ public class JumpCharacs
 	private float jumpTime; // time a jump takes
 
 	private float expectedVelocity; // velocity per frame
-	private Vector2 currentJumpStart; // origin of the jump
+	//private Vector2 currentJumpStart; // origin of the jump
 	
 	private float shapeIndex; // index to evaluate the jumpShape
 	private List<Vector3> offsetsOrigin; // offstes with the origin
@@ -94,7 +94,7 @@ public class JumpCharacs
 	{
 		timeClock = 0.0f;
 		shapeIndex = startTime;
-		currentJumpStart = origin;
+		//currentJumpStart = origin;
 		index = 0;
 		inJump = true;
 		lastY = 0.0f;
@@ -123,7 +123,6 @@ public class JumpCharacs
 
     public Vector3 getNext()
 	{
-		int ind = index;
 		index++;
 		shapeIndex += Time.deltaTime;
 		timeClock += Time.deltaTime;
@@ -179,7 +178,7 @@ public class JumpCharacs
 	public void endJump()
 	{
 		shapeIndex = jumpTime;
-		currentJumpStart = Vector2.zero;
+		//currentJumpStart = Vector2.zero;
 		index = 0;
 		inJump = false;
 		lastY = 0.0f;

@@ -9,7 +9,7 @@ public class InversePlayerVelocity : MonoBehaviour {
 	public float maxYVelocity = 20.0f;
     public float timeBeforeRetakeCorrectDirection = 0.6f;
 
-    private float disableColliderTime = 0.5f;
+   // private float disableColliderTime = 0.5f;
 
 	// Use this for initialization
 	void Start () {

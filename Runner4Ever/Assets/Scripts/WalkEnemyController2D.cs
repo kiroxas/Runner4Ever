@@ -13,7 +13,7 @@ public class WalkEnemyController2D : MonoBehaviour
 
 	private CharacterState state;
 	private Rigidbody2D rb;
-	private Transform transform;
+	//private Transform transform;
 
 	public WalkDirection startWalkDirection = WalkDirection.Left;
 	public float xSpeed = 4;
@@ -24,7 +24,7 @@ public class WalkEnemyController2D : MonoBehaviour
 	{
 		rb = GetComponent<Rigidbody2D>();
 		state = GetComponent<CharacterState>();
-		transform = GetComponent<Transform>();
+		//transform = GetComponent<Transform>();
 	}
 
 	public void Start()

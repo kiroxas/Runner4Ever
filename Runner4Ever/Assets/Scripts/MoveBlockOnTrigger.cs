@@ -30,10 +30,10 @@ public class MoveBlockOnTrigger : MonoBehaviour
 	private CharacterController2D player;
 	private Vector2 offsetByUpdate;
 	private Vector2 originalPos;
-	private Transform transform;
+	//private Transform transform;
 	private Collider2D myCollider;
 	private Rigidbody2D rb;
-	private float currentSpeed = 0;
+	//private float currentSpeed = 0;
 	private bool triggered = false;
 	private Vector2 _vel;
 	private bool comingBack = false;
@@ -41,7 +41,7 @@ public class MoveBlockOnTrigger : MonoBehaviour
 	public void Start()
 	{
 		myCollider = GetComponent<Collider2D>();
-		transform = GetComponent<Transform>();
+		//transform = GetComponent<Transform>();
 		rb = GetComponent<Rigidbody2D>();
 		originalPos = transform.position;
 		offsetByUpdate = new Vector2(0,0);

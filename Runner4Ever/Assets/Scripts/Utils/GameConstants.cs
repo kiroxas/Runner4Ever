@@ -27,10 +27,10 @@ public class GameConstants
 		public float width;
 		public float height;
 
-		public ResolutionChangedArgument(float width, float height)
+		public ResolutionChangedArgument(float w, float h)
 		{
-			width = width;
-			height = height;
+			width = w;
+			height = h;
 		}
 	}
 
@@ -54,6 +54,18 @@ public class GameConstants
 		}
 	}
 
+	public class SegmentEnabledArgument
+	{
+		public Vector3 minBound;
+		public Vector3 maxBound;
+
+		public SegmentEnabledArgument(Vector3 min, Vector3 max)
+		{
+			minBound = min;
+			maxBound = max;
+		}
+	}
+
 	// Events
 	public class PlayerSpawnEvent : UnityEvent<PlayerSpawnArgument>
 	{}
@@ -65,6 +77,9 @@ public class GameConstants
 	{}
 
 	public class OrientationChangedEvent : UnityEvent<OrientationChangedArgument>
+	{}
+
+	public class SegmentEnabledEvent : UnityEvent<SegmentEnabledArgument>
 	{}
 
 	

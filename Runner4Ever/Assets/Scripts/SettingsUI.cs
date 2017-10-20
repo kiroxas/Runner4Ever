@@ -19,8 +19,6 @@ public class SettingsUI : MonoBehaviour
     protected const string k_MusicVolumeFloatName = "MusicVolume";
     protected const string k_MasterSFXVolumeFloatName = "SFXVolume";
 
-    private bool changed = false;
-
     public void Open()
     {
         gameObject.SetActive(true);
@@ -49,7 +47,6 @@ public class SettingsUI : MonoBehaviour
         m_MasterVolume = k_MinVolume * (1.0f - value);
         mixer.SetFloat(k_MasterVolumeFloatName, m_MasterVolume);
 		PlayerData.instance.masterVolume = m_MasterVolume;
-		changed = true;
     }
 
     public void MusicVolumeChangeValue(float value)
@@ -57,7 +54,6 @@ public class SettingsUI : MonoBehaviour
         m_MusicVolume = k_MinVolume * (1.0f - value);
         mixer.SetFloat(k_MusicVolumeFloatName, m_MusicVolume);
 		PlayerData.instance.musicVolume = m_MusicVolume;
-		changed = true;
     }
 
     public void MasterSFXVolumeChangeValue(float value)
@@ -65,6 +61,5 @@ public class SettingsUI : MonoBehaviour
         m_MasterSFXVolume = k_MinVolume * (1.0f - value);
         mixer.SetFloat(k_MasterSFXVolumeFloatName, m_MasterSFXVolume);
 		PlayerData.instance.masterSFXVolume = m_MasterSFXVolume;
-		changed = true;
     }
 }

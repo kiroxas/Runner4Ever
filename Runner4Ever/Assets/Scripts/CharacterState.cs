@@ -30,7 +30,7 @@ public class CharacterState : MonoBehaviour
 
 	private Rigidbody2D rb;
 	private Collider2D myCollider;
-	private Transform transform;
+	//private Transform transform;
 
 	public bool isGrounded { get; private set; }
 	public bool isCollidingAbove { get; private set; }
@@ -79,7 +79,7 @@ public class CharacterState : MonoBehaviour
 
 		rb = GetComponent<Rigidbody2D>();
 		myCollider = GetComponent<Collider2D>();
-		transform = GetComponent<Transform>();
+		//transform = GetComponent<Transform>();
 		isGrounded = false;
 		isCollidingRight = false;
 		isCollidingLeft = false;

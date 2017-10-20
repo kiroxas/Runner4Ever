@@ -12,6 +12,7 @@ public class EventManager : MonoBehaviour
     public GameConstants.LanguageChangedEvent languageChangedEvent { get; private set;}
     public GameConstants.ResolutionChangedEvent resolutionChangedEvent { get; private set;}
     public GameConstants.OrientationChangedEvent orientationChangedEvent { get; private set;}
+    public GameConstants.SegmentEnabledEvent segmentEnabledEvent { get; private set;}
 
     public static EventManager instance
     {
@@ -42,12 +43,13 @@ public class EventManager : MonoBehaviour
 
     void Init ()
     {
-        if (playerSpawnEvent == null || languageChangedEvent == null || resolutionChangedEvent == null || orientationChangedEvent == null)
+        if (playerSpawnEvent == null || languageChangedEvent == null || resolutionChangedEvent == null || orientationChangedEvent == null || segmentEnabledEvent == null)
         {
             playerSpawnEvent = new GameConstants.PlayerSpawnEvent();
             languageChangedEvent = new GameConstants.LanguageChangedEvent();
             resolutionChangedEvent = new GameConstants.ResolutionChangedEvent();
             orientationChangedEvent = new GameConstants.OrientationChangedEvent();
+            segmentEnabledEvent = new GameConstants.SegmentEnabledEvent();
         }
     }
 

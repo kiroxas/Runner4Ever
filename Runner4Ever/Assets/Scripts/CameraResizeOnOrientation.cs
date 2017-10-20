@@ -29,10 +29,9 @@ public class CameraResizeOnOrientation : MonoBehaviour
         if(DeviceUtils.getDeviceType() != DeviceUtils.Device.Mobile)
             return;
             
-    	Camera cam = GetComponent<Camera> ();
         bool isPortrait = DeviceUtils.isPortrait(arg.orientation);
 
-       aimedSize = isPortrait ? portraitSize : landscapeSize;
+        aimedSize = isPortrait ? portraitSize : landscapeSize;
     }
 
     void Start()
