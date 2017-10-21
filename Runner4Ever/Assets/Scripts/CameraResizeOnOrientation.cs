@@ -36,8 +36,11 @@ public class CameraResizeOnOrientation : MonoBehaviour
 
     void Start()
     {
-        currentSize = GetComponent<Camera> ().orthographicSize;
-        changeSize(new GameConstants.OrientationChangedArgument(GameFlow.get().getOrientation()));
+        if(DeviceUtils.getDeviceType() == DeviceUtils.Device.Mobile)
+        {
+            currentSize = GetComponent<Camera> ().orthographicSize;
+            changeSize(new GameConstants.OrientationChangedArgument(GameFlow.get().getOrientation()));
+        }
     }
 
     void Update()

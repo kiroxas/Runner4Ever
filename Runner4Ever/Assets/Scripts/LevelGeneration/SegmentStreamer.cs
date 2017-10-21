@@ -263,12 +263,15 @@ public class SegmentStreamer : MonoBehaviour
 
 	public void loadInitSegments()
 	{
+		GameConstants.SegmentsUpdatedArgument ev = new GameConstants.SegmentsUpdatedArgument();
+
 		if(strat == SegmentStrategy.LoadAll)
 		{
 			/* load all */
 			foreach(Segment s in segments)
 			{
 				s.enable(statePool);
+				ev.add(s.getBounds());
 			}
 		}
 		else if(strat == SegmentStrategy.NineGrid)
@@ -277,18 +280,23 @@ public class SegmentStreamer : MonoBehaviour
 			foreach(Segment s in nineGridSegments(oldPlayerPlacement))
 			{
 				s.enable(statePool);
+				ev.add(s.getBounds());
 			}
 		}
+
+		EventManager.TriggerEvent(EventManager.get().segmentsUpdatedEvent, ev);
 	}
 
 	public void updateSegments()
 	{
 		 if(strat == SegmentStrategy.NineGrid)
 		 {
+		 	
 		 	Vector2 gridIndex = getPlayerSegment();
 
 		 	if(gridIndex != oldPlayerPlacement)
 		 	{
+		 		GameConstants.SegmentsUpdatedArgument ev = new GameConstants.SegmentsUpdatedArgument();
 		 		oldPlayerPlacement = gridIndex;
 		 		var ngs = nineGridSegments(gridIndex);
 
@@ -305,8 +313,10 @@ public class SegmentStreamer : MonoBehaviour
 		 		foreach(Segment s in ngs)
 		 		{
 		 			s.enable(statePool);
-		 			//Debug.Log(s.presentation());
+		 			ev.add(s.getBounds());
 		 		}
+
+		 		EventManager.TriggerEvent(EventManager.get().segmentsUpdatedEvent, ev);
 		 	}
 
 		 }
@@ -356,10 +366,12 @@ public class SegmentStreamer : MonoBehaviour
 		statePool.addPool(jumper, PoolIndexes.jumperIndex, PoolIndexes.smallPoolingStrategy);
 
 		//printSegments();
-
-		loadInitSegments();
 		fillContainingBox();
+	}
 
+	public void Start()
+	{
+		loadInitSegments();
 		createPlayerAndAttachCamera();
 	}
 

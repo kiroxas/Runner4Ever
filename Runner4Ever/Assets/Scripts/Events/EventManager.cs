@@ -6,34 +6,27 @@ using System;
 
 public class EventManager : MonoBehaviour 
 {
-    private static EventManager eventManager;
-
     public GameConstants.PlayerSpawnEvent playerSpawnEvent { get; private set;}
     public GameConstants.LanguageChangedEvent languageChangedEvent { get; private set;}
     public GameConstants.ResolutionChangedEvent resolutionChangedEvent { get; private set;}
     public GameConstants.OrientationChangedEvent orientationChangedEvent { get; private set;}
     public GameConstants.SegmentEnabledEvent segmentEnabledEvent { get; private set;}
+    public GameConstants.SegmentsUpdatedEvent segmentsUpdatedEvent { get; private set;}
 
-    public static EventManager instance
+    public static EventManager instance;
+
+    void Awake()
     {
-        get
+        if (instance != null)
         {
-            if (!eventManager)
-            {
-                eventManager = FindObjectOfType (typeof (EventManager)) as EventManager;
-
-                if (!eventManager)
-                {
-                    Debug.LogError ("There needs to be one active EventManger script on a GameObject in your scene.");
-                }
-                else
-                {
-                    eventManager.Init (); 
-                }
-            }
-
-            return eventManager;
+            Destroy(gameObject);
+            return;
         }
+
+        instance = this;
+        Init (); 
+
+        //DontDestroyOnLoad(gameObject);
     }
 
     public static EventManager get()
@@ -50,6 +43,7 @@ public class EventManager : MonoBehaviour
             resolutionChangedEvent = new GameConstants.ResolutionChangedEvent();
             orientationChangedEvent = new GameConstants.OrientationChangedEvent();
             segmentEnabledEvent = new GameConstants.SegmentEnabledEvent();
+            segmentsUpdatedEvent = new GameConstants.SegmentsUpdatedEvent();
         }
     }
 

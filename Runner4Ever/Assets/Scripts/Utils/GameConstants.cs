@@ -66,6 +66,21 @@ public class GameConstants
 		}
 	}
 
+	public class SegmentsUpdatedArgument
+	{
+		public List<SegmentEnabledArgument> segments;
+		
+		public SegmentsUpdatedArgument()
+		{
+			segments = new List<SegmentEnabledArgument>();
+		}
+
+		public void add(SegmentEnabledArgument arg)
+		{
+			segments.Add(arg);
+		}
+	}
+
 	// Events
 	public class PlayerSpawnEvent : UnityEvent<PlayerSpawnArgument>
 	{}
@@ -80,6 +95,9 @@ public class GameConstants
 	{}
 
 	public class SegmentEnabledEvent : UnityEvent<SegmentEnabledArgument>
+	{}
+
+	public class SegmentsUpdatedEvent : UnityEvent<SegmentsUpdatedArgument>
 	{}
 
 	

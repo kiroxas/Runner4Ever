@@ -34,6 +34,11 @@ public class Segment
 
 	private Vector3 bottomRight, bottomLeft, topRight, topLeft; // for debug drawings
 
+	public GameConstants.SegmentEnabledArgument getBounds()
+	{
+		return new GameConstants.SegmentEnabledArgument(bottomLeft, topRight);
+	}
+
 	public bool isEnabled()
 	{
 		return enabled;
