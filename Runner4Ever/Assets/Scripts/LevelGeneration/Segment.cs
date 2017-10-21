@@ -12,8 +12,11 @@ using Random = UnityEngine.Random;
 /* Class that represents a portion of the level, can load and unload itself */
 public class Segment
 {
+
+
 	private Dictionary<int, List<GameObject>> loaded; // All gameobject loaded in the segment
 	private Dictionary<int, List<GameObject>> stateLoaded; // All gameobject loaded in the segment
+	private Dictionary<int, List<GameObject>> bgLoaded; // All gameobject loaded in the segment
 	private bool enabled = false; // is this segment enabled
 	private bool firstLoad = true; // first time loading ?
 
@@ -31,6 +34,8 @@ public class Segment
 	public int yGrid; // position in the whole level grid
 
 	private string name; // name, for debug purpose
+	private List<Vector2> groundLevels = new List<Vector2>(); //first list is for x (so groundLevels[0] is for grid with x == 0), and it can have multiple grounds on different ys
+
 
 	private Vector3 bottomRight, bottomLeft, topRight, topLeft; // for debug drawings
 
@@ -39,27 +44,66 @@ public class Segment
 		return new GameConstants.SegmentEnabledArgument(bottomLeft, topRight);
 	}
 
+	private bool isItGround(int x, int y)
+	{
+		int currentIndex = (ySize - y) * xSize + x;
+		if(layout[currentIndex] != '1')
+			return false;
+
+		if(ySize - y - 1 < 0)
+			return false;
+
+		currentIndex = (ySize - y - 1) * xSize + x;
+		if(layout[currentIndex] != PoolIndexes.emptyIndex)
+			return false;
+
+		if(ySize - y - 2 < 0)
+			return true;
+
+		currentIndex = (ySize - y - 2) * xSize + x;
+		if(layout[currentIndex] != PoolIndexes.emptyIndex)
+			return false;
+
+		return true;
+	}
+
+	private void fillGroundLevel()
+	{
+		for(int x = 0; x < xSize; ++x)
+		{
+			for(int y = 1; y < ySize; ++y)
+			{
+				if(isItGround(x,y))
+				{
+					groundLevels.Add(new Vector2(x,y));
+				}
+			}
+		}
+
+		UnityUtils.Shuffle(ref groundLevels);
+	}
+
 	public bool isEnabled()
 	{
 		return enabled;
 	}
 
-	public void enable(PoolCollection statePool)
+	public void enable(PoolCollection statePool, PoolCollection bgPool)
 	{
 		if(!isEnabled())
 		{
-			load(statePool);
+			load(statePool, bgPool);
 			enabled = true;
 
 			EventManager.TriggerEvent(EventManager.get().segmentEnabledEvent, new GameConstants.SegmentEnabledArgument(bottomRight, topLeft));
 		}
 	}
 
-	public void disable(PoolCollection statePool)
+	public void disable(PoolCollection statePool, PoolCollection bgPool)
 	{
 		if(isEnabled())
 		{
-			unload(statePool);
+			unload(statePool, bgPool);
 			enabled = false;
 		}
 	}
@@ -76,6 +120,7 @@ public class Segment
 	{
 		loaded = new Dictionary<int, List<GameObject>>();
 		stateLoaded = new  Dictionary<int, List<GameObject>>();
+		bgLoaded = new Dictionary<int, List<GameObject>>();
 
 		init(PoolIndexes.statelessIndexes, loaded);
 		init(PoolIndexes.stateIndexes, stateLoaded);
@@ -95,13 +140,15 @@ public class Segment
 		topLeft = new Vector3(xBegin, _yBegin + ySize * tileHeight, 0.0f );
 		topRight = new Vector3(xBegin + xSize * tileWidth,_yBegin + ySize * tileHeight, 0.0f);
 
+		fillGroundLevel();
+
 		if(layout.Count != xSize * ySize)
 		{
 			Debug.LogError("[Segment] Layout size (" + layout.Count + ") should be equal to x (" + xSize + ") * y (" + ySize + ")");
 		} 
 	}
 
-	private void load(PoolCollection statePool)
+	private void load(PoolCollection statePool, PoolCollection bgPool)
 	{
 		if(layout.Count != xSize * ySize)
 		{
@@ -154,10 +201,27 @@ public class Segment
 			}
 		}
 
+		// load a bg prop
+		if(bgLoaded.Count == 0 && groundLevels.Count > 0)
+		{
+			for(int i = 0; i < 2; ++i)
+			{
+				int ind = bgPool.getRandomIndex();
+				Vector2 gridIndex = groundLevels[i % groundLevels.Count];
+
+				float xOffset =  (tileWidth / 2.0f); // bg props have pivot at 0,0, instead of .5/.5 of tiles
+				float yOffset =  (tileHeight / 2.0f); // bg props have pivot at 0,0, instead of .5/.5 of tiles
+
+				Vector3 position = new Vector3(xBegin + gridIndex.x * tileWidth - xOffset, yBegin + gridIndex.y * tileHeight - yOffset, 0.0f); 
+				bgLoaded[ind] = new List<GameObject>();
+				bgLoaded[ind].Add(bgPool.getFromPool(ind, position));
+			}
+		}
+
 		firstLoad = false;
 	}
 
-	private void unload(PoolCollection statePool)
+	private void unload(PoolCollection statePool, PoolCollection bgPool)
 	{
 		foreach(int index in PoolIndexes.statelessIndexes)
 		{
@@ -176,6 +240,16 @@ public class Segment
 				obj.SetActive(false);
 			}
 		}
+
+		foreach(var entry in bgLoaded)
+		{
+			foreach(GameObject g in entry.Value)
+			{
+				bgPool.free(g, entry.Key);
+			}
+			entry.Value.Clear();
+		}
+		bgLoaded.Clear();
 	}
 
 	/* --------------------------------- Debug or Unity Utilities ----------------------------------------------- */

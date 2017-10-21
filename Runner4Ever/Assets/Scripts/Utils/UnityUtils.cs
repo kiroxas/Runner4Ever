@@ -6,7 +6,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Random = UnityEngine.Random;
 
-
 public class UnityUtils 
 {
 	public enum CollisionDirection
@@ -16,6 +15,20 @@ public class UnityUtils
 		Left,
 		Right,
 		Nowhere
+	}
+
+	public static void Swap<T>(ref List<T> list, int i, int j)
+	{
+    	var temp = list[i];
+   	 	list[i] = list[j];
+   		list[j] = temp;
+	}
+
+
+	public static void Shuffle<T>(ref List<T> list)
+	{
+   		for(var i=0; i < list.Count; i++)
+        	Swap(ref list, i, Random.Range(i, list.Count -1));
 	}
 
 	static public void drawGizmoSquare(Vector3 bottomLeft, Vector3 bottomRight, Vector3 topRight, Vector3 topLeft, Color color)

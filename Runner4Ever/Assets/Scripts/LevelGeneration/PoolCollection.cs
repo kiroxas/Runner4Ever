@@ -58,4 +58,11 @@ public class PoolCollection
 	{
 		return pools[index].getUsedObject();
 	}
+
+	public int getRandomIndex()
+	{
+		List<int> keyList = new List<int>(pools.Keys);
+
+		return keyList[Random.Range(0, keyList.Count - 1)];		
+	}
 }

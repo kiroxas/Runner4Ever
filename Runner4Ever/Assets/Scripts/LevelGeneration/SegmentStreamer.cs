@@ -78,8 +78,13 @@ public class SegmentStreamer : MonoBehaviour
 	public GameObject movingTile;
 	public GameObject killMovingTile;
 
+	/* Background */
+	public GameObject[] backgroundObjects;
+
 	/* Poolers */
 	PoolCollection statePool;
+	PoolCollection bgPool;
+
 	public Bounds containingBox;
 
 	public SegmentStrategy strat = SegmentStrategy.NineGrid;
@@ -270,7 +275,7 @@ public class SegmentStreamer : MonoBehaviour
 			/* load all */
 			foreach(Segment s in segments)
 			{
-				s.enable(statePool);
+				s.enable(statePool, bgPool);
 				ev.add(s.getBounds());
 			}
 		}
@@ -279,7 +284,7 @@ public class SegmentStreamer : MonoBehaviour
 			oldPlayerPlacement = getPlayerSegment();
 			foreach(Segment s in nineGridSegments(oldPlayerPlacement))
 			{
-				s.enable(statePool);
+				s.enable(statePool, bgPool);
 				ev.add(s.getBounds());
 			}
 		}
@@ -305,14 +310,14 @@ public class SegmentStreamer : MonoBehaviour
 		 		{
 		 			if(s.isEnabled() && ngs.Contains(s) == false)
 		 			{
-		 				s.disable(statePool);
+		 				s.disable(statePool, bgPool);
 		 			}
 		 		}
 
 		 		// then enable
 		 		foreach(Segment s in ngs)
 		 		{
-		 			s.enable(statePool);
+		 			s.enable(statePool, bgPool);
 		 			ev.add(s.getBounds());
 		 		}
 
@@ -364,6 +369,14 @@ public class SegmentStreamer : MonoBehaviour
 		statePool.addPool(bumper, PoolIndexes.bumperIndex, PoolIndexes.smallPoolingStrategy);
 		statePool.addPool(standOn, PoolIndexes.standOnIndex, PoolIndexes.smallPoolingStrategy);
 		statePool.addPool(jumper, PoolIndexes.jumperIndex, PoolIndexes.smallPoolingStrategy);
+
+
+		bgPool = new PoolCollection();
+		
+		for(int i = 0; i < backgroundObjects.Length; ++i)
+		{
+			bgPool.addPool(backgroundObjects[i], i, PoolIndexes.smallPoolingStrategy);
+		}
 
 		//printSegments();
 		fillContainingBox();
