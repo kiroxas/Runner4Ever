@@ -17,9 +17,21 @@ public class LoopLevel : MonoBehaviour
 
 	private SegmentStreamer cam;
 
-	public void Start()
-	{
+	void OnEnable()
+    {
+    	EventManager.StartListening (EventManager.get().playerSpawnEvent, selectPlayer);
+    }
+
+    void OnDisable ()
+    {
+        EventManager.StopListening (EventManager.get().playerSpawnEvent, selectPlayer);
+    }
+
+    public void selectPlayer(GameConstants.PlayerSpawnArgument arg)
+    {
 		player = GameObject.FindGameObjectWithTag("Player");
+		cam = FindObjectOfType<SegmentStreamer>();
+
 		GameObject firstCheckpoint = CheckpointUtils.findFirstCheckpoint();
 		GameObject lastCheckpoint = CheckpointUtils.findLastCheckpoint();
 
@@ -28,13 +40,15 @@ public class LoopLevel : MonoBehaviour
 			xStart = firstCheckpoint.GetComponent<Transform>().position.x;
 			yStart = firstCheckpoint.GetComponent<Transform>().position.y;
 			xEnd = lastCheckpoint.GetComponent<Transform>().position.x;
-		}
+		}	
+    }
 
-		cam = FindObjectOfType<SegmentStreamer>();
-	}
+	public void Start()
+	{}
 
 	public void Update()
 	{	
+
 		if(player != null && cam != null)
 		{
 			int xPlayer = (int)player.GetComponent<Transform>().position.x;
