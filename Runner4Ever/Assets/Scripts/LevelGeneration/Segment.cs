@@ -12,8 +12,6 @@ using Random = UnityEngine.Random;
 /* Class that represents a portion of the level, can load and unload itself */
 public class Segment
 {
-
-
 	private Dictionary<int, List<GameObject>> loaded; // All gameobject loaded in the segment
 	private Dictionary<int, List<GameObject>> stateLoaded; // All gameobject loaded in the segment
 	private Dictionary<int, List<GameObject>> bgLoaded; // All gameobject loaded in the segment
@@ -35,6 +33,8 @@ public class Segment
 
 	private string name; // name, for debug purpose
 	private List<Vector2> groundLevels = new List<Vector2>(); //first list is for x (so groundLevels[0] is for grid with x == 0), and it can have multiple grounds on different ys
+
+	private int backgroundProps = 0;
 
 
 	private Vector3 bottomRight, bottomLeft, topRight, topLeft; // for debug drawings
@@ -116,11 +116,13 @@ public class Segment
 		}
 	}
 
-	public Segment(int _xSize, int _ySize, float _xBegin, float _yBegin, List<char> _layout, float _tileWidth, float _tileHeight, int _xGrid, int _yGrid)
+	public Segment(int _xSize, int _ySize, float _xBegin, float _yBegin, List<char> _layout, float _tileWidth, float _tileHeight, int _xGrid, int _yGrid, int backgroundprops)
 	{
 		loaded = new Dictionary<int, List<GameObject>>();
 		stateLoaded = new  Dictionary<int, List<GameObject>>();
 		bgLoaded = new Dictionary<int, List<GameObject>>();
+
+		backgroundProps = backgroundprops;
 
 		init(PoolIndexes.statelessIndexes, loaded);
 		init(PoolIndexes.stateIndexes, stateLoaded);
@@ -178,7 +180,29 @@ public class Segment
 		if(xSize > placeAvailable)
 			return false;
 
+		float xOffset =  (tileWidth / 2.0f); // bg props have pivot at 0,0, instead of .5/.5 of tiles
+
+		foreach(var values in bgLoaded.Values)
+		{
+			foreach(GameObject g in values)
+			{
+				int place = (int)((g.GetComponent<Transform>().position.x - xBegin + xOffset )/ tileWidth);
+				if(place > placement.x && place < placement.x + xSize)
+					return false;
+			}
+		}
+
 		return true;
+	}
+
+	private void removeSizeFromGroundAvailable(GameObject obj, Vector2 placement)
+	{
+		Vector2 size =UnityUtils.getSpriteSize(obj);
+
+		for(int x = (int)placement.x; x < (int)placement.x + size.x; ++x)
+		{
+			groundLevels.Remove(new Vector2(x, placement.y));
+		}
 	}
 
 	private int getIndex(Vector2 vec)
@@ -196,7 +220,7 @@ public class Segment
 		// load a bg prop
 		if(bgLoaded.Count == 0 && groundLevels.Count > 0)
 		{
-			for(int i = 0; i < 2; ++i)
+			for(int i = 0; i < backgroundProps; ++i)
 			{
 				int ind = bgPool.getRandomIndex();
 				Vector2 gridIndex = groundLevels[i % groundLevels.Count];
@@ -212,6 +236,7 @@ public class Segment
 
 				if(isObjValidHere(obj, gridIndex))
 				{
+					removeSizeFromGroundAvailable(obj, position);
 					bgLoaded[ind].Add(obj);
 				}
 				else

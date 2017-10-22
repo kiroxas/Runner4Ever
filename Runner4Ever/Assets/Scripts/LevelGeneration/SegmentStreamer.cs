@@ -86,6 +86,7 @@ public class SegmentStreamer : MonoBehaviour
 	PoolCollection bgPool;
 
 	public Bounds containingBox;
+	public int propsPerSegment = 3;
 
 	public SegmentStrategy strat = SegmentStrategy.NineGrid;
 	private Vector2 oldPlayerPlacement; // player placement at precedent frame, int he segment grid
@@ -192,7 +193,7 @@ public class SegmentStreamer : MonoBehaviour
 
 				bool verbose = false;
 
-				segments.Add(new Segment(xSize, ySize, xBegin, yBegin, extractSegmentList(level, x, y, verbose, xSize, ySize), tileWidth, tileHeight, x, y));
+				segments.Add(new Segment(xSize, ySize, xBegin, yBegin, extractSegmentList(level, x, y, verbose, xSize, ySize), tileWidth, tileHeight, x, y, propsPerSegment));
 				segments[segments.Count -1].setName(segmentNumber.ToString());
 
 				if(verbose)
@@ -375,6 +376,7 @@ public class SegmentStreamer : MonoBehaviour
 		
 		for(int i = 0; i < backgroundObjects.Length; ++i)
 		{
+			Debug.Log("Size :" + UnityUtils.getSpriteSize(backgroundObjects[i]));
 			bgPool.addPool(backgroundObjects[i], i, PoolIndexes.smallPoolingStrategy);
 		}
 
