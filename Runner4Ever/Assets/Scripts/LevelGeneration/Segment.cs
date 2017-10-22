@@ -157,7 +157,7 @@ public class Segment
 			placement.x++;
 			var nextLevel = groundLevels.Find(c => c.x == placement.x);
 			
-			if(nextLevel == null || placement.x >= xSize || nextLevel.y != placement.y)
+			if(placement.x >= xSize || nextLevel.y != placement.y)
 			{
 				break;
 			}
@@ -167,13 +167,13 @@ public class Segment
 		return width;
 	}
 
+
+
 	private bool isObjValidHere(GameObject obj, Vector2 placement)
 	{
-		Vector2 size = obj.GetComponent<SpriteRenderer>().bounds.size;
+		Vector2 size =UnityUtils.getSpriteSize(obj);
 		int xSize = (int)Mathf.Ceil(size.x / tileWidth);
 		int placeAvailable= getMaxWidthAvailable(placement);
-
-		Debug.Log("placement : " + placement + " xSize :" + xSize + " placeAvailable :" + placeAvailable);
 
 		if(xSize > placeAvailable)
 			return false;

@@ -31,6 +31,18 @@ public class UnityUtils
         	Swap(ref list, i, Random.Range(i, list.Count -1));
 	}
 
+	static public Vector2 getSpriteSize(GameObject g)
+	{
+		Bounds b = g.GetComponent<SpriteRenderer>().bounds;
+
+		foreach(var render in g.GetComponentsInChildren<SpriteRenderer>())
+		{
+			b.Encapsulate(render.bounds);
+		}
+
+		return b.size;
+	}
+
 	static public void drawGizmoSquare(Vector3 bottomLeft, Vector3 bottomRight, Vector3 topRight, Vector3 topLeft, Color color)
 	{
 		Debug.DrawLine(bottomLeft, topLeft, color);
