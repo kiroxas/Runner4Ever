@@ -148,6 +148,80 @@ public class Segment
 		} 
 	}
 
+	private int getMaxWidthAvailable(Vector2 placement)
+	{
+		int width = 1;
+
+		while(true) 
+		{
+			placement.x++;
+			var nextLevel = groundLevels.Find(c => c.x == placement.x);
+			
+			if(nextLevel == null || placement.x >= xSize || nextLevel.y != placement.y)
+			{
+				break;
+			}
+			width++;
+		}
+
+		return width;
+	}
+
+	private bool isObjValidHere(GameObject obj, Vector2 placement)
+	{
+		Vector2 size = obj.GetComponent<SpriteRenderer>().bounds.size;
+		int xSize = (int)Mathf.Ceil(size.x / tileWidth);
+		int placeAvailable= getMaxWidthAvailable(placement);
+
+		Debug.Log("placement : " + placement + " xSize :" + xSize + " placeAvailable :" + placeAvailable);
+
+		if(xSize > placeAvailable)
+			return false;
+
+		return true;
+	}
+
+	private int getIndex(Vector2 vec)
+	{
+		return getIndex((int)vec.x, (int)vec.y);
+	}
+
+	private int getIndex(int x, int y)
+	{
+		return (ySize - y - 1) * xSize + x;
+	}
+
+	private void loadBgProps(PoolCollection bgPool)
+	{
+		// load a bg prop
+		if(bgLoaded.Count == 0 && groundLevels.Count > 0)
+		{
+			for(int i = 0; i < 2; ++i)
+			{
+				int ind = bgPool.getRandomIndex();
+				Vector2 gridIndex = groundLevels[i % groundLevels.Count];
+
+				float xOffset =  (tileWidth / 2.0f); // bg props have pivot at 0,0, instead of .5/.5 of tiles
+				float yOffset =  (tileHeight / 2.0f); // bg props have pivot at 0,0, instead of .5/.5 of tiles
+
+				Vector3 position = new Vector3(xBegin + gridIndex.x * tileWidth - xOffset, yBegin + gridIndex.y * tileHeight - yOffset, 0.0f); 
+				if(bgLoaded.ContainsKey(ind) == false)
+					bgLoaded[ind] = new List<GameObject>();
+
+				var obj =  bgPool.getFromPool(ind, position);
+
+				if(isObjValidHere(obj, gridIndex))
+				{
+					bgLoaded[ind].Add(obj);
+				}
+				else
+				{
+					bgPool.free(obj, ind);
+				}
+			}
+		}
+	}
+
 	private void load(PoolCollection statePool, PoolCollection bgPool)
 	{
 		if(layout.Count != xSize * ySize)
@@ -201,22 +275,7 @@ public class Segment
 			}
 		}
 
-		// load a bg prop
-		if(bgLoaded.Count == 0 && groundLevels.Count > 0)
-		{
-			for(int i = 0; i < 2; ++i)
-			{
-				int ind = bgPool.getRandomIndex();
-				Vector2 gridIndex = groundLevels[i % groundLevels.Count];
-
-				float xOffset =  (tileWidth / 2.0f); // bg props have pivot at 0,0, instead of .5/.5 of tiles
-				float yOffset =  (tileHeight / 2.0f); // bg props have pivot at 0,0, instead of .5/.5 of tiles
-
-				Vector3 position = new Vector3(xBegin + gridIndex.x * tileWidth - xOffset, yBegin + gridIndex.y * tileHeight - yOffset, 0.0f); 
-				bgLoaded[ind] = new List<GameObject>();
-				bgLoaded[ind].Add(bgPool.getFromPool(ind, position));
-			}
-		}
+		loadBgProps(bgPool);
 
 		firstLoad = false;
 	}
