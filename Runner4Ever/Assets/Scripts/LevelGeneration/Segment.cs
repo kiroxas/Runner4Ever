@@ -19,23 +19,10 @@ public class Segment
 	private bool firstLoad = true; // first time loading ?
 
 	private List<char> layout; // the layout in char format
-	private int xSize; // x size of the segment
-	private int ySize; // y size of the segment
-
-	private float xBegin; // bottom left x position of the segment
-	private float yBegin; // bottom left y position of the segment
-
-	private float tileHeight; // height of a tile
-	private float tileWidth; // width of a tile
-
-	public int xGrid; // position in the whole level grid
-	public int yGrid; // position in the whole level grid
+	public SegmentInfo info;
 
 	private string name; // name, for debug purpose
 	private List<Vector2> groundLevels = new List<Vector2>(); //first list is for x (so groundLevels[0] is for grid with x == 0), and it can have multiple grounds on different ys
-
-	private int backgroundProps = 0;
-
 
 	private Vector3 bottomRight, bottomLeft, topRight, topLeft; // for debug drawings
 
@@ -46,21 +33,21 @@ public class Segment
 
 	private bool isItGround(int x, int y)
 	{
-		int currentIndex = (ySize - y) * xSize + x;
+		int currentIndex = (info.ySize - y) * info.xSize + x;
 		if(layout[currentIndex] != '1')
 			return false;
 
-		if(ySize - y - 1 < 0)
+		if(info.ySize - y - 1 < 0)
 			return false;
 
-		currentIndex = (ySize - y - 1) * xSize + x;
+		currentIndex = (info.ySize - y - 1) * info.xSize + x;
 		if(layout[currentIndex] != PoolIndexes.emptyIndex)
 			return false;
 
-		if(ySize - y - 2 < 0)
+		if(info.ySize - y - 2 < 0)
 			return true;
 
-		currentIndex = (ySize - y - 2) * xSize + x;
+		currentIndex = (info.ySize - y - 2) * info.xSize + x;
 		if(layout[currentIndex] != PoolIndexes.emptyIndex)
 			return false;
 
@@ -69,9 +56,9 @@ public class Segment
 
 	private void fillGroundLevel()
 	{
-		for(int x = 0; x < xSize; ++x)
+		for(int x = 0; x < info.xSize; ++x)
 		{
-			for(int y = 1; y < ySize; ++y)
+			for(int y = 1; y < info.ySize; ++y)
 			{
 				if(isItGround(x,y))
 				{
@@ -88,7 +75,7 @@ public class Segment
 		return enabled;
 	}
 
-	public void enable(PoolCollection statePool, PoolCollection bgPool)
+	public void enable(PoolCollection statePool, BackgroundPropsHandler bgPool)
 	{
 		if(!isEnabled())
 		{
@@ -99,7 +86,7 @@ public class Segment
 		}
 	}
 
-	public void disable(PoolCollection statePool, PoolCollection bgPool)
+	public void disable(PoolCollection statePool, BackgroundPropsHandler bgPool)
 	{
 		if(isEnabled())
 		{
@@ -116,38 +103,37 @@ public class Segment
 		}
 	}
 
-	public Segment(int _xSize, int _ySize, float _xBegin, float _yBegin, List<char> _layout, float _tileWidth, float _tileHeight, int _xGrid, int _yGrid, int backgroundprops)
+	public Segment(SegmentInfo inf, List<char> _layout)
 	{
 		loaded = new Dictionary<int, List<GameObject>>();
 		stateLoaded = new  Dictionary<int, List<GameObject>>();
 		bgLoaded = new Dictionary<int, List<GameObject>>();
 
-		backgroundProps = backgroundprops;
-
 		init(PoolIndexes.statelessIndexes, loaded);
 		init(PoolIndexes.stateIndexes, stateLoaded);
 
 		layout = new List<char>(_layout);
-		xSize = _xSize;
-		ySize = _ySize;
-		xBegin = _xBegin;
-		yBegin = _yBegin;
-		tileWidth = _tileWidth;
-		tileHeight = _tileHeight;
-		xGrid = _xGrid;
-		yGrid = _yGrid;
+		info = inf;
 
-		bottomLeft = new Vector3(xBegin, yBegin, 0.0f);
-		bottomRight = new Vector3(xBegin + xSize * tileWidth, _yBegin, 0.0f);
-		topLeft = new Vector3(xBegin, _yBegin + ySize * tileHeight, 0.0f );
-		topRight = new Vector3(xBegin + xSize * tileWidth,_yBegin + ySize * tileHeight, 0.0f);
+		bottomLeft = new Vector3(info.xBegin, info.yBegin, 0.0f);
+		bottomRight = new Vector3(info.xBegin + info.xSize * info.tileWidth, info.yBegin, 0.0f);
+		topLeft = new Vector3(info.xBegin, info.yBegin + info.ySize * info.tileHeight, 0.0f );
+		topRight = new Vector3(info.xBegin + info.xSize * info.tileWidth, info.yBegin + info.ySize * info.tileHeight, 0.0f);
 
 		fillGroundLevel();
 
-		if(layout.Count != xSize * ySize)
+		if(layout.Count != info.xSize * info.ySize)
 		{
-			Debug.LogError("[Segment] Layout size (" + layout.Count + ") should be equal to x (" + xSize + ") * y (" + ySize + ")");
+			Debug.LogError("[Segment] Layout size (" + layout.Count + ") should be equal to x (" + info.xSize + ") * y (" + info.ySize + ")");
 		} 
+	}
+
+	private Vector2 getSpriteSize(GameObject obj)
+	{
+		Vector2 size = UnityUtils.getSpriteSize(obj);
+		size = new Vector2(Mathf.Ceil(size.x / info.tileWidth), Mathf.Ceil(size.y / info.tileHeight));
+
+		return size;
 	}
 
 	private int getMaxWidthAvailable(Vector2 placement)
@@ -156,13 +142,26 @@ public class Segment
 
 		while(true) 
 		{
-			placement.x++;
-			var nextLevel = groundLevels.Find(c => c.x == placement.x);
+			var nextLevel = groundLevels.Find(c => c.x == placement.x + width);
 			
-			if(placement.x >= xSize || nextLevel.y != placement.y)
+			if(placement.x + width >= info.xSize || nextLevel.y != placement.y)
 			{
 				break;
 			}
+
+			float xOffset = (info.tileWidth / 2.0f); // bg props have pivot at 0,0, instead of .5/.5 of tiles
+			
+			foreach(var values in bgLoaded.Values)
+			{
+				foreach(GameObject g in values)
+				{
+					float place = Mathf.Ceil((g.GetComponent<Transform>().position.x - info.xBegin + xOffset ) / info.tileWidth);
+					
+					if(place == placement.x + width)
+						return width;
+				}
+			}
+
 			width++;
 		}
 
@@ -170,23 +169,22 @@ public class Segment
 	}
 
 
-
 	private bool isObjValidHere(GameObject obj, Vector2 placement)
 	{
-		Vector2 size =UnityUtils.getSpriteSize(obj);
-		int xSize = (int)Mathf.Ceil(size.x / tileWidth);
-		int placeAvailable= getMaxWidthAvailable(placement);
+		Vector2 size = getSpriteSize(obj);
+		int xSize = (int)Mathf.Ceil(size.x / info.tileWidth);
+		int placeAvailable = getMaxWidthAvailable(placement);
 
 		if(xSize > placeAvailable)
 			return false;
 
-		float xOffset =  (tileWidth / 2.0f); // bg props have pivot at 0,0, instead of .5/.5 of tiles
+		float xOffset = (info.tileWidth / 2.0f); // bg props have pivot at 0,0, instead of .5/.5 of tiles
 
-		foreach(var values in bgLoaded.Values)
+		foreach(var values in bgLoaded)
 		{
-			foreach(GameObject g in values)
+			foreach(GameObject g in values.Value)
 			{
-				int place = (int)((g.GetComponent<Transform>().position.x - xBegin + xOffset )/ tileWidth);
+				int place = (int)((g.GetComponent<Transform>().position.x - info.xBegin + xOffset )/ info.tileWidth);
 				if(place > placement.x && place < placement.x + xSize)
 					return false;
 			}
@@ -195,11 +193,23 @@ public class Segment
 		return true;
 	}
 
-	private void removeSizeFromGroundAvailable(GameObject obj, Vector2 placement)
+	private int bgLoadedCount()
 	{
-		Vector2 size =UnityUtils.getSpriteSize(obj);
+		int i = 0;
+		foreach(var values in bgLoaded)
+		{
+			foreach(GameObject g in values.Value)
+			{
+				++i;
+			}
+		}
 
-		for(int x = (int)placement.x; x < (int)placement.x + size.x; ++x)
+		return i;
+	}
+
+	private void removeSizeFromGroundAvailable(int xSize, Vector2 placement)
+	{
+		for(int x = (int)placement.x; x < (int)placement.x + xSize; ++x)
 		{
 			groundLevels.Remove(new Vector2(x, placement.y));
 		}
@@ -212,52 +222,59 @@ public class Segment
 
 	private int getIndex(int x, int y)
 	{
-		return (ySize - y - 1) * xSize + x;
+		return (info.ySize - y - 1) * info.xSize + x;
 	}
 
-	private void loadBgProps(PoolCollection bgPool)
+	private void loadBgProps(BackgroundPropsHandler bgPool)
 	{
 		// load a bg prop
 		if(bgLoaded.Count == 0 && groundLevels.Count > 0)
 		{
-			for(int i = 0; i < backgroundProps; ++i)
+			while(bgLoadedCount() <= bgPool.propsPerSegment)
 			{
-				int ind = bgPool.getRandomIndex();
-				Vector2 gridIndex = groundLevels[i % groundLevels.Count];
+				if(groundLevels.Count == 0) // if we "ate" ll available space
+					break;
 
-				float xOffset =  (tileWidth / 2.0f); // bg props have pivot at 0,0, instead of .5/.5 of tiles
-				float yOffset =  (tileHeight / 2.0f); // bg props have pivot at 0,0, instead of .5/.5 of tiles
+				Vector2 gridIndex = groundLevels[Random.Range(0, groundLevels.Count - 1)];
 
-				Vector3 position = new Vector3(xBegin + gridIndex.x * tileWidth - xOffset, yBegin + gridIndex.y * tileHeight - yOffset, 0.0f); 
-				if(bgLoaded.ContainsKey(ind) == false)
-					bgLoaded[ind] = new List<GameObject>();
+				int size = getMaxWidthAvailable(gridIndex);
+				int index = bgPool.GetPropsIndexThatFits(size);
 
-				var obj =  bgPool.getFromPool(ind, position);
-
-				if(isObjValidHere(obj, gridIndex))
+				if(index == -1)
 				{
-					removeSizeFromGroundAvailable(obj, position);
-					bgLoaded[ind].Add(obj);
+					Debug.Log("Could not find any size " + size + " at " + gridIndex);
+					removeSizeFromGroundAvailable(1, gridIndex);
+					continue;
 				}
-				else
-				{
-					bgPool.free(obj, ind);
-				}
+
+				if(bgLoaded.ContainsKey(index) == false)
+					bgLoaded[index] = new List<GameObject>();
+
+				float xOffset = info.tileWidth / 2.0f;
+				float yOffset = info.tileHeight / 2.0f;
+
+				Vector3 position = new Vector3( info.xBegin + gridIndex.x * info.tileWidth - xOffset , info.yBegin + gridIndex.y * info.tileHeight - yOffset, 0.0f);
+
+				GameObject props = bgPool.get(index, position);
+				bgLoaded[index].Add(props);
+				removeSizeFromGroundAvailable((int)getSpriteSize(props).x, gridIndex);
 			}
+
+			Debug.Log("Added " + bgLoadedCount() + " props to segment");
 		}
 	}
 
-	private void load(PoolCollection statePool, PoolCollection bgPool)
+	private void load(PoolCollection statePool, BackgroundPropsHandler bgPool)
 	{
-		if(layout.Count != xSize * ySize)
+		if(layout.Count != info.xSize * info.ySize)
 		{
-			Debug.LogError("[Segment] Layout size (" + layout.Count + ") should be equal to x (" + xSize + ") * y (" + ySize + ")");
+			Debug.LogError("[Segment] Layout size (" + layout.Count + ") should be equal to x (" + info.xSize + ") * y (" + info.ySize + ")");
 		} 
 
-		int index =  (ySize - 1) * xSize;
-		for(int y = 0; y < ySize; ++y)
+		int index =  (info.ySize - 1) * info.xSize;
+		for(int y = 0; y < info.ySize; ++y)
 		{
-			for(int x = 0; x < xSize; ++x)
+			for(int x = 0; x < info.xSize; ++x)
 			{
 				char value = layout[index];
 				index++;
@@ -267,7 +284,7 @@ public class Segment
 				}
 
 				int poolIndex = PoolIndexes.fileToPoolMapping[value];
-				Vector3 position = new Vector3(xBegin + x * tileWidth, yBegin + y * tileHeight, 0.0f); 
+				Vector3 position = new Vector3(info.xBegin + x * info.tileWidth, info.yBegin + y * info.tileHeight, 0.0f); 
 
 				bool loadedContains = loaded.ContainsKey(poolIndex);
 				bool stateLoadedContains = stateLoaded.ContainsKey(poolIndex);
@@ -286,7 +303,7 @@ public class Segment
 					stateLoaded[poolIndex].Add(statePool.getFromPool(poolIndex, position));
 				}
 			}
-			index -= 2* xSize;
+			index -= 2 * info.xSize;
 		}
 
 		if(!firstLoad) // if not first load, just reactivate the state tiles
@@ -305,7 +322,7 @@ public class Segment
 		firstLoad = false;
 	}
 
-	private void unload(PoolCollection statePool, PoolCollection bgPool)
+	private void unload(PoolCollection statePool, BackgroundPropsHandler bgPool)
 	{
 		foreach(int index in PoolIndexes.statelessIndexes)
 		{
@@ -345,12 +362,12 @@ public class Segment
 
 	public string layoutAsString()
 	{
-		return SegmentStreamer.layoutAsString(layout, xSize, ySize);
+		return SegmentStreamer.layoutAsString(layout, info.xSize, info.ySize);
 	}
 
 	public string presentation()
 	{
-		return "I'm segment " + name + " at x:" + xBegin + ",y:" + yBegin + " with size x: " + xSize + " ,y: " + ySize + " /n " + layoutAsString(); 
+		return "I'm segment " + name + " at x:" + info.xBegin + ",y:" + info.yBegin + " with size x: " + info.xSize + " ,y: " + info.ySize + " /n " + layoutAsString(); 
 	}
 
 	public void OnDrawGizmos() 

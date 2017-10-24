@@ -8,7 +8,7 @@ using System.Collections.Generic;
 public class Pooler
 {
 	protected Stack<GameObject> m_FreeInstances = new Stack<GameObject>();
-	protected GameObject m_Original;
+	public GameObject m_Original;
 	protected List<GameObject> usedObjects = new List<GameObject>();
 
 	public Pooler(GameObject original, int initialSize)

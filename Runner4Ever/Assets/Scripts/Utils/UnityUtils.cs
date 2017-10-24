@@ -33,6 +33,9 @@ public class UnityUtils
 
 	static public Vector2 getSpriteSize(GameObject g)
 	{
+		if(g.GetComponent<SpriteRenderer>() == null)
+			return Vector2.zero;
+
 		Bounds b = g.GetComponent<SpriteRenderer>().bounds;
 
 		foreach(var render in g.GetComponentsInChildren<SpriteRenderer>())

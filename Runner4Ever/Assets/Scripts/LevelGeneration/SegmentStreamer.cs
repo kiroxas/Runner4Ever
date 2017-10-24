@@ -12,7 +12,103 @@ using Random = UnityEngine.Random;
 public enum SegmentStrategy
 {
 	LoadAll,
-	NineGrid
+	NineGrid,
+	LoadOne
+}
+
+public class BgIndexObject
+{
+	public GameObject obj;
+	public int index;
+
+	public BgIndexObject(GameObject o, int i)
+	{
+		obj = o;
+		index = i;
+	}
+}
+
+public class SegmentInfo
+{
+	public float xBegin;
+	public float yBegin;
+	public float tileWidth;
+	public float tileHeight;
+	public int xSize;
+	public int ySize;
+	public int layoutXGrid;
+	public int layoutYGrid;
+
+	public SegmentInfo(float x, float y, float w, float h, int xS, int yS, int lxg, int lyg)
+	{
+		xBegin = x;
+		yBegin = y;
+		tileHeight = h;
+		tileWidth = w;
+		xSize = xS;
+		ySize = yS;
+		layoutXGrid = lxg;
+		layoutYGrid = lyg;
+	}
+}
+
+
+
+public class BackgroundPropsHandler
+{
+	private PoolCollection bgPool;
+	public List<float> sizes;
+	public int propsPerSegment;
+
+	public int GetPropsIndexThatFits(int availableWidth)
+	{
+		List<int> indexes = new List<int>();
+		for(int i = 0; i < sizes.Count; ++i)
+		{
+			if((int)sizes[i] <= availableWidth)
+				indexes.Add(i);
+		}
+
+		int index = -1;
+
+		if(indexes.Count != 0)
+		{
+			index = indexes[Random.Range(0, indexes.Count -1)];
+		}
+	
+		return index;
+	}
+
+	public BackgroundPropsHandler(int propsPerSeg, GameObject[] g, float tileWidth)
+	{
+		bgPool = new PoolCollection();
+		sizes = new List<float>();
+		propsPerSegment = propsPerSeg;
+
+		add(g, tileWidth);
+	}
+
+	private void add(GameObject[] g, float tileWidth)
+	{
+		for(int i = 0; i < g.Length; ++i)
+		{
+			bgPool.addPool(g[i], i, PoolIndexes.smallPoolingStrategy);
+			float size = UnityUtils.getSpriteSize(g[i]).x;
+			float gridSize = Mathf.Ceil(size / tileWidth);
+			sizes.Add(gridSize);
+		}
+	}
+
+	public GameObject get(int index, Vector3 position)
+	{
+		return bgPool.getFromPool(index, position);
+	}
+
+	public void free(GameObject g, int index)
+	{
+		bgPool.free(g, index);
+	}
+
 }
 
 /*
@@ -20,7 +116,6 @@ public enum SegmentStrategy
 */
 public class SegmentStreamer : MonoBehaviour 
 {
-
 	public static string layoutAsString(List<char> layout, int xSize, int ySize)
 	{
 		StringBuilder sb = new StringBuilder();
@@ -83,7 +178,7 @@ public class SegmentStreamer : MonoBehaviour
 
 	/* Poolers */
 	PoolCollection statePool;
-	PoolCollection bgPool;
+	BackgroundPropsHandler bgHandler;
 
 	public Bounds containingBox;
 	public int propsPerSegment = 3;
@@ -193,7 +288,9 @@ public class SegmentStreamer : MonoBehaviour
 
 				bool verbose = false;
 
-				segments.Add(new Segment(xSize, ySize, xBegin, yBegin, extractSegmentList(level, x, y, verbose, xSize, ySize), tileWidth, tileHeight, x, y, propsPerSegment));
+				SegmentInfo info = new SegmentInfo(xBegin, yBegin, tileWidth, tileHeight, xSize, ySize, x, y);
+
+				segments.Add(new Segment(info, extractSegmentList(level, x, y, verbose, xSize, ySize)));
 				segments[segments.Count -1].setName(segmentNumber.ToString());
 
 				if(verbose)
@@ -258,7 +355,7 @@ public class SegmentStreamer : MonoBehaviour
 
 		foreach (Segment s in segments)
 		{
-			if((s.xGrid == gridPos.x || s.xGrid == gridPos.x - 1 || s.xGrid == gridPos.x + 1) && (s.yGrid == gridPos.y || s.yGrid == gridPos.y - 1 || s.yGrid == gridPos.y + 1))
+			if((s.info.layoutXGrid == gridPos.x || s.info.layoutXGrid == gridPos.x - 1 || s.info.layoutXGrid == gridPos.x + 1) && (s.info.layoutYGrid == gridPos.y || s.info.layoutYGrid == gridPos.y - 1 || s.info.layoutYGrid == gridPos.y + 1))
 			{
 				seg.Add(s);
 			}
@@ -276,7 +373,7 @@ public class SegmentStreamer : MonoBehaviour
 			/* load all */
 			foreach(Segment s in segments)
 			{
-				s.enable(statePool, bgPool);
+				s.enable(statePool, bgHandler);
 				ev.add(s.getBounds());
 			}
 		}
@@ -285,8 +382,21 @@ public class SegmentStreamer : MonoBehaviour
 			oldPlayerPlacement = getPlayerSegment();
 			foreach(Segment s in nineGridSegments(oldPlayerPlacement))
 			{
-				s.enable(statePool, bgPool);
+				s.enable(statePool, bgHandler);
 				ev.add(s.getBounds());
+			}
+		}
+		else if(strat == SegmentStrategy.LoadOne)
+		{
+			oldPlayerPlacement = getPlayerSegment();
+			foreach(Segment s in segments)
+			{
+				if(s.info.layoutXGrid == oldPlayerPlacement.x && s.info.layoutYGrid == oldPlayerPlacement.y)
+				{
+					s.enable(statePool, bgHandler);
+					ev.add(s.getBounds());
+					break;
+				}
 			}
 		}
 
@@ -296,8 +406,7 @@ public class SegmentStreamer : MonoBehaviour
 	public void updateSegments()
 	{
 		 if(strat == SegmentStrategy.NineGrid)
-		 {
-		 	
+		 {	 	
 		 	Vector2 gridIndex = getPlayerSegment();
 
 		 	if(gridIndex != oldPlayerPlacement)
@@ -311,14 +420,14 @@ public class SegmentStreamer : MonoBehaviour
 		 		{
 		 			if(s.isEnabled() && ngs.Contains(s) == false)
 		 			{
-		 				s.disable(statePool, bgPool);
+		 				s.disable(statePool, bgHandler);
 		 			}
 		 		}
 
 		 		// then enable
 		 		foreach(Segment s in ngs)
 		 		{
-		 			s.enable(statePool, bgPool);
+		 			s.enable(statePool, bgHandler);
 		 			ev.add(s.getBounds());
 		 		}
 
@@ -326,9 +435,38 @@ public class SegmentStreamer : MonoBehaviour
 		 	}
 
 		 }
-	}
+		else if(strat == SegmentStrategy.LoadOne)
+		{
+			Vector2 gridIndex = getPlayerSegment();
 
-	
+			if(gridIndex != oldPlayerPlacement)
+		 	{
+		 		GameConstants.SegmentsUpdatedArgument ev = new GameConstants.SegmentsUpdatedArgument();
+
+		 		// Disable
+				foreach(Segment s in segments)
+				{
+					if(s.info.layoutXGrid == oldPlayerPlacement.x && s.info.layoutYGrid == oldPlayerPlacement.y)
+					{
+						s.disable(statePool, bgHandler);
+					}
+				}
+
+				// Enable
+				foreach(Segment s in segments)
+				{
+					if(s.info.layoutXGrid == gridIndex.x && s.info.layoutYGrid == gridIndex.y)
+					{
+						s.enable(statePool, bgHandler);
+						ev.add(s.getBounds());
+					}
+				}
+
+				oldPlayerPlacement = gridIndex;
+				EventManager.TriggerEvent(EventManager.get().segmentsUpdatedEvent, ev);
+			}
+		}
+	}
 
 	public void fillContainingBox()
 	{
@@ -370,15 +508,8 @@ public class SegmentStreamer : MonoBehaviour
 		statePool.addPool(bumper, PoolIndexes.bumperIndex, PoolIndexes.smallPoolingStrategy);
 		statePool.addPool(standOn, PoolIndexes.standOnIndex, PoolIndexes.smallPoolingStrategy);
 		statePool.addPool(jumper, PoolIndexes.jumperIndex, PoolIndexes.smallPoolingStrategy);
-
-
-		bgPool = new PoolCollection();
 		
-		for(int i = 0; i < backgroundObjects.Length; ++i)
-		{
-			Debug.Log("Size :" + UnityUtils.getSpriteSize(backgroundObjects[i]));
-			bgPool.addPool(backgroundObjects[i], i, PoolIndexes.smallPoolingStrategy);
-		}
+		bgHandler = new BackgroundPropsHandler(propsPerSegment, backgroundObjects, tileWidth);
 
 		//printSegments();
 		fillContainingBox();
