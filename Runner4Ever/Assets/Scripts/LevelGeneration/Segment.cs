@@ -385,7 +385,7 @@ public class Segment
 
 	private Vector3 getPosition(int x, int y)
 	{
-		return  new Vector3(info.xBegin + x * info.tileWidth, info.yBegin + y * info.tileHeight, 0.0f); 
+		return  new Vector3(info.xBegin + x * info.tileWidth - (info.tileWidth / 2.0f), info.yBegin + y * info.tileHeight - (info.tileHeight / 2.0f), 0.0f); 
 	}
 
 	private void load(PoolCollection statePool, BackgroundPropsHandler bgPool, TilesHandler tileHandler)

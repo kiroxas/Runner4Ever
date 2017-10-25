@@ -63,6 +63,6 @@ public class PoolCollection
 	{
 		List<int> keyList = new List<int>(pools.Keys);
 
-		return keyList[Random.Range(0, keyList.Count - 1)];		
+		return keyList[Random.Range(0, keyList.Count)];		
 	}
 }
