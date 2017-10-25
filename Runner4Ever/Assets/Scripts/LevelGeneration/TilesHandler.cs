@@ -24,6 +24,8 @@ public class TilesHandler
 		Floating,
 		BottomLeft,
 		BottomRight,
+		TopRight,
+		TopLeft,
 		None
 	}
 
@@ -36,6 +38,14 @@ public class TilesHandler
 		else if(tileDeepness.top == 1 && tileDeepness.bottom == 1)
 		{
 			return TilePlacement.Floating;
+		}
+		else if(tileDeepness.right == 1 && tileDeepness.top == 1)
+		{
+			return TilePlacement.TopRight;
+		}
+		else if(tileDeepness.left == 1 && tileDeepness.top == 1)
+		{
+			return TilePlacement.TopLeft;
 		}
 		else if(tileDeepness.top == 1) // on top
 		{

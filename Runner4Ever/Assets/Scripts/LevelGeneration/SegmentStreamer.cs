@@ -116,6 +116,8 @@ public class SegmentStreamer : MonoBehaviour
 	public GameObject[] floatingTiles;
 	public GameObject[] bottomRightTiles;
 	public GameObject[] bottomLeftTiles;
+	public GameObject[] topRightTiles;
+	public GameObject[] topLeftTiles;
 
 	/* Poolers */
 	PoolCollection statePool;
@@ -466,6 +468,8 @@ public class SegmentStreamer : MonoBehaviour
 		tilesHandler.addTileType(TilesHandler.TilePlacement.Floating, floatingTiles);
 		tilesHandler.addTileType(TilesHandler.TilePlacement.BottomLeft, bottomLeftTiles);
 		tilesHandler.addTileType(TilesHandler.TilePlacement.BottomRight, bottomRightTiles);
+		tilesHandler.addTileType(TilesHandler.TilePlacement.TopLeft, topLeftTiles);
+		tilesHandler.addTileType(TilesHandler.TilePlacement.TopRight, topRightTiles);
 
 		//printSegments();
 		fillContainingBox();
