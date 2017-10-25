@@ -21,6 +21,7 @@ public class TilesHandler
 		Inner,
 		Bottom,
 		InnerBottom,
+		Floating,
 		None
 	}
 
@@ -29,6 +30,10 @@ public class TilesHandler
 		if(tileDeepness.empty())
 		{
 			return TilePlacement.None;
+		}
+		else if(tileDeepness.top == 1 && tileDeepness.bottom == 1)
+		{
+			return TilePlacement.Floating;
 		}
 		else if(tileDeepness.top == 1) // on top
 		{
