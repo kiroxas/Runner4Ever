@@ -28,7 +28,24 @@ public class Deepness
 	{
 		return "t:" + top + " , b:" + bottom + " ,r:" + right + " ,l:" + left;
 	}
+
+	public bool empty()
+	{
+		return top == 0 && bottom == 0 && right == 0 && left == 0;
+	}
 }
+
+public class LoadedTile
+	{
+		public int poolIndex;
+		public GameObject obj;
+
+		public LoadedTile(int pi, GameObject o)
+		{
+			poolIndex = pi;
+			obj = o;
+		}
+	}
 
 /* Class that represents a portion of the level, can load and unload itself */
 public class Segment
@@ -36,6 +53,7 @@ public class Segment
 	private Dictionary<int, List<GameObject>> loaded; // All gameobject loaded in the segment
 	private Dictionary<int, List<GameObject>> stateLoaded; // All gameobject loaded in the segment
 	private Dictionary<int, List<GameObject>> bgLoaded; // All gameobject loaded in the segment
+	private Dictionary<Vector2, LoadedTile> tilesLoaded; // tiles loaded by position
 	private bool enabled = false; // is this segment enabled
 	private bool firstLoad = true; // first time loading ?
 
@@ -173,22 +191,22 @@ public class Segment
 		return enabled;
 	}
 
-	public void enable(PoolCollection statePool, BackgroundPropsHandler bgPool)
+	public void enable(PoolCollection statePool, BackgroundPropsHandler bgPool, TilesHandler tiles)
 	{
 		if(!isEnabled())
 		{
-			load(statePool, bgPool);
+			load(statePool, bgPool, tiles);
 			enabled = true;
 
 			EventManager.TriggerEvent(EventManager.get().segmentEnabledEvent, new GameConstants.SegmentEnabledArgument(bottomRight, topLeft));
 		}
 	}
 
-	public void disable(PoolCollection statePool, BackgroundPropsHandler bgPool)
+	public void disable(PoolCollection statePool, BackgroundPropsHandler bgPool, TilesHandler tiles)
 	{
 		if(isEnabled())
 		{
-			unload(statePool, bgPool);
+			unload(statePool, bgPool, tiles);
 			enabled = false;
 		}
 	}
@@ -207,6 +225,7 @@ public class Segment
 		stateLoaded = new  Dictionary<int, List<GameObject>>();
 		bgLoaded = new Dictionary<int, List<GameObject>>();
 		deepness = Enumerable.Repeat(new Deepness(0,0,0,0), _layout.Count).ToList(); 
+		tilesLoaded = new Dictionary<Vector2, LoadedTile>();
 
 		init(PoolIndexes.statelessIndexes, loaded);
 		init(PoolIndexes.stateIndexes, stateLoaded);
@@ -364,7 +383,12 @@ public class Segment
 		}
 	}
 
-	private void load(PoolCollection statePool, BackgroundPropsHandler bgPool)
+	private Vector3 getPosition(int x, int y)
+	{
+		return  new Vector3(info.xBegin + x * info.tileWidth, info.yBegin + y * info.tileHeight, 0.0f); 
+	}
+
+	private void load(PoolCollection statePool, BackgroundPropsHandler bgPool, TilesHandler tileHandler)
 	{
 		if(layout.Count != info.xSize * info.ySize)
 		{
@@ -384,24 +408,32 @@ public class Segment
 				}
 
 				int poolIndex = PoolIndexes.fileToPoolMapping[value];
-				Vector3 position = new Vector3(info.xBegin + x * info.tileWidth, info.yBegin + y * info.tileHeight, 0.0f); 
+				Vector3 position = getPosition(x,y); 
 
-				bool loadedContains = loaded.ContainsKey(poolIndex);
-				bool stateLoadedContains = stateLoaded.ContainsKey(poolIndex);
-
-				
-				if(loadedContains == false && stateLoadedContains == false)
+				if(poolIndex != PoolIndexes.earthIndex)
 				{
-					Debug.LogError("[Segment/Load] Cannot store gameobject of type :" + poolIndex);
+					bool loadedContains = loaded.ContainsKey(poolIndex);
+					bool stateLoadedContains = stateLoaded.ContainsKey(poolIndex);
+
+					if(loadedContains == false && stateLoadedContains == false)
+					{
+						Debug.LogError("[Segment/Load] Cannot store gameobject of type :" + poolIndex);
+					}
+
+					if(loadedContains)
+					{
+						loaded[poolIndex].Add(statePool.getFromPool(poolIndex, position));	
+					}
+					else if(stateLoadedContains && firstLoad)
+					{
+						stateLoaded[poolIndex].Add(statePool.getFromPool(poolIndex, position));
+					}
 				}
-
-				if(loadedContains)
+				else // tile
 				{
-					loaded[poolIndex].Add(statePool.getFromPool(poolIndex, position));	
-				}
-				else if(stateLoadedContains && firstLoad)
-				{
-					stateLoaded[poolIndex].Add(statePool.getFromPool(poolIndex, position));
+					int tileIndex = tileHandler.getRandomTileIndex(deepness[index]);
+					GameObject g = tileHandler.getFromPool(deepness[index], tileIndex, position);
+					tilesLoaded[new Vector2(x ,y)] = new LoadedTile(tileIndex, g);
 				}
 			}
 		}
@@ -422,7 +454,7 @@ public class Segment
 		firstLoad = false;
 	}
 
-	private void unload(PoolCollection statePool, BackgroundPropsHandler bgPool)
+	private void unload(PoolCollection statePool, BackgroundPropsHandler bgPool, TilesHandler tileHandler)
 	{
 		foreach(int index in PoolIndexes.statelessIndexes)
 		{
@@ -440,6 +472,12 @@ public class Segment
 			{
 				obj.SetActive(false);
 			}
+		}
+
+		foreach(var tileLoaded in tilesLoaded)
+		{
+			int index = getIndex(tileLoaded.Key);
+			tileHandler.free(tileLoaded.Value.obj, deepness[index], tileLoaded.Value.poolIndex);
 		}
 
 		foreach(var entry in bgLoaded)

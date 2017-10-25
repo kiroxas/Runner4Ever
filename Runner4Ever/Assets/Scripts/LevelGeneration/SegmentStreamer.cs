@@ -16,18 +16,6 @@ public enum SegmentStrategy
 	LoadOne
 }
 
-public class BgIndexObject
-{
-	public GameObject obj;
-	public int index;
-
-	public BgIndexObject(GameObject o, int i)
-	{
-		obj = o;
-		index = i;
-	}
-}
-
 public class SegmentInfo
 {
 	public float xBegin;
@@ -98,7 +86,6 @@ public class SegmentStreamer : MonoBehaviour
 	public GameObject checkpoint;
 
 	/* Stateless prefabs */
-	public GameObject landTiles;
 	public GameObject inverseLandTiles;
 	public GameObject waterTiles;
 	public GameObject hurtTiles;
@@ -117,9 +104,20 @@ public class SegmentStreamer : MonoBehaviour
 	/* Background */
 	public GameObject[] backgroundObjects;
 
+	public GameObject[] topLandTiles;
+	public GameObject[] rightLandTiles;
+	public GameObject[] leftLandTiles;
+	public GameObject[] bottomLandTiles;
+	public GameObject[] topInnerLandTiles;
+	public GameObject[] rightInnerLandTiles;
+	public GameObject[] leftInnerLandTiles;
+	public GameObject[] bottomInnerLandTiles;
+	public GameObject[] innerLandTiles;
+
 	/* Poolers */
 	PoolCollection statePool;
 	BackgroundPropsHandler bgHandler;
+	TilesHandler tilesHandler;
 
 	public Bounds containingBox;
 	public int propsPerSegment = 3;
@@ -314,7 +312,7 @@ public class SegmentStreamer : MonoBehaviour
 			/* load all */
 			foreach(Segment s in segments)
 			{
-				s.enable(statePool, bgHandler);
+				s.enable(statePool, bgHandler, tilesHandler);
 				ev.add(s.getBounds());
 			}
 		}
@@ -323,7 +321,7 @@ public class SegmentStreamer : MonoBehaviour
 			oldPlayerPlacement = getPlayerSegment();
 			foreach(Segment s in nineGridSegments(oldPlayerPlacement))
 			{
-				s.enable(statePool, bgHandler);
+				s.enable(statePool, bgHandler, tilesHandler);
 				ev.add(s.getBounds());
 			}
 		}
@@ -334,7 +332,7 @@ public class SegmentStreamer : MonoBehaviour
 			{
 				if(s.info.layoutXGrid == oldPlayerPlacement.x && s.info.layoutYGrid == oldPlayerPlacement.y)
 				{
-					s.enable(statePool, bgHandler);
+					s.enable(statePool, bgHandler, tilesHandler);
 					ev.add(s.getBounds());
 					break;
 				}
@@ -361,14 +359,14 @@ public class SegmentStreamer : MonoBehaviour
 		 		{
 		 			if(s.isEnabled() && ngs.Contains(s) == false)
 		 			{
-		 				s.disable(statePool, bgHandler);
+		 				s.disable(statePool, bgHandler, tilesHandler);
 		 			}
 		 		}
 
 		 		// then enable
 		 		foreach(Segment s in ngs)
 		 		{
-		 			s.enable(statePool, bgHandler);
+		 			s.enable(statePool, bgHandler, tilesHandler);
 		 			ev.add(s.getBounds());
 		 		}
 
@@ -389,7 +387,7 @@ public class SegmentStreamer : MonoBehaviour
 				{
 					if(s.info.layoutXGrid == oldPlayerPlacement.x && s.info.layoutYGrid == oldPlayerPlacement.y)
 					{
-						s.disable(statePool, bgHandler);
+						s.disable(statePool, bgHandler, tilesHandler);
 					}
 				}
 
@@ -398,7 +396,7 @@ public class SegmentStreamer : MonoBehaviour
 				{
 					if(s.info.layoutXGrid == gridIndex.x && s.info.layoutYGrid == gridIndex.y)
 					{
-						s.enable(statePool, bgHandler);
+						s.enable(statePool, bgHandler, tilesHandler);
 						ev.add(s.getBounds());
 					}
 				}
@@ -434,7 +432,7 @@ public class SegmentStreamer : MonoBehaviour
 
 		statePool = new PoolCollection();
 
-		statePool.addPool(landTiles, PoolIndexes.earthIndex, PoolIndexes.bigPoolingStrategy);
+		//statePool.addPool(landTiles, PoolIndexes.earthIndex, PoolIndexes.bigPoolingStrategy);
 		statePool.addPool(inverseLandTiles, PoolIndexes.inverseEarthIndex, PoolIndexes.mediumPoolingStrategy);
 		statePool.addPool(waterTiles, PoolIndexes.waterIndex , PoolIndexes.mediumPoolingStrategy);
 		statePool.addPool(hurtTiles, PoolIndexes.hurtIndex, PoolIndexes.mediumPoolingStrategy);
@@ -451,6 +449,17 @@ public class SegmentStreamer : MonoBehaviour
 		statePool.addPool(jumper, PoolIndexes.jumperIndex, PoolIndexes.smallPoolingStrategy);
 		
 		bgHandler = new BackgroundPropsHandler(propsPerSegment, backgroundObjects, tileWidth);
+		tilesHandler = new TilesHandler();
+
+		tilesHandler.addTileType(TilesHandler.TilePlacement.OnTop, topLandTiles);
+		tilesHandler.addTileType(TilesHandler.TilePlacement.BelowTop, topInnerLandTiles);
+		tilesHandler.addTileType(TilesHandler.TilePlacement.Right, rightLandTiles);
+		tilesHandler.addTileType(TilesHandler.TilePlacement.Left, leftLandTiles);
+		tilesHandler.addTileType(TilesHandler.TilePlacement.InnerRight, rightInnerLandTiles);
+		tilesHandler.addTileType(TilesHandler.TilePlacement.InnerLeft, leftInnerLandTiles);
+		tilesHandler.addTileType(TilesHandler.TilePlacement.Inner, innerLandTiles);
+		tilesHandler.addTileType(TilesHandler.TilePlacement.Bottom, bottomLandTiles);
+		tilesHandler.addTileType(TilesHandler.TilePlacement.InnerBottom, bottomInnerLandTiles);
 
 		//printSegments();
 		fillContainingBox();

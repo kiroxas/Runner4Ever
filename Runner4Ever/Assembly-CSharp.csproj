@@ -115,6 +115,7 @@
      <Compile Include="Assets\Scripts\LevelGeneration\Segment.cs" />
      <Compile Include="Assets\Scripts\LevelGeneration\SegmentStreamer.cs" />
      <Compile Include="Assets\Scripts\LevelGeneration\SkyBoxFiller.cs" />
+     <Compile Include="Assets\Scripts\LevelGeneration\TilesHandler.cs" />
      <Compile Include="Assets\Scripts\Localization\LanguagesButton.cs" />
      <Compile Include="Assets\Scripts\Localization\LocalizationData.cs" />
      <Compile Include="Assets\Scripts\Localization\LocalizationManager.cs" />
