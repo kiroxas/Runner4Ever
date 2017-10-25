@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 7c680896492c70b43b4ef4505140b99b
-timeCreated: 1508938952
+timeCreated: 1508939134
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
@@ -404,13 +404,13 @@ TextureImporter:
       name: forest_tiles_bottom
       rect:
         serializedVersion: 2
-        x: 147
+        x: 148
         y: 368
-        width: 102
-        height: 101
+        width: 100
+        height: 100
       alignment: 6
       pivot: {x: 0, y: 0}
-      border: {x: 1, y: 0, z: 0, w: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
