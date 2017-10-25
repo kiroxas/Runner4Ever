@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 7c680896492c70b43b4ef4505140b99b
-timeCreated: 1508936629
+timeCreated: 1508938952
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
@@ -443,12 +443,12 @@ TextureImporter:
       name: forest_tiles_23
       rect:
         serializedVersion: 2
-        x: 26
-        y: 182
+        x: 28
+        y: 181
         width: 101
         height: 100
-      alignment: 6
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.011, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -460,8 +460,8 @@ TextureImporter:
         y: 181
         width: 101
         height: 134
-      alignment: 6
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.011, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -473,8 +473,8 @@ TextureImporter:
         y: 181
         width: 101
         height: 136
-      alignment: 6
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.011, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -486,8 +486,8 @@ TextureImporter:
         y: 181
         width: 101
         height: 100
-      alignment: 6
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.011, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -499,8 +499,8 @@ TextureImporter:
         y: 181
         width: 101
         height: 100
-      alignment: 6
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.011, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -512,8 +512,8 @@ TextureImporter:
         y: 181
         width: 101
         height: 138
-      alignment: 6
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.011, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -525,8 +525,8 @@ TextureImporter:
         y: 181
         width: 101
         height: 100
-      alignment: 6
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.011, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -538,8 +538,8 @@ TextureImporter:
         y: 181
         width: 108
         height: 114
-      alignment: 6
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.011, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -564,8 +564,8 @@ TextureImporter:
         y: 181
         width: 101
         height: 100
-      alignment: 6
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.011, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -577,8 +577,8 @@ TextureImporter:
         y: 181
         width: 101
         height: 136
-      alignment: 6
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.011, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -590,8 +590,8 @@ TextureImporter:
         y: 181
         width: 101
         height: 100
-      alignment: 6
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.011, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -603,8 +603,8 @@ TextureImporter:
         y: 181
         width: 101
         height: 100
-      alignment: 6
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.011, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -616,8 +616,8 @@ TextureImporter:
         y: 181
         width: 101
         height: 100
-      alignment: 6
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.011, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -629,8 +629,8 @@ TextureImporter:
         y: 181
         width: 101
         height: 139
-      alignment: 6
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.011, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -642,8 +642,8 @@ TextureImporter:
         y: 181
         width: 101
         height: 100
-      alignment: 6
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.011, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -742,7 +742,7 @@ TextureImporter:
       name: forest_tiles_46
       rect:
         serializedVersion: 2
-        x: 798
+        x: 795
         y: 61
         width: 100
         height: 100
@@ -755,8 +755,8 @@ TextureImporter:
       name: forest_tiles_47
       rect:
         serializedVersion: 2
-        x: 944
-        y: 58
+        x: 947
+        y: 61
         width: 100
         height: 100
       alignment: 6
