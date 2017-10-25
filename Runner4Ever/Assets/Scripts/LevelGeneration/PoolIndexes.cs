@@ -11,6 +11,7 @@ public class PoolIndexes
 	public static int bigPoolingStrategy = 250;
 
 	// -------------- StateLess
+	public static int emptyLayoutIndex = -1;
 	public static int earthIndex = 0;
 	public static int inverseEarthIndex = 1;
 	public static int waterIndex = 2;
@@ -35,7 +36,8 @@ public class PoolIndexes
 
 	public static char emptyIndex = '0';
 	public static Dictionary<char, int> fileToPoolMapping = new Dictionary<char, int>
-	 { {'1', earthIndex}, 
+	 { {emptyIndex, emptyLayoutIndex},
+	   {'1', earthIndex}, 
 	   {'2', waterIndex},
 	   {'3', objectIndex},
 	   {'4', checkpointIndex},

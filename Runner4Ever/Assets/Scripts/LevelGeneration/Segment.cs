@@ -6,8 +6,29 @@ using System.Xml;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using Random = UnityEngine.Random;
 
+public class Deepness
+{
+	public int top;
+	public int bottom;
+	public int right;
+	public int left;
+
+	public Deepness(int t, int b, int r, int l)
+	{
+		top = t;
+		bottom = b;
+		right = r;
+		left = l;
+	}
+
+	public string toString()
+	{
+		return "t:" + top + " , b:" + bottom + " ,r:" + right + " ,l:" + left;
+	}
+}
 
 /* Class that represents a portion of the level, can load and unload itself */
 public class Segment
@@ -19,6 +40,7 @@ public class Segment
 	private bool firstLoad = true; // first time loading ?
 
 	private List<char> layout; // the layout in char format
+	private List<Deepness> deepness; // deepness of earth tiles
 	public SegmentInfo info;
 
 	private string name; // name, for debug purpose
@@ -33,25 +55,101 @@ public class Segment
 
 	private bool isItGround(int x, int y)
 	{
-		int currentIndex = (info.ySize - y) * info.xSize + x;
-		if(layout[currentIndex] != '1')
-			return false;
+		int index = getIndex(x,y);
+		int indexBelow = getIndex(x,y - 1);
 
-		if(info.ySize - y - 1 < 0)
-			return false;
+		return deepness[index].top == 0 && indexBelow >= 0 && deepness[indexBelow].top == 1;
+	}
 
-		currentIndex = (info.ySize - y - 1) * info.xSize + x;
-		if(layout[currentIndex] != PoolIndexes.emptyIndex)
-			return false;
+	private void calculateDeepness()
+	{
+		// first pass, from left bottom to top right
+		for(int y = 0; y < info.ySize; ++y)
+		{
+			for(int x = 0; x < info.xSize; ++x)
+			{
+				int index = getIndex(x,y);
+				char value = layout[index];
+				int poolIndex = PoolIndexes.fileToPoolMapping[value];
 
-		if(info.ySize - y - 2 < 0)
-			return true;
+				int left = 0;
+				int bottom = 0;
 
-		currentIndex = (info.ySize - y - 2) * info.xSize + x;
-		if(layout[currentIndex] != PoolIndexes.emptyIndex)
-			return false;
+				// left component
+				if(poolIndex != PoolIndexes.earthIndex)
+				{
+					left = 0;
+				}
+				else if(x == 0) // on earth index, but first of the row
+				{
+					left = 1; // for now deepness inside the segment
+				}
+				else
+				{
+					left = deepness[getIndex(x-1, y)].left + 1;
+				}
 
-		return true;
+				// bottom component
+				if(poolIndex != PoolIndexes.earthIndex)
+				{
+					bottom = 0;
+				}
+				else if(y == 0) // on earth index, but first of the row
+				{
+					bottom = 1; // for now deepness inside the segment
+				}
+				else
+				{
+					bottom = deepness[getIndex(x, y - 1)].bottom + 1;
+				}
+
+				deepness[index] = new Deepness(0,bottom,0,left); 
+			}
+		}
+
+		// second pass, from top right to bottom left
+		for(int y = info.ySize - 1; y >= 0; --y)
+		{
+			for(int x = info.xSize - 1; x >= 0; --x)
+			{
+				int index = getIndex(x,y);
+				char value = layout[index];
+				int poolIndex = PoolIndexes.fileToPoolMapping[value];
+
+				int right = 0;
+				int top = 0;
+
+				// right component
+				if(poolIndex != PoolIndexes.earthIndex)
+				{
+					right = 0;
+				}
+				else if(x == info.xSize - 1) // on earth index, but first of the row
+				{
+					right = 1; // for now deepness inside the segment
+				}
+				else
+				{
+					right = deepness[getIndex(x + 1, y)].right + 1;
+				}
+
+				// top component
+				if(poolIndex != PoolIndexes.earthIndex)
+				{
+					top = 0;
+				}
+				else if(y == info.ySize - 1) // on earth index, but first of the row
+				{
+					top = 1; // for now deepness inside the segment
+				}
+				else
+				{
+					top = deepness[getIndex(x, y + 1)].top + 1;
+				}
+
+				deepness[index] = new Deepness(top,deepness[index].bottom,right,deepness[index].left); 
+			}
+		}
 	}
 
 	private void fillGroundLevel()
@@ -108,6 +206,7 @@ public class Segment
 		loaded = new Dictionary<int, List<GameObject>>();
 		stateLoaded = new  Dictionary<int, List<GameObject>>();
 		bgLoaded = new Dictionary<int, List<GameObject>>();
+		deepness = Enumerable.Repeat(new Deepness(0,0,0,0), _layout.Count).ToList(); 
 
 		init(PoolIndexes.statelessIndexes, loaded);
 		init(PoolIndexes.stateIndexes, stateLoaded);
@@ -120,6 +219,7 @@ public class Segment
 		topLeft = new Vector3(info.xBegin, info.yBegin + info.ySize * info.tileHeight, 0.0f );
 		topRight = new Vector3(info.xBegin + info.xSize * info.tileWidth, info.yBegin + info.ySize * info.tileHeight, 0.0f);
 
+		calculateDeepness();
 		fillGroundLevel();
 
 		if(layout.Count != info.xSize * info.ySize)
@@ -271,13 +371,13 @@ public class Segment
 			Debug.LogError("[Segment] Layout size (" + layout.Count + ") should be equal to x (" + info.xSize + ") * y (" + info.ySize + ")");
 		} 
 
-		int index =  (info.ySize - 1) * info.xSize;
 		for(int y = 0; y < info.ySize; ++y)
 		{
 			for(int x = 0; x < info.xSize; ++x)
 			{
+				int index = getIndex(x,y);
 				char value = layout[index];
-				index++;
+				
 				if(value == PoolIndexes.emptyIndex)
 				{
 					continue;
@@ -289,6 +389,7 @@ public class Segment
 				bool loadedContains = loaded.ContainsKey(poolIndex);
 				bool stateLoadedContains = stateLoaded.ContainsKey(poolIndex);
 
+				
 				if(loadedContains == false && stateLoadedContains == false)
 				{
 					Debug.LogError("[Segment/Load] Cannot store gameobject of type :" + poolIndex);
@@ -303,7 +404,6 @@ public class Segment
 					stateLoaded[poolIndex].Add(statePool.getFromPool(poolIndex, position));
 				}
 			}
-			index -= 2 * info.xSize;
 		}
 
 		if(!firstLoad) // if not first load, just reactivate the state tiles
