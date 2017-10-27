@@ -30,6 +30,59 @@ namespace FileUtils
 		{
 			return xSize * ySize == 0;
 		}
+
+		static public FileSize getSize(string[] lines)
+		{
+			int xSize = -1;
+			int ySize = 0;
+
+			foreach(string s in lines)
+			{
+				int xTemp = s.Length;
+				if(xTemp == 0)
+					continue;
+
+				ySize++;
+
+				if(xSize == -1)
+				{
+					xSize = xTemp;
+				}
+				else
+				{
+					if(xSize != xTemp)
+					{
+						Debug.LogError("The size of lines should be equal xSize : " + xSize + " new : " + xTemp);
+					}
+				}
+			}
+
+			return new FileSize(xSize, ySize);
+		}
+
+		static public List<char> toChar(string[] lines)
+		{
+			List<char> list = new List<char>();
+		
+			foreach(string s in lines)
+			{
+				foreach(char c in s)
+				{
+					list.Add(c);
+				}
+			}
+		
+			return list;
+		}
+
+		public static string[] load(string path)
+		{
+			TextAsset data = Resources.Load(path) as TextAsset;
+			string fs = data.text;
+  			string[] lines = System.Text.RegularExpressions.Regex.Split ( fs, "\n|\r|\r\n" );
+
+			return lines;
+		}
 	}
 
 	[XmlRoot(ElementName="FileList")]
@@ -70,7 +123,31 @@ namespace FileUtils
 		{
 			return loaded.Count;
 		}
-	}
+
+		public static FileUtils.FileList loadFrom(string folder, string path)
+		{
+        	TextAsset data = Resources.Load(folder + path) as TextAsset;
+
+        	if(data == null)
+        	{
+        		Debug.LogError("Couldn't load file : " + path);
+        	}
+
+			TextReader sr = new StringReader(data.text);
+
+			XmlSerializer serial = new XmlSerializer(typeof(FileUtils.FileList));
+			FileUtils.FileList list = (FileUtils.FileList)serial.Deserialize(sr);
+
+			foreach(string f in list.files)
+			{
+				string[] lines = FileUtils.FileSize.load(folder + f);
+				list.loaded.Add(FileUtils.FileSize.toChar(lines));
+				list.sizes.Add(FileUtils.FileSize.getSize(lines));
+			}
+		
+			return list;
+		}
+	}	
 }
 
 public abstract class ILayoutGenerator
@@ -84,6 +161,44 @@ public abstract class ILayoutGenerator
 	abstract public void generateLayout();
 
 	abstract public FileUtils.FileSize getLevelSize();
+}
+
+public class BasicFileLevelLoader : ILayoutGenerator
+{
+	string filePath;
+
+	public BasicFileLevelLoader(string file)
+	{
+		filePath = file;
+		wholeLayout = new List<char>();
+		totalSize = new FileUtils.FileSize();
+	}
+
+	public override List<char> getLayout()
+	{
+		return wholeLayout;
+	}
+
+	string[] load(string path)
+	{
+		TextAsset data = Resources.Load(path) as TextAsset;
+		string fs = data.text;
+  		string[] lines = System.Text.RegularExpressions.Regex.Split ( fs, "\n|\r|\r\n" );
+
+		return lines;
+	}
+
+	public override void generateLayout()
+	{
+		string[] lines = load(filePath);
+		totalSize = FileUtils.FileSize.getSize(lines);
+		wholeLayout = FileUtils.FileSize.toChar(lines);
+	}
+
+	public override FileUtils.FileSize getLevelSize()
+	{
+		return totalSize;
+	}
 }
 
 public class BasicLevelGenerator : ILayoutGenerator
@@ -121,53 +236,8 @@ public class BasicLevelGenerator : ILayoutGenerator
 		foreach(string f in list.files)
 		{
 			string[] lines = loadTileGroup(folder, f);
-			//Array.Reverse(lines);
-			list.loaded.Add(toChar(lines));	
-			list.sizes.Add(getSize(lines));
-		}
-		
-		return list;
-	}
-	
-	FileUtils.FileSize getSize(string[] lines)
-	{
-		int xSize = -1;
-		int ySize = 0;
-
-		foreach(string s in lines)
-		{
-			int xTemp = s.Length;
-			if(xTemp == 0)
-				continue;
-
-			ySize++;
-
-			if(xSize == -1)
-			{
-				xSize = xTemp;
-			}
-			else
-			{
-				if(xSize != xTemp)
-				{
-					Debug.LogError("The size of lines should be equal xSize : " + xSize + " new : " + xTemp);
-				}
-			}
-		}
-
-		return new FileUtils.FileSize(xSize, ySize);
-	}
-
-	List<char> toChar(string[] lines)
-	{
-		List<char> list = new List<char>();
-		
-		foreach(string s in lines)
-		{
-			foreach(char c in s)
-			{
-				list.Add(c);
-			}
+			list.loaded.Add(FileUtils.FileSize.toChar(lines));
+			list.sizes.Add(FileUtils.FileSize.getSize(lines));
 		}
 		
 		return list;

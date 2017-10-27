@@ -57,11 +57,13 @@
      <None Include="Assets\Resources\LevelGeneration\file_list.xml" />
      <None Include="Assets\Resources\LevelGeneration\bug_level.txt" />
      <None Include="Assets\Resources\LevelGeneration\two.txt" />
+     <None Include="Assets\Resources\LevelGeneration\levelList.xml" />
      <None Include="Assets\StreamingAssets\build_info.txt" />
      <None Include="Assets\Resources\LevelGeneration\four.txt" />
      <None Include="Assets\Resources\LevelGeneration\one.txt" />
      <None Include="Assets\LeanTouch\Examples\Shaders\Skybox.shader" />
      <None Include="Assets\LeanTouch\Examples\Shaders\Smooth.shader" />
+     <None Include="Assets\Resources\LevelGeneration\levelList.txt" />
      <None Include="Assets\Resources\LevelGeneration\three.txt" />
      <None Include="Assets\Resources\Localization\jp.txt" />
      <None Include="Assets\Resources\Localization\en.txt" />

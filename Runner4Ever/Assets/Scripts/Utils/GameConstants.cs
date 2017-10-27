@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class GameConstants 
 {
+	static public string levelFolder = "LevelGeneration/";
+	static public string levelListFile = "levelList";
 	static public string[] charactersNames = { "Human", "HumanFlip" };
 	static public string defaultCharac = charactersNames[0];
 

@@ -12,6 +12,7 @@ public class GameFlow : MonoBehaviour
 	static public GameFlow instance { get { return s_Instance; } }
 
     private ScreenOrientation orientation;
+    public FileUtils.FileList levels { get; private set;}
 
  	void Awake()
     {
@@ -24,10 +25,16 @@ public class GameFlow : MonoBehaviour
         s_Instance = this;
         
     	DontDestroyOnLoad(gameObject);
+        Init();
+    }
 
+    void Init()
+    {
         PlayerData.Create();
         setLang(PlayerData.get().lang);
         orientation = Screen.orientation;
+        levels = FileUtils.FileList.loadFrom(GameConstants.levelFolder, GameConstants.levelListFile);
+
     }
 
     static public GameFlow get()

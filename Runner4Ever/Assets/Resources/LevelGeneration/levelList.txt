@@ -1,0 +1,6 @@
+<FileList>
+	<files>
+		<file>bugLevel</file>
+		<file>gold</file>
+	</files>
+</FileList>
