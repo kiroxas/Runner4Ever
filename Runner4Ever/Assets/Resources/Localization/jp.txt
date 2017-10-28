@@ -8,4 +8,5 @@
 		  {"key":"settings", "value":"設定"},
 		  {"key":"master", "value":"音"},
 		  {"key":"music", "value":"音楽"},
-		  {"key":"sfx", "value":"SFX"}]}
+		  {"key":"sfx", "value":"SFX"},
+		  {"key":"levelSelection", "value":"Select a Level"}]}

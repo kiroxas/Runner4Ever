@@ -12,6 +12,9 @@ public class EventManager : MonoBehaviour
     public GameConstants.OrientationChangedEvent orientationChangedEvent { get; private set;}
     public GameConstants.SegmentEnabledEvent segmentEnabledEvent { get; private set;}
     public GameConstants.SegmentsUpdatedEvent segmentsUpdatedEvent { get; private set;}
+    public GameConstants.LevelSelectedEvent levelSelectedEvent { get; private set;}
+    public GameConstants.LevelInitialisedEvent levelInitialisedEvent { get; private set;}
+     public GameConstants.LoadLevelEvent loadLevelEvent { get; private set;}
 
     public static EventManager instance;
 
@@ -44,6 +47,9 @@ public class EventManager : MonoBehaviour
             orientationChangedEvent = new GameConstants.OrientationChangedEvent();
             segmentEnabledEvent = new GameConstants.SegmentEnabledEvent();
             segmentsUpdatedEvent = new GameConstants.SegmentsUpdatedEvent();
+            levelSelectedEvent = new GameConstants.LevelSelectedEvent();
+            levelInitialisedEvent = new GameConstants.LevelInitialisedEvent();
+            loadLevelEvent = new GameConstants.LoadLevelEvent();
         }
     }
 

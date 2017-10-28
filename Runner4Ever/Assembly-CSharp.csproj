@@ -106,6 +106,7 @@
      <Compile Include="Assets\Scripts\InversePlayerVelocity.cs" />
      <Compile Include="Assets\Scripts\JumpCharacs.cs" />
      <Compile Include="Assets\Scripts\JumpCollection.cs" />
+     <Compile Include="Assets\Scripts\LevelEntry.cs" />
      <Compile Include="Assets\Scripts\LevelFlow.cs" />
      <Compile Include="Assets\Scripts\LevelGeneration\BackgroundPropsHandler.cs" />
      <Compile Include="Assets\Scripts\LevelGeneration\BasicLevelGenerator.cs" />

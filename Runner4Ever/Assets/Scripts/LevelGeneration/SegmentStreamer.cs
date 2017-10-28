@@ -254,23 +254,17 @@ public class SegmentStreamer : MonoBehaviour
 		}
 	}
 
-	public void createPlayerAndAttachCamera()
+	public void createPlayer()
 	{
-    	CameraFollow camera = FindObjectOfType<CameraFollow>();
-
-    	if(camera == null)
-    	{
-    		Debug.LogError("Could not find the cameraFollow script in the scene");
-    	}
-
     	GameObject firstCheckpoint = CheckpointUtils.findFirstCheckpoint();
 
-    	if(camera && firstCheckpoint)
+    	if(firstCheckpoint)
     	{
     		GameObject player = statePool.getFromPool(PoolIndexes.playerIndex, firstCheckpoint.GetComponent<Transform>().position);
-    		camera.target = player.GetComponent<Transform>(); 
 
-    		EventManager.TriggerEvent(EventManager.get().playerSpawnEvent, new GameConstants.PlayerSpawnArgument(camera.target.position.x, camera.target.position.y));
+    		EventManager.TriggerEvent(EventManager.get().playerSpawnEvent, new GameConstants.PlayerSpawnArgument(player, 
+    																											 player.GetComponent<Transform>().position.x,
+    																											 player.GetComponent<Transform>().position.y));
     	}
 	}
 
@@ -428,13 +422,7 @@ public class SegmentStreamer : MonoBehaviour
 
 	public void Awake()
 	{
-		generator = new BasicLevelGenerator(BasicLevelGenerator.GenerationStyle.InOrder);
-		generator.generateLayout();
-
 		segments = new List<Segment>();
-
-		createSegments();
-
 		statePool = new PoolCollection();
 
 		//statePool.addPool(landTiles, PoolIndexes.earthIndex, PoolIndexes.bigPoolingStrategy);
@@ -470,16 +458,36 @@ public class SegmentStreamer : MonoBehaviour
 		tilesHandler.addTileType(TilesHandler.TilePlacement.BottomRight, bottomRightTiles);
 		tilesHandler.addTileType(TilesHandler.TilePlacement.TopLeft, topLeftTiles);
 		tilesHandler.addTileType(TilesHandler.TilePlacement.TopRight, topRightTiles);
+	}
 
-		//printSegments();
+	public void load(GameConstants.LoadLevelArgument arg)
+	{
+		Debug.Log("Load level " + arg.levelName);
+
+		generator = new BasicFileLevelLoader(arg.levelName);
+		generator.generateLayout();
+
+		createSegments();
 		fillContainingBox();
+		loadInitSegments();
+		createPlayer();
+
+		EventManager.TriggerEvent(EventManager.get().levelInitialisedEvent, new GameConstants.LevelInitialisedArgument());
 	}
 
 	public void Start()
 	{
-		loadInitSegments();
-		createPlayerAndAttachCamera();
 	}
+
+	void OnEnable()
+    {
+        EventManager.StartListening(EventManager.get().loadLevelEvent, load);
+    }
+
+    void OnDisable ()
+    {
+        EventManager.StopListening(EventManager.get().loadLevelEvent, load);
+    }
 
 	public void Update()
 	{

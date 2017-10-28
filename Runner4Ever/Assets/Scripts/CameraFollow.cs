@@ -11,6 +11,19 @@ public class CameraFollow : MonoBehaviour {
 	private Bounds containingBox;
 	private Vector3 upLeft, downRight;
 
+
+	void OnEnable()
+    {
+        EventManager.StartListening(EventManager.get().levelInitialisedEvent, init);
+        EventManager.StartListening(EventManager.get().playerSpawnEvent, attachCamera);
+    }
+
+    void OnDisable ()
+    {
+        EventManager.StopListening(EventManager.get().levelInitialisedEvent, init);
+        EventManager.StopListening(EventManager.get().playerSpawnEvent, attachCamera);
+    }
+
 	public void LateUpdate()
 	{
 		if(target != null)
@@ -29,8 +42,12 @@ public class CameraFollow : MonoBehaviour {
 		}
 	}
 
-	// Use this for initialization
-	void Start () 
+	public void attachCamera(GameConstants.PlayerSpawnArgument arg)
+	{
+		target = arg.player.GetComponent<Transform>();
+	}
+
+	public void init(GameConstants.LevelInitialisedArgument arg)
 	{
 		var lg = FindObjectOfType<SegmentStreamer>();
 
@@ -46,6 +63,12 @@ public class CameraFollow : MonoBehaviour {
 
 		upLeft = new Vector3(containingBox.min.x, containingBox.max.y);
 		downRight = new Vector3(containingBox.max.x, containingBox.min.y);
+	}
+
+	// Use this for initialization
+	void Start () 
+	{
+		
 	}
 	
 	// Update is called once per frame

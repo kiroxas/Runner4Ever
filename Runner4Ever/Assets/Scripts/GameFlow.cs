@@ -14,6 +14,26 @@ public class GameFlow : MonoBehaviour
     private ScreenOrientation orientation;
     public FileUtils.FileList levels { get; private set;}
 
+    private string levelToLoad;
+
+    void OnEnable()
+    {
+        EventManager.StartListening(EventManager.get().levelSelectedEvent, onLevelSelected);
+        SceneManager.sceneLoaded += OnLevelFinishedLoading;
+    }
+
+    void OnDisable ()
+    {
+        EventManager.StopListening(EventManager.get().levelSelectedEvent, onLevelSelected);
+        SceneManager.sceneLoaded -= OnLevelFinishedLoading;
+    }
+
+    public void onLevelSelected(GameConstants.LevelSelectedArgument arg)
+    {
+        levelToLoad = GameConstants.levelFolder + arg.levelName;
+        LoadMainGame();
+    }
+
  	void Awake()
     {
     	if (s_Instance != null)
@@ -35,6 +55,18 @@ public class GameFlow : MonoBehaviour
         orientation = Screen.orientation;
         levels = FileUtils.FileList.loadFrom(GameConstants.levelFolder, GameConstants.levelListFile);
 
+    }
+
+    void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log("Level Loaded");
+        Debug.Log(scene.name);
+        Debug.Log(mode);
+
+        if(scene.name == GameConstants.MainGameName)
+        {
+            EventManager.TriggerEvent(EventManager.get().loadLevelEvent, new GameConstants.LoadLevelArgument(levelToLoad));
+        }
     }
 
     static public GameFlow get()

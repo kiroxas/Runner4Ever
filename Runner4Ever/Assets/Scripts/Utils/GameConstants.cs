@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class GameConstants 
 {
+	static public string MainGameName = "MainGame";
 	static public string levelFolder = "LevelGeneration/";
 	static public string levelListFile = "levelList";
 	static public string[] charactersNames = { "Human", "HumanFlip" };
@@ -16,9 +17,11 @@ public class GameConstants
 	{
 		public float xPosition;
 		public float yPosition;
+		public GameObject player;
 
-		public PlayerSpawnArgument(float x, float y)
+		public PlayerSpawnArgument(GameObject p, float x, float y)
 		{
+			player = p;
 			xPosition = x;
 			yPosition = y;
 		}
@@ -83,6 +86,32 @@ public class GameConstants
 		}
 	}
 
+	public class LevelSelectedArgument
+	{
+		public string levelName;
+		
+		public LevelSelectedArgument(string s)
+		{
+			levelName = s;
+		}
+	}
+
+	public class LevelInitialisedArgument
+	{
+		public LevelInitialisedArgument(){}
+	}
+
+	public class LoadLevelArgument
+	{
+		public string levelName;
+
+		public LoadLevelArgument(string ln)
+		{
+			levelName = ln;
+		}
+	}
+
+
 	// Events
 	public class PlayerSpawnEvent : UnityEvent<PlayerSpawnArgument>
 	{}
@@ -102,5 +131,12 @@ public class GameConstants
 	public class SegmentsUpdatedEvent : UnityEvent<SegmentsUpdatedArgument>
 	{}
 
-	
+	public class LevelSelectedEvent : UnityEvent<LevelSelectedArgument>
+	{}
+
+	public class LevelInitialisedEvent : UnityEvent<LevelInitialisedArgument>
+	{}
+
+	public class LoadLevelEvent : UnityEvent<LoadLevelArgument>
+	{}
 }

@@ -8,4 +8,5 @@
 		  {"key":"settings", "value":"Réglages"},
 		  {"key":"master", "value":"Son"},
 		  {"key":"music", "value":"Musique"},
-		  {"key":"sfx", "value":"Bruitages"}]}
+		  {"key":"sfx", "value":"Bruitages"},
+		  {"key":"levelSelection", "value":"Selection de niveau"}]}
