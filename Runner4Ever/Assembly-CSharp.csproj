@@ -95,6 +95,7 @@
      <Compile Include="Assets\Scripts\ChangeGravity.cs" />
      <Compile Include="Assets\Scripts\CharacterController2D.cs" />
      <Compile Include="Assets\Scripts\CharacterState.cs" />
+     <Compile Include="Assets\Scripts\Checkpoint.cs" />
      <Compile Include="Assets\Scripts\Events\EventManager.cs" />
      <Compile Include="Assets\Scripts\ExploseTile.cs" />
      <Compile Include="Assets\Scripts\GameFlow.cs" />

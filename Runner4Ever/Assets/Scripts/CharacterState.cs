@@ -117,27 +117,27 @@ public class CharacterState : MonoBehaviour
 		Debug.DrawRay(myCollider.bounds.min, rayDirectionNorm * distance, Color.green);
 		Debug.DrawRay(myCollider.bounds.center, rayDirectionNorm * distance, Color.green);
 
-		if(raycastHitTL && rayDirection.y > 0)
+		if(raycastHitTL && raycastHitTL.collider.isTrigger == false && rayDirection.y > 0)
 		{
 			distance = Mathf.Min(distance, Vector2.Distance(topLeft, raycastHitTL.point));
 		}
 
-		if(raycastHitTR && rayDirection.y > 0)
+		if(raycastHitTR && raycastHitTR.collider.isTrigger == false && rayDirection.y > 0)
 		{
 			distance = Mathf.Min(distance, Vector2.Distance(myCollider.bounds.max, raycastHitTR.point));
 		}
 
-		if(raycastHitBL && rayDirection.y < 0)
+		if(raycastHitBL && raycastHitBL.collider.isTrigger == false && rayDirection.y < 0)
 		{
 			distance = Mathf.Min(distance, Vector2.Distance(myCollider.bounds.min, raycastHitBL.point));
 		}
 
-		if(raycastHitBR && rayDirection.y < 0)
+		if(raycastHitBR && raycastHitBR.collider.isTrigger == false && rayDirection.y < 0)
 		{
 			distance = Mathf.Min(distance, Vector2.Distance(bottomRight, raycastHitBR.point));
 		}
 
-		if(raycastHitC)
+		if(raycastHitC && raycastHitC.collider.isTrigger == false)
 		{
 			distance = Mathf.Min(distance, Vector2.Distance(myCollider.bounds.center, raycastHitC.point));
 		}
@@ -228,13 +228,19 @@ public class CharacterState : MonoBehaviour
 					if(effector2D.useOneWay && myCollider.bounds.min.y > raycastHit.collider.bounds.center.y ) // Only allowed if above
 					{
 						addCollider(raycastHit.collider, raycastHit.point);
-						isGrounded = true;
+						if(raycastHit.collider.isTrigger == false)
+						{
+							isGrounded = true;
+						}
 					}
 				}
 				else
 				{
 					addCollider(raycastHit.collider, raycastHit.point);
-					isGrounded = true;
+					if(raycastHit.collider.isTrigger == false)
+					{
+						isGrounded = true;
+					}
 				}
 			}
 		}
@@ -264,13 +270,19 @@ public class CharacterState : MonoBehaviour
 					if(effector2D.useOneWay && myCollider.bounds.min.y > raycastHit.collider.bounds.center.y ) // Only allowed if above
 					{
 						addCollider(raycastHit.collider, raycastHit.point);
-						isCollidingAbove = true;
+						if(raycastHit.collider.isTrigger == false)
+						{
+							isCollidingAbove = true;
+						}
 					}
 				}
 				else
 				{
 					addCollider(raycastHit.collider, raycastHit.point);
-					isCollidingAbove = true;
+					if(raycastHit.collider.isTrigger == false)
+					{
+						isCollidingAbove = true;
+					}
 				}
 			}
 		
@@ -286,13 +298,19 @@ public class CharacterState : MonoBehaviour
 					if(effector2D.useOneWay && myCollider.bounds.min.y > raycastHit.collider.bounds.center.y ) // Only allowed if above
 					{
 						addCollider(raycastHit.collider, raycastHit.point);
-						isCollidingAbove = true;
+						if(raycastHit.collider.isTrigger == false)
+						{
+							isCollidingAbove = true;
+						}
 					}
 				}
 				else
 				{
 					addCollider(raycastHit.collider, raycastHit.point);
-					isCollidingAbove = true;
+					if(raycastHit.collider.isTrigger == false)
+					{
+						isCollidingAbove = true;
+					}
 				}
 			}
 		}
@@ -310,13 +328,19 @@ public class CharacterState : MonoBehaviour
 					if(effector2D.useOneWay && myCollider.bounds.min.y > raycastHit.collider.bounds.center.y ) // Only allowed if above
 					{
 						addCollider(raycastHit.collider, raycastHit.point);
-						isCollidingAbove = true;
+						if(raycastHit.collider.isTrigger == false)
+						{
+							isCollidingAbove = true;
+						}
 					}
 				}
 				else
 				{
 					addCollider(raycastHit.collider, raycastHit.point);
-					isCollidingAbove = true;
+					if(raycastHit.collider.isTrigger == false)
+					{
+						isCollidingAbove = true;
+					}
 				}
 			}
 		}
@@ -461,7 +485,10 @@ public class CharacterState : MonoBehaviour
 			if (raycastHit)
 			{
 				addCollider(raycastHit.collider, raycastHit.point);
-				isCollidingLeft = true;
+				if(raycastHit.collider.isTrigger == false)
+				{
+					isCollidingLeft = true;
+				}
 			}
 		}
 
@@ -472,7 +499,10 @@ public class CharacterState : MonoBehaviour
 			Debug.DrawRay(rayVector, rayDirection * rcCastDistance, Color.red);
 			if (raycastHit)
 			{
-				isCollidingLeft = true;
+				if(raycastHit.collider.isTrigger == false)
+				{
+					isCollidingLeft = true;
+				}
 				addCollider(raycastHit.collider, raycastHit.point);
 			}
 		}
@@ -498,7 +528,10 @@ public class CharacterState : MonoBehaviour
 			Debug.DrawRay(rayVector, dir * rcCastDistance, Color.black);
 			if (raycastHit)
 			{
-				isCollidingRight = true;
+				if(raycastHit.collider.isTrigger == false)
+				{
+					isCollidingRight = true;
+				}
 				addCollider(raycastHit.collider, raycastHit.point);
 			}
 		}
@@ -510,7 +543,10 @@ public class CharacterState : MonoBehaviour
 			Debug.DrawRay(rayVector, rayDirection * rcCastDistance, Color.black);
 			if (raycastHit)
 			{
-				isCollidingRight = true;
+				if(raycastHit.collider.isTrigger == false)
+				{
+					isCollidingRight = true;
+				}
 				addCollider(raycastHit.collider, raycastHit.point);
 			}
 		}

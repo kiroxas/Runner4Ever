@@ -361,7 +361,7 @@ public class Segment
 
 				if(index == -1)
 				{
-					Debug.Log("Could not find any size " + size + " at " + gridIndex);
+					//Debug.Log("Could not find any size " + size + " at " + gridIndex);
 					removeSizeFromGroundAvailable(1, gridIndex);
 					continue;
 				}
@@ -379,7 +379,7 @@ public class Segment
 				removeSizeFromGroundAvailable((int)getSpriteSize(props).x, gridIndex);
 			}
 
-			Debug.Log("Added " + bgLoadedCount() + " props to segment");
+			//Debug.Log("Added " + bgLoadedCount() + " props to segment");
 		}
 	}
 

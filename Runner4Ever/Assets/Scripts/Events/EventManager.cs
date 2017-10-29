@@ -14,7 +14,8 @@ public class EventManager : MonoBehaviour
     public GameConstants.SegmentsUpdatedEvent segmentsUpdatedEvent { get; private set;}
     public GameConstants.LevelSelectedEvent levelSelectedEvent { get; private set;}
     public GameConstants.LevelInitialisedEvent levelInitialisedEvent { get; private set;}
-     public GameConstants.LoadLevelEvent loadLevelEvent { get; private set;}
+    public GameConstants.LoadLevelEvent loadLevelEvent { get; private set;}
+    public GameConstants.HitCheckpointEvent hitCheckpointEvent { get; private set;}
 
     public static EventManager instance;
 
@@ -29,7 +30,7 @@ public class EventManager : MonoBehaviour
         instance = this;
         Init (); 
 
-        //DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(gameObject);
     }
 
     public static EventManager get()
@@ -50,6 +51,7 @@ public class EventManager : MonoBehaviour
             levelSelectedEvent = new GameConstants.LevelSelectedEvent();
             levelInitialisedEvent = new GameConstants.LevelInitialisedEvent();
             loadLevelEvent = new GameConstants.LoadLevelEvent();
+            hitCheckpointEvent = new GameConstants.HitCheckpointEvent();
         }
     }
 

@@ -111,6 +111,16 @@ public class GameConstants
 		}
 	}
 
+	public class HitCheckpointArgument
+	{
+		public GameObject checkpoint;
+
+		public HitCheckpointArgument(GameObject c)
+		{
+			checkpoint = c;
+		}
+	}
+
 
 	// Events
 	public class PlayerSpawnEvent : UnityEvent<PlayerSpawnArgument>
@@ -138,5 +148,8 @@ public class GameConstants
 	{}
 
 	public class LoadLevelEvent : UnityEvent<LoadLevelArgument>
+	{}
+
+	public class HitCheckpointEvent : UnityEvent<HitCheckpointArgument>
 	{}
 }

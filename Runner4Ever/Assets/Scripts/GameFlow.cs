@@ -30,6 +30,7 @@ public class GameFlow : MonoBehaviour
 
     public void onLevelSelected(GameConstants.LevelSelectedArgument arg)
     {
+        Debug.Log("Selected");
         levelToLoad = GameConstants.levelFolder + arg.levelName;
         LoadMainGame();
     }
@@ -54,15 +55,10 @@ public class GameFlow : MonoBehaviour
         setLang(PlayerData.get().lang);
         orientation = Screen.orientation;
         levels = FileUtils.FileList.loadFrom(GameConstants.levelFolder, GameConstants.levelListFile);
-
     }
 
     void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log("Level Loaded");
-        Debug.Log(scene.name);
-        Debug.Log(mode);
-
         if(scene.name == GameConstants.MainGameName)
         {
             EventManager.TriggerEvent(EventManager.get().loadLevelEvent, new GameConstants.LoadLevelArgument(levelToLoad));

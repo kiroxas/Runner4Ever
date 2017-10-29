@@ -462,7 +462,7 @@ public class SegmentStreamer : MonoBehaviour
 
 	public void load(GameConstants.LoadLevelArgument arg)
 	{
-		Debug.Log("Load level " + arg.levelName);
+		//Debug.Log("Load level " + arg.levelName);
 
 		generator = new BasicFileLevelLoader(arg.levelName);
 		generator.generateLayout();
