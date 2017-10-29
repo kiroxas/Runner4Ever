@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 26904fba9039d664ab78d810dcec76f7
-timeCreated: 1507021365
-licenseType: Pro
+timeCreated: 1509314956
+licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
     21300000: waterTile
@@ -76,6 +76,14 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+  - buildTarget: iPhone
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
   - buildTarget: WebGL
     maxTextureSize: 2048
     textureFormat: -1
@@ -95,8 +103,8 @@ TextureImporter:
         y: 0
         width: 1175
         height: 979
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 6
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -104,12 +112,12 @@ TextureImporter:
       name: earthTile
       rect:
         serializedVersion: 2
-        x: 1221
+        x: 1223
         y: 0
         width: 1177
         height: 1205
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 6
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
