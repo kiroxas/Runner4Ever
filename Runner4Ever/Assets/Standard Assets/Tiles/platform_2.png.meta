@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: eb5bdf9796d869d4bb08a38f1d570e98
-timeCreated: 1508933235
-licenseType: Pro
+timeCreated: 1509301600
+licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
     21300000: poison_water
@@ -77,6 +77,14 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
   - buildTarget: WebGL
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: iPhone
     maxTextureSize: 2048
     textureFormat: -1
     textureCompression: 1
