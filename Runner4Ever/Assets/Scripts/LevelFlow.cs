@@ -31,7 +31,7 @@ public class LevelFlow : MonoBehaviour
     {
         if(CheckpointUtils.findLastCheckpoint() == arg.checkpoint)
         {
-            GameFlow.get().LoadMainMenu();
+            //GameFlow.get().LoadMainMenu();
         }
     }
 

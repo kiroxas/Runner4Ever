@@ -11,7 +11,7 @@ public class CheckpointUtils
 {
 	static public GameObject findFirstCheckpoint()
 	{
-		GameObject[] checkpoints = GameObject.FindGameObjectsWithTag("CheckPoint");
+		GameObject[] checkpoints = GameObject.FindGameObjectsWithTag(GameConstants.checkpointTag);
 		
 		if(checkpoints == null || checkpoints.Length == 0)
 			return null;
@@ -33,7 +33,7 @@ public class CheckpointUtils
 
 	static public GameObject findLastCheckpoint()
 	{
-		GameObject[] checkpoints = GameObject.FindGameObjectsWithTag("CheckPoint");
+		GameObject[] checkpoints = GameObject.FindGameObjectsWithTag(GameConstants.checkpointTag);
 		
 		if(checkpoints == null || checkpoints.Length == 0)
 			return null;

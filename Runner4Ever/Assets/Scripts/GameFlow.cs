@@ -30,7 +30,6 @@ public class GameFlow : MonoBehaviour
 
     public void onLevelSelected(GameConstants.LevelSelectedArgument arg)
     {
-        Debug.Log("Selected");
         levelToLoad = GameConstants.levelFolder + arg.levelName;
         LoadMainGame();
     }

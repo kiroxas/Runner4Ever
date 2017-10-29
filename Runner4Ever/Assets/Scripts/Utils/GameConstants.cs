@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class GameConstants 
 {
+	static public string checkpointTag = "CheckPoint";
+	static public string playerTag = "Player";
 	static public string MainGameName = "MainGame";
 	static public string levelFolder = "LevelGeneration/";
 	static public string levelListFile = "levelList";

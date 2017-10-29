@@ -20,7 +20,7 @@ public class InverseJumpWall : MonoBehaviour
 	void OnCollisionEnterCustom(RaycastCollision other) 
 	{
         var state = other.other.GetComponent<CharacterController2D>();
-        if(state != null && other.other.gameObject.tag == "Player")
+        if(state != null && other.other.gameObject.tag == GameConstants.playerTag)
         {
         	state.jumpWallStack.Push(strat);
         }
@@ -29,7 +29,7 @@ public class InverseJumpWall : MonoBehaviour
     void OnCollisionExitCustom(RaycastCollision other) 
 	{
         var state = other.other.GetComponent<CharacterController2D>();
-        if(state != null && other.other.gameObject.tag == "Player")
+        if(state != null && other.other.gameObject.tag == GameConstants.playerTag)
         {
         	state.jumpWallStack.Pop();
         }
