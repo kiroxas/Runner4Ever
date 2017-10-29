@@ -22,7 +22,7 @@ public class InverseJumpWall : MonoBehaviour
         var state = other.other.GetComponent<CharacterController2D>();
         if(state != null && other.other.gameObject.tag == GameConstants.playerTag)
         {
-        	state.jumpWallStack.Push(strat);
+        	state.pushWallStack(strat);
         }
     }
 
@@ -31,7 +31,7 @@ public class InverseJumpWall : MonoBehaviour
         var state = other.other.GetComponent<CharacterController2D>();
         if(state != null && other.other.gameObject.tag == GameConstants.playerTag)
         {
-        	state.jumpWallStack.Pop();
+        	state.popWallStack();
         }
     }
 }

@@ -254,6 +254,25 @@ public class CharacterController2D : MonoBehaviour
 		
 	/* ------------------------------------------------------ Functions -------------------------------------------------------*/
 
+	public void pushWallStack(JumpDirectionOnWallOrEdge d)
+	{
+		jumpWallStack.Push(d);
+	}
+
+	public void popWallStack()
+	{
+		if(jumpWallStack.Count > 0)
+		{
+			jumpWallStack.Pop();
+		}
+		else
+		{
+			Debug.Log("Cannot pop an empty stack");
+		}
+	}
+
+
+
 	private void applyOutsideForce(ref Vector3 offset)
 	{
 		if(outsideForce.magnitude != 0.0f)
