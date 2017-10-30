@@ -4,7 +4,7 @@ using UnityEngine;
 public class MissionUI : MonoBehaviour
 {
     public RectTransform missionPlace;
-    public MissionEntry missionEntryPrefab;
+    public GameObject missionEntryPrefab;
     //public AdsForMission addMissionButtonPrefab;
 
     public void Open()
@@ -18,10 +18,12 @@ public class MissionUI : MonoBehaviour
         {
             if (PlayerData.instance.missions.Count > i)
             {
-                MissionEntry entry = Instantiate(missionEntryPrefab);
-                entry.transform.SetParent(missionPlace, false);
+                GameObject entry = Instantiate(missionEntryPrefab);
 
-                entry.FillWithMission(PlayerData.instance.missions[i], this);
+                entry.GetComponent<Transform>().SetParent(missionPlace, false);
+                MissionEntry mission = entry.GetComponent<MissionEntry>();
+
+                mission.FillWithMission(PlayerData.instance.missions[i], this);
             }
            /* else
             {

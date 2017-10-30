@@ -81,7 +81,7 @@ public class SingleRunMission : MissionBase
 
 	public override string GetMissionDesc()
     {
-        return LocalizationManager.GetValue("run") + ((int)max) + LocalizationManager.GetValue("distance_unit") + " " + LocalizationManager.GetValue("single_run");
+        return LocalizationManager.GetValue("run") + " " + ((int)max) + LocalizationManager.GetValue("distance_unit") + " " + LocalizationManager.GetValue("single_run");
     }
 
     public override MissionType GetMissionType()
@@ -116,7 +116,7 @@ public class PickupMission : MissionBase
 
     public override string GetMissionDesc()
     {
-        return LocalizationManager.GetValue("pickup") + max + " " + LocalizationManager.GetValue("normalObject");
+        return LocalizationManager.GetValue("pickup") + " " + max + " " + LocalizationManager.GetValue("normalObject");
     }
 
     public override MissionType GetMissionType()
@@ -155,7 +155,7 @@ public class JumpMission : MissionBase
 
     public override string GetMissionDesc()
     {
-        return "Jump over " + ((int)max) + " barriers";
+        return LocalizationManager.GetValue("jump") + " " +  ((int)max) + " " + LocalizationManager.GetValue("times");
     }
 
     public override MissionType GetMissionType()

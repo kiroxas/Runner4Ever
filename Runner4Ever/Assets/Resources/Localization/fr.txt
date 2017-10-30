@@ -9,4 +9,6 @@
 		  {"key":"master", "value":"Son"},
 		  {"key":"music", "value":"Musique"},
 		  {"key":"sfx", "value":"Bruitages"},
-		  {"key":"levelSelection", "value":"Selection de niveau"}]}
+		  {"key":"levelSelection", "value":"Selection de niveau"},
+		  {"key":"jump", "value":"Sautez"},
+		  {"key":"times", "value":"fois"}]}

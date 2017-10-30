@@ -9,4 +9,6 @@
 		  {"key":"master", "value":"Master"},
 		  {"key":"music", "value":"Music"},
 		  {"key":"sfx", "value":"SFX"},
-		  {"key":"levelSelection", "value":"Select a Level"}]}
+		  {"key":"levelSelection", "value":"Select a Level"},
+		  {"key":"jump", "value":"Jump"},
+		  {"key":"times", "value":"times"}]}
