@@ -72,6 +72,12 @@ public class CharacterState : MonoBehaviour
 
 	public EdgeGrabingStrategy edgeStrategy = EdgeGrabingStrategy.None;
 
+	public void clean()
+	{
+		colliderHitThisFrame.Clear();
+		colliderHitThisFrame.Clear();
+	}
+
 	public void Start()
 	{
 		colliderHitThisFrame = new List<ColliderInstances>();
@@ -215,7 +221,7 @@ public class CharacterState : MonoBehaviour
 			}
 		}*/
 
-		for(int i = -1; i <= groundedRayCasts + 1; ++i)
+		for(int i = 0; i <= groundedRayCasts; ++i)
 		{
 			Vector2 rayVector = new Vector2(myCollider.bounds.min.x + i * step, myCollider.bounds.min.y);
 			var raycastHit = Physics2D.Raycast(rayVector, rayDirection, groundedCastDistance, PlatformMask);

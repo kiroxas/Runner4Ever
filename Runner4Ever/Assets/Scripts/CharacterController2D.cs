@@ -200,7 +200,7 @@ public class CharacterController2D : MonoBehaviour
 		Vector3 offset;
 
 		currentVelocity = Mathf.Lerp(currentVelocity, areWeGoingRight() ? xSpeedBySecond : -xSpeedBySecond, Time.deltaTime * accelerationSmooth);
-		currentGravity = Mathf.Lerp(currentGravity, gravityFactor, Time.deltaTime * gravitySmooth);
+		currentGravity = Mathf.Lerp(currentGravity, (float)gravity.Peek(), Time.deltaTime * gravitySmooth);
 
 		float xMoveForward = (collidingForward() || !running) ? 0.0f : currentVelocity;
 
@@ -210,9 +210,9 @@ public class CharacterController2D : MonoBehaviour
 		}
 
 		xMoveForward *= Time.deltaTime; // keep this line or it will be framerate dependant
-		float gravity = (grounded() && currentGravity > 0) ? 0.0f : wallSticking() ? -(currentGravity / 2.0f) : -currentGravity;
+		float grav = (grounded() && currentGravity > 0) ? 0.0f : wallSticking() ? -(currentGravity / 2.0f) : -currentGravity;
 
-		gravity *= Time.deltaTime;
+		grav *= Time.deltaTime;
 
 		if(isJumping())
 		{
@@ -237,7 +237,7 @@ public class CharacterController2D : MonoBehaviour
 		}
 		else
 		{
-			offset = new Vector3(xMoveForward, gravity, 0.0f);
+			offset = new Vector3(xMoveForward, grav, 0.0f);
 		}
 
 		applyOutsideForce(ref offset);
@@ -663,6 +663,8 @@ public class CharacterController2D : MonoBehaviour
 	{
 		if(characTransform.localScale.x == -1)
 			Flip();
+
+		state.clean();
 
 		jumpCollec.reset();
 		jumpCollec.reinit();
