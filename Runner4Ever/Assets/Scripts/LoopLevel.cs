@@ -12,7 +12,6 @@ public class LoopLevel : MonoBehaviour
 	private GameObject player;
 
 	private float xStart = 0;
-	private float yStart = 0;
 	private float xEnd = 0;
 
 	private SegmentStreamer cam;
@@ -38,7 +37,6 @@ public class LoopLevel : MonoBehaviour
 		if(firstCheckpoint && lastCheckpoint)
 		{
 			xStart = firstCheckpoint.GetComponent<Transform>().position.x;
-			yStart = firstCheckpoint.GetComponent<Transform>().position.y;
 			xEnd = lastCheckpoint.GetComponent<Transform>().position.x;
 		}	
     }
@@ -60,7 +58,8 @@ public class LoopLevel : MonoBehaviour
 
 			if(player.GetComponent<CharacterController2D>().isDead() || percent > 1.0f || yPlayer < cam.containingBox.min.y || xPlayer < (cam.containingBox.min.x)|| xPlayer > cam.containingBox.max.x)
 			{
-				player.GetComponent<CharacterController2D>().respawn(xStart, yStart);
+				EventManager.TriggerEvent(EventManager.get().playerDeadEvent, new GameConstants.PlayerDeadArgument(player));
+				//player.GetComponent<CharacterController2D>().respawn(xStart, yStart);
 			}
 		}
 	}

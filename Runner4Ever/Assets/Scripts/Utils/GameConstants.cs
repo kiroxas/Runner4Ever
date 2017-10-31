@@ -133,6 +133,16 @@ public class GameConstants
 		}
 	}
 
+	public class PlayerDeadArgument
+	{
+		public GameObject player;
+
+		public PlayerDeadArgument(GameObject c)
+		{
+			player = c;
+		}
+	}
+
 
 	// Events
 	public class PlayerSpawnEvent : UnityEvent<PlayerSpawnArgument>
@@ -168,5 +178,6 @@ public class GameConstants
 	public class HitFinalCheckpointEvent : UnityEvent<HitFinalCheckpointArgument>
 	{}
 
-	
+	public class PlayerDeadEvent : UnityEvent<PlayerDeadArgument>
+	{}
 }

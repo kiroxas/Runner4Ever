@@ -19,7 +19,7 @@ public class HurtPlayer : MonoBehaviour {
 	void OnCollisionEnterCustom(RaycastCollision other) 
 	{
         var state = other.other.GetComponent<CharacterController2D>();
-        if(state != null && other.other.gameObject.tag == "Player")
+        if(state != null && other.other.gameObject.tag == GameConstants.playerTag)
         {
         	state.doDamage(damage);
         }
