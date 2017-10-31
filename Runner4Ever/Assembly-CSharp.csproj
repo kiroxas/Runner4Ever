@@ -98,6 +98,7 @@
      <Compile Include="Assets\Scripts\Checkpoint.cs" />
      <Compile Include="Assets\Scripts\Events\EventManager.cs" />
      <Compile Include="Assets\Scripts\ExploseTile.cs" />
+     <Compile Include="Assets\Scripts\FinalCheckpoint.cs" />
      <Compile Include="Assets\Scripts\GameFlow.cs" />
      <Compile Include="Assets\Scripts\GoldCollectible.cs" />
      <Compile Include="Assets\Scripts\HurtPlayer.cs" />

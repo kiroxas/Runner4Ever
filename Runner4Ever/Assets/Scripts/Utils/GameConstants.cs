@@ -123,6 +123,16 @@ public class GameConstants
 		}
 	}
 
+	public class HitFinalCheckpointArgument
+	{
+		public GameObject checkpoint;
+
+		public HitFinalCheckpointArgument(GameObject c)
+		{
+			checkpoint = c;
+		}
+	}
+
 
 	// Events
 	public class PlayerSpawnEvent : UnityEvent<PlayerSpawnArgument>
@@ -154,4 +164,9 @@ public class GameConstants
 
 	public class HitCheckpointEvent : UnityEvent<HitCheckpointArgument>
 	{}
+
+	public class HitFinalCheckpointEvent : UnityEvent<HitFinalCheckpointArgument>
+	{}
+
+	
 }

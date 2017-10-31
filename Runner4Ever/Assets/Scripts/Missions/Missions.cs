@@ -126,7 +126,7 @@ public class PickupMission : MissionBase
 
     public override void RunStart(TrackingManager manager)
     {
-        previousCoinAmount = 0;
+        //previousCoinAmount = 0;
     }
 
     public override void Update(TrackingManager manager)

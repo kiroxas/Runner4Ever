@@ -18,21 +18,18 @@ public class LevelFlow : MonoBehaviour
     void OnEnable ()
     {
         EventManager.StartListening (EventManager.get().playerSpawnEvent, startTrackingPlayer);
-        EventManager.StartListening (EventManager.get().hitCheckpointEvent, checkpointHit);
+        EventManager.StartListening (EventManager.get().hitFinalCheckpointEvent, checkpointHit);
     }
 
     void OnDisable ()
     {
         EventManager.StopListening (EventManager.get().playerSpawnEvent, startTrackingPlayer);
-        EventManager.StopListening (EventManager.get().hitCheckpointEvent, checkpointHit);
+        EventManager.StopListening (EventManager.get().hitFinalCheckpointEvent, checkpointHit);
     }
 
-    void checkpointHit(GameConstants.HitCheckpointArgument arg)
+    void checkpointHit(GameConstants.HitFinalCheckpointArgument arg)
     {
-        if(CheckpointUtils.findLastCheckpoint() == arg.checkpoint)
-        {
-            //GameFlow.get().LoadMainMenu();
-        }
+         GameFlow.get().LoadMainMenu();
     }
 
     void startTrackingPlayer(GameConstants.PlayerSpawnArgument arg)

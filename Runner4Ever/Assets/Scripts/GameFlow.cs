@@ -86,6 +86,7 @@ public class GameFlow : MonoBehaviour
 
     public void LoadMainMenu()
     {
+        PlayerData.instance.Save();
         LoadLevel("MainMenu");
     }
 

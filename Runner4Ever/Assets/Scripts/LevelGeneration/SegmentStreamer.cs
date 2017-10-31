@@ -84,6 +84,7 @@ public class SegmentStreamer : MonoBehaviour
 	/* Origin prefab */
 	public GameObject instancePlayer;
 	public GameObject checkpoint;
+	public GameObject finalCheckpoint;
 
 	/* Stateless prefabs */
 	public GameObject inverseLandTiles;
@@ -440,6 +441,7 @@ public class SegmentStreamer : MonoBehaviour
 		statePool.addPool(bumper, PoolIndexes.bumperIndex, PoolIndexes.smallPoolingStrategy);
 		statePool.addPool(standOn, PoolIndexes.standOnIndex, PoolIndexes.smallPoolingStrategy);
 		statePool.addPool(jumper, PoolIndexes.jumperIndex, PoolIndexes.smallPoolingStrategy);
+		statePool.addPool(finalCheckpoint, PoolIndexes.finalCheckpointIndex, PoolIndexes.smallPoolingStrategy);
 		
 		bgHandler = new BackgroundPropsHandler(propsPerSegment, backgroundObjects, tileWidth);
 		tilesHandler = new TilesHandler();

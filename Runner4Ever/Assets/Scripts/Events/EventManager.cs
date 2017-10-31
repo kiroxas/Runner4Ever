@@ -16,6 +16,8 @@ public class EventManager : MonoBehaviour
     public GameConstants.LevelInitialisedEvent levelInitialisedEvent { get; private set;}
     public GameConstants.LoadLevelEvent loadLevelEvent { get; private set;}
     public GameConstants.HitCheckpointEvent hitCheckpointEvent { get; private set;}
+    public GameConstants.HitFinalCheckpointEvent hitFinalCheckpointEvent { get; private set;}
+
 
     public static EventManager instance;
 
@@ -52,7 +54,7 @@ public class EventManager : MonoBehaviour
             levelInitialisedEvent = new GameConstants.LevelInitialisedEvent();
             loadLevelEvent = new GameConstants.LoadLevelEvent();
             hitCheckpointEvent = new GameConstants.HitCheckpointEvent();
-        }
+            hitFinalCheckpointEvent = new GameConstants.HitFinalCheckpointEvent();        }
     }
 
     public static void StartListening<Event>(UnityEvent<Event> ev, UnityAction<Event> listener)
