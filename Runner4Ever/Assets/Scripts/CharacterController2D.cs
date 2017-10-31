@@ -89,6 +89,7 @@ public class CharacterController2D : MonoBehaviour
 
 	private float dashIn = 0.0f;
 	public float dashTime = 1.0f;
+	public bool nullifyGravityOnDash = false;
 
 	private float xColliderSize = 0.0f;
 	private float yColliderSize = 0.0f;
@@ -210,7 +211,7 @@ public class CharacterController2D : MonoBehaviour
 		}
 
 		xMoveForward *= Time.deltaTime; // keep this line or it will be framerate dependant
-		float grav = (grounded() && currentGravity > 0) ? 0.0f : wallSticking() ? -(currentGravity / 2.0f) : -currentGravity;
+		float grav = isGravityNullified() ? 0.0f : -currentGravity;
 
 		grav *= Time.deltaTime;
 
@@ -248,11 +249,16 @@ public class CharacterController2D : MonoBehaviour
 
 		animator.SetBool("isRunning", running);
 		animator.SetBool("isJumping", jumpIn > 0);
-		animator.SetBool("isSliding", dashIn > 0);
+		animator.SetBool("isSliding", isDashing());
 		
 	}
 		
 	/* ------------------------------------------------------ Functions -------------------------------------------------------*/
+
+	private bool isGravityNullified()
+	{
+		return (nullifyGravityOnDash && isDashing()) || (grounded() && currentGravity > 0);
+	}
 
 	public void pushWallStack(JumpDirectionOnWallOrEdge d)
 	{
@@ -546,6 +552,11 @@ public class CharacterController2D : MonoBehaviour
 	{
 		return jumpCollec.isJumping();
 		//return movstate == MovementState.Transform;
+	}
+
+	public bool isDashing()
+	{
+		return dashIn > 0;
 	}
 
 	public bool collidingAbove()

@@ -73,7 +73,7 @@ public class CharacterController2DEditor : Editor
         myScript.jumpRes = (CharacterController2D.JumpRestrictions)EditorGUILayout.EnumPopup("JumpRestrictions", myScript.jumpRes);
         myScript.runDir = (CharacterController2D.RunDirectionOnGround)EditorGUILayout.EnumPopup("Direction when hitting ground", myScript.runDir);
         myScript.dashTime = EditorGUILayout.FloatField("dashTime", myScript.dashTime);
-
+        myScript.nullifyGravityOnDash = EditorGUILayout.Toggle("nullifyGravityOnDash", myScript.nullifyGravityOnDash);
        
         if (GUI.changed)
         {
