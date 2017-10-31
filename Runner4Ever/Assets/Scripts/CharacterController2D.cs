@@ -52,6 +52,7 @@ public class CharacterController2D : MonoBehaviour
 	private float lastJumpFailedAttempt = 0.0f; // private variable to register when was the last failed jump
 	private float jumpIn; // variable to register when we last jumped
 	private JumpCollection jumpCollec; // where we store the jumps, and it will manage the order and the proper end of each jump
+	public bool firstJumpInAirEnabled = true;
 
 	// ---------------------------------------- Health Related
 	public int maxHealth = 10;
@@ -618,6 +619,9 @@ public class CharacterController2D : MonoBehaviour
 		{
 			return false;
 		}
+
+		if(firstJumpInAirEnabled == false && !grounded() && getCurrentJumpCount() == 0)
+			return false;
 
 		if(getMaxJumps() <= getCurrentJumpCount())
 		{

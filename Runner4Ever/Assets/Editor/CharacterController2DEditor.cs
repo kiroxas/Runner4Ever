@@ -71,6 +71,7 @@ public class CharacterController2DEditor : Editor
         myScript.timeBetweenJumps = EditorGUILayout.FloatField("timeBetweenJumps", myScript.timeBetweenJumps);
         myScript.jumpStrategy = (CharacterController2D.JumpStrat)EditorGUILayout.EnumPopup("jumpStrategy", myScript.jumpStrategy);
         myScript.jumpRes = (CharacterController2D.JumpRestrictions)EditorGUILayout.EnumPopup("JumpRestrictions", myScript.jumpRes);
+        myScript.firstJumpInAirEnabled = EditorGUILayout.Toggle("firstJumpInAirEnabled", myScript.firstJumpInAirEnabled);
         myScript.runDir = (CharacterController2D.RunDirectionOnGround)EditorGUILayout.EnumPopup("Direction when hitting ground", myScript.runDir);
         myScript.dashTime = EditorGUILayout.FloatField("dashTime", myScript.dashTime);
         myScript.nullifyGravityOnDash = EditorGUILayout.Toggle("nullifyGravityOnDash", myScript.nullifyGravityOnDash);
