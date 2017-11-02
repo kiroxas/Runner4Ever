@@ -11,7 +11,6 @@ public class CameraFollow : MonoBehaviour {
 	private Bounds containingBox;
 	private Vector3 upLeft, downRight;
 
-
 	void OnEnable()
     {
         EventManager.StartListening(EventManager.get().levelInitialisedEvent, init);
