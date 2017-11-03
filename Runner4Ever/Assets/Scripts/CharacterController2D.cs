@@ -124,6 +124,10 @@ public class CharacterController2D : MonoBehaviour
 		{
 			Debug.LogError("You need a character State");
 		}
+
+		xColliderSize = GetComponent<BoxCollider2D>().size.x;
+		yColliderSize = GetComponent<BoxCollider2D>().size.y;
+		colliderOffset = GetComponent<BoxCollider2D>().offset;
 		
 	}
 
@@ -147,15 +151,11 @@ public class CharacterController2D : MonoBehaviour
 		gravity = new Stack();
 
 		reinit();
-
-		xColliderSize = GetComponent<BoxCollider2D>().size.x;
-		yColliderSize = GetComponent<BoxCollider2D>().size.y;
-		colliderOffset = GetComponent<BoxCollider2D>().offset;
 	}
 
 	public bool firstWallJumpCollision()
 	{
-		return previousFrameState.isWallSticking == false && state.isWallSticking;
+		return previousFrameState.isWallSticking == false && wallSticking();
 	}
 
 	public void Update()
@@ -612,7 +612,7 @@ public class CharacterController2D : MonoBehaviour
 
 	public bool wallSticking()
 	{
-		return state.isWallSticking;
+		return state.isWallSticking && collidingForward();
 	}
 
 	public bool grounded()
@@ -696,7 +696,7 @@ public class CharacterController2D : MonoBehaviour
 
 	public void reinit()
 	{
-		if(characTransform.localScale.x == -1)
+		if(flipped())
 			Flip();
 
 		state.clean();
@@ -721,6 +721,14 @@ public class CharacterController2D : MonoBehaviour
 		gravity.Clear();
 		gravity.Push(gravityFactor);
 		health = maxHealth;
+
+		dashIn = 0;
+		timeHanging = 0;
+		jumpIn = 0;
+		lastJumpFailedAttempt = 0;
+
+		GetComponent<BoxCollider2D>().size = new Vector2(xColliderSize, yColliderSize);
+		GetComponent<BoxCollider2D>().offset = new Vector2(colliderOffset.x, colliderOffset.y);
 
 		CancelInvoke(); // cancel all invokes
 	}

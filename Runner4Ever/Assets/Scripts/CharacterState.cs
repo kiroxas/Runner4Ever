@@ -101,7 +101,7 @@ public class CharacterState : MonoBehaviour
 	public void clean()
 	{
 		colliderHitThisFrame.Clear();
-		colliderHitThisFrame.Clear();
+		colliderHitLastFrame.Clear();
 	}
 
 	public void Start()
