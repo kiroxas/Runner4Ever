@@ -21,7 +21,7 @@ public class ChangeGravity : MonoBehaviour
         var state = other.other.GetComponent<CharacterController2D>();
         if(state != null && other.other.gameObject.tag == GameConstants.playerTag)
         {
-        	state.gravity.Push(gravity);
+        	state.gravity.Push(gravity, gameObject);
         }
     }
 
@@ -30,7 +30,7 @@ public class ChangeGravity : MonoBehaviour
         var state = other.other.GetComponent<CharacterController2D>();
         if(state != null && other.other.gameObject.tag == GameConstants.playerTag)
         {
-        	state.gravity.Pop();
+        	state.gravity.Remove(gameObject);
         }
     }
 
@@ -39,7 +39,7 @@ public class ChangeGravity : MonoBehaviour
          var state = other.other.GetComponent<CharacterController2D>();
         if(state != null && other.other.gameObject.tag == GameConstants.playerTag)
         {
-        	state.gravity.Push(gravity);
+        	state.gravity.Push(gravity, gameObject);
         }
     }
 
@@ -48,7 +48,7 @@ public class ChangeGravity : MonoBehaviour
         var state = other.other.GetComponent<CharacterController2D>();
         if(state != null && other.other.gameObject.tag == GameConstants.playerTag)
         {
-        	state.gravity.Pop();
+        	state.gravity.Remove(gameObject);
         }
     }
 }

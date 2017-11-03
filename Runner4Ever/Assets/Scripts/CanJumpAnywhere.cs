@@ -17,25 +17,18 @@ public class CanJumpAnywhere : MonoBehaviour {
 	void OnTriggerEnterCustom(RaycastCollision other) 
 	{
         var state = other.other.GetComponent<CharacterController2D>();
-        if(state != null && other.other.gameObject.tag == "Player")
+        if(state != null && other.other.gameObject.tag == GameConstants.playerTag)
         {
-        	state.jumpState.Push(CharacterController2D.JumpRestrictions.Anywhere);
+        	state.jumpState.Push(CharacterController2D.JumpRestrictions.Anywhere, gameObject);
         }
     }
 
     void OnTriggerExitCustom(RaycastCollision other) 
 	{
         var state = other.other.GetComponent<CharacterController2D>();
-        if(state != null && other.other.gameObject.tag == "Player")
+        if(state != null && other.other.gameObject.tag == GameConstants.playerTag)
         {
-        	if(state.jumpState.Count == 0)
-        	{
-        		Debug.Log("Trying to pop an empty stack");
-        	}
-        	else
-        	{
-        		state.jumpState.Pop();
-        	}
+        	state.jumpState.Remove(gameObject);
         }
     }
 }

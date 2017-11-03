@@ -1,7 +1,59 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using Lean.Touch;
 using System;
+
+public class ItsAlmostAStack<T, Index>
+{
+    private List<T> items = new List<T>();
+    private List<Index> indexes = new List<Index>();
+
+    public void Push(T item, Index index)
+    {
+        items.Add(item);
+        indexes.Add(index);
+    }
+
+    public T Pop()
+    {
+        if (items.Count > 0)
+        {
+            T temp = items[items.Count - 1];
+            items.RemoveAt(items.Count - 1);
+            indexes.RemoveAt(indexes.Count - 1);
+            return temp;
+        }
+        else
+            return default(T);
+    }
+
+    public T Peek()
+    {
+    	return items[items.Count - 1];
+    }
+
+    public void Clear()
+    {
+    	items.Clear();
+    	indexes.Clear();
+    }
+
+    public void Remove(Index itemAtPosition)
+    {
+    	int ind = indexes.IndexOf(itemAtPosition);
+
+    	if(ind == -1)
+    	{
+    		Debug.LogError("Unknown index");
+    	}
+    	else
+    	{
+        	items.RemoveAt(ind);
+        	indexes.RemoveAt(ind);
+    	}
+    }
+}
 
 /*
 	Central class for controlling a character, handles actions and flow 
@@ -44,8 +96,8 @@ public class CharacterController2D : MonoBehaviour
  	public JumpStrat jumpStrategy = JumpStrat.DoubleJump; // the strategy about jump, can we double jump or simple jump
  	public JumpRestrictions jumpRes = JumpRestrictions.OnGround; // When can we jump
  	public JumpDirectionOnWallOrEdge jumpWall = JumpDirectionOnWallOrEdge.KeepTheSame; // when we are wall jumpin or edge jumping, in which direction do we jump
- 	public Stack jumpWallStack; // stack to know which is the current strategy for JumpDirectionOnWallOrEdge
- 	public Stack jumpState; // stack to know which is the current strategy for JumpRestrictions
+ 	public ItsAlmostAStack<JumpDirectionOnWallOrEdge, GameObject> jumpWallStack; // stack to know which is the current strategy for JumpDirectionOnWallOrEdge
+ 	public ItsAlmostAStack<JumpRestrictions, GameObject> jumpState; // stack to know which is the current strategy for JumpRestrictions
  	public float timeBetweenJumps = 0.25f; // minimum time between 2 jumps
  	public float jumpBufferTime = 0.2f; // buffer time when we register a failed jump attempt
 
@@ -67,7 +119,7 @@ public class CharacterController2D : MonoBehaviour
 
 	//---------------------------------------- Misc
 	public RunDirectionOnGround runDir = RunDirectionOnGround.KeepTheAirOne;
-	public Stack runDirStack;
+	public ItsAlmostAStack<RunDirectionOnGround, GameObject> runDirStack;
 	private bool facingRight = true;
 	private bool canBeRepelled = true;
 	//private float timeBetweenRepelledAgain = 0.1f;
@@ -89,7 +141,7 @@ public class CharacterController2D : MonoBehaviour
 
 	public float dashSpeedMul = 2.5f;
 	private float upSpeed = 0;
-	public Stack gravity;
+	public ItsAlmostAStack<float, GameObject> gravity;
 
 	private float dashIn = 0.0f;
 	public float dashTime = 1.0f;
@@ -145,10 +197,10 @@ public class CharacterController2D : MonoBehaviour
 		jumpCollec.addJump(jumpDefinition);
 		jumpCollec.addJump(doubleJumpDefinition);
 		
-		jumpState = new Stack();
-		runDirStack = new Stack();
-		jumpWallStack = new Stack();
-		gravity = new Stack();
+		jumpState = new ItsAlmostAStack<JumpRestrictions, GameObject>();
+		runDirStack = new ItsAlmostAStack<RunDirectionOnGround, GameObject>();
+		jumpWallStack = new ItsAlmostAStack<JumpDirectionOnWallOrEdge, GameObject>();
+		gravity = new ItsAlmostAStack<float, GameObject>();
 
 		reinit();
 	}
@@ -281,21 +333,14 @@ public class CharacterController2D : MonoBehaviour
 		return (nullifyGravityOnDash && isDashing()) || (grounded() && currentGravity > 0) || (timeHanging > 0 && outsideForce.magnitude == 0);
 	}
 
-	public void pushWallStack(JumpDirectionOnWallOrEdge d)
+	public void pushWallStack(JumpDirectionOnWallOrEdge d, GameObject from)
 	{
-		jumpWallStack.Push(d);
+		jumpWallStack.Push(d, from);
 	}
 
-	public void popWallStack()
+	public void popWallStack(GameObject from)
 	{
-		if(jumpWallStack.Count > 0)
-		{
-			jumpWallStack.Pop();
-		}
-		else
-		{
-			Debug.Log("Cannot pop an empty stack");
-		}
+		jumpWallStack.Remove(from);
 	}
 
 
@@ -336,7 +381,7 @@ public class CharacterController2D : MonoBehaviour
 
 	public void doNotRunRight()
 	{		
-		runDirStack.Push(RunDirectionOnGround.KeepTheAirOne);
+		runDirStack.Push(RunDirectionOnGround.KeepTheAirOne, gameObject);
 	}
 
 	public void popGroundRunDirection()
@@ -710,16 +755,16 @@ public class CharacterController2D : MonoBehaviour
 		canBeRepelled = true;
 
 		runDirStack.Clear();
-		runDirStack.Push(runDir);
+		runDirStack.Push(runDir, gameObject);
 
 		jumpState.Clear();
-		jumpState.Push(jumpRes);
+		jumpState.Push(jumpRes, gameObject);
 
 		jumpWallStack.Clear();
-		jumpWallStack.Push(jumpWall);
+		jumpWallStack.Push(jumpWall, gameObject);
 
 		gravity.Clear();
-		gravity.Push(gravityFactor);
+		gravity.Push(gravityFactor, gameObject);
 		health = maxHealth;
 
 		dashIn = 0;
