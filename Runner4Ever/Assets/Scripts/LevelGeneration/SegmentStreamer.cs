@@ -101,6 +101,7 @@ public class SegmentStreamer : MonoBehaviour
 	public GameObject escalator;
 	public GameObject movingTile;
 	public GameObject killMovingTile;
+	public GameObject stopTile;
 
 	/* Background */
 	public GameObject[] backgroundObjects;
@@ -442,6 +443,8 @@ public class SegmentStreamer : MonoBehaviour
 		statePool.addPool(standOn, PoolIndexes.standOnIndex, PoolIndexes.smallPoolingStrategy);
 		statePool.addPool(jumper, PoolIndexes.jumperIndex, PoolIndexes.smallPoolingStrategy);
 		statePool.addPool(finalCheckpoint, PoolIndexes.finalCheckpointIndex, PoolIndexes.smallPoolingStrategy);
+		statePool.addPool(stopTile, PoolIndexes.stopTileIndex, PoolIndexes.smallPoolingStrategy);
+		
 		
 		bgHandler = new BackgroundPropsHandler(propsPerSegment, backgroundObjects, tileWidth);
 		tilesHandler = new TilesHandler();

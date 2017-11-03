@@ -31,9 +31,9 @@ public class PoolIndexes
 	public static int standOnIndex = 13;
 	public static int jumperIndex = 14;
 	public static int finalCheckpointIndex = 15;
+	public static int stopTileIndex = 16;
 
-
-	public static int[] statelessIndexes = { earthIndex, inverseEarthIndex, waterIndex, hurtIndex, bumperIndex, standOnIndex, jumperIndex };
+	public static int[] statelessIndexes = { earthIndex, inverseEarthIndex, waterIndex, hurtIndex, bumperIndex, standOnIndex, jumperIndex, stopTileIndex };
 	public static int[] stateIndexes = { objectIndex, enemiesIndex, disapearingIndex, escalatorIndex, movingIndex, killMovingIndex, checkpointIndex, playerIndex, finalCheckpointIndex};
 
 	public static char emptyIndex = '0';
@@ -54,6 +54,7 @@ public class PoolIndexes
 	   {'D', killMovingIndex},
 	   {'E', standOnIndex},
 	   {'F', jumperIndex},
-	   {'L', finalCheckpointIndex} };
+	   {'L', finalCheckpointIndex},
+	   {'S', stopTileIndex} };
 
 }

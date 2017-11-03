@@ -133,6 +133,7 @@
      <Compile Include="Assets\Scripts\PlayerData.cs" />
      <Compile Include="Assets\Scripts\ProgressionDisplay.cs" />
      <Compile Include="Assets\Scripts\SettingsUI.cs" />
+     <Compile Include="Assets\Scripts\StopPlayer.cs" />
      <Compile Include="Assets\Scripts\Utils\CheckpointUtils.cs" />
      <Compile Include="Assets\Scripts\Utils\DeviceUtils.cs" />
      <Compile Include="Assets\Scripts\Utils\GameConstants.cs" />
