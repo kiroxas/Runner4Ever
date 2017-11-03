@@ -93,6 +93,7 @@
      <Compile Include="Assets\Scripts\CameraResizeOnOrientation.cs" />
      <Compile Include="Assets\Scripts\CanJumpAnywhere.cs" />
      <Compile Include="Assets\Scripts\ChangeGravity.cs" />
+     <Compile Include="Assets\Scripts\ChangePlayerMaxSpeed.cs" />
      <Compile Include="Assets\Scripts\CharacterController2D.cs" />
      <Compile Include="Assets\Scripts\CharacterState.cs" />
      <Compile Include="Assets\Scripts\Checkpoint.cs" />
@@ -166,6 +167,7 @@
      <None Include="Assets\Resources\Localization\jp.txt" />
      <None Include="Assets\Resources\LevelGeneration\level_3_Wael.txt" />
      <None Include="Assets\Resources\Localization\en.txt" />
+     <None Include="Assets\Resources\LevelGeneration\accelTest.txt" />
      <None Include="Assets\Resources\LevelGeneration\level_test_02.txt" />
      <None Include="Assets\Resources\LevelGeneration\five.txt" />
      <None Include="Assets\Resources\Localization\fr.txt" />

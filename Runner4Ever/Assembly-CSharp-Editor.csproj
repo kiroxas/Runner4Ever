@@ -70,6 +70,7 @@
      <None Include="Assets\Resources\Localization\jp.txt" />
      <None Include="Assets\Resources\LevelGeneration\level_3_Wael.txt" />
      <None Include="Assets\Resources\Localization\en.txt" />
+     <None Include="Assets\Resources\LevelGeneration\accelTest.txt" />
      <None Include="Assets\Resources\LevelGeneration\level_test_02.txt" />
      <None Include="Assets\Resources\LevelGeneration\five.txt" />
      <None Include="Assets\Resources\Localization\fr.txt" />

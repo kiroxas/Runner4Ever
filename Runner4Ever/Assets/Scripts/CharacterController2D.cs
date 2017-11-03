@@ -128,6 +128,7 @@ public class CharacterController2D : MonoBehaviour
 	private float totalDistanceRun = 0.0f;
 	private bool running = true;
 	private float currentVelocity;
+	public ItsAlmostAStack<float, GameObject> maxVelocity;
 	private float yVelocity;
 	public float xSpeedBySecond = 0.1f;
 	public float gravityFactor = 0.2f;
@@ -201,6 +202,7 @@ public class CharacterController2D : MonoBehaviour
 		runDirStack = new ItsAlmostAStack<RunDirectionOnGround, GameObject>();
 		jumpWallStack = new ItsAlmostAStack<JumpDirectionOnWallOrEdge, GameObject>();
 		gravity = new ItsAlmostAStack<float, GameObject>();
+		maxVelocity = new ItsAlmostAStack<float, GameObject>();
 
 		reinit();
 	}
@@ -272,15 +274,10 @@ public class CharacterController2D : MonoBehaviour
 		handleJump(jumped);
 		Vector3 offset;
 
-		currentVelocity = Mathf.Lerp(currentVelocity, areWeGoingRight() ? xSpeedBySecond : -xSpeedBySecond, Time.deltaTime * accelerationSmooth);
+		currentVelocity = Mathf.Lerp(currentVelocity, areWeGoingRight() ? maxVelocity.Peek() : -maxVelocity.Peek(), Time.deltaTime * accelerationSmooth);
 		currentGravity = Mathf.Lerp(currentGravity, (float)gravity.Peek(), Time.deltaTime * gravitySmooth);
 
 		float xMoveForward = (collidingForward() || !running) ? 0.0f : currentVelocity;
-
-		if(Mathf.Approximately(xMoveForward, xSpeedBySecond))
-		{
-			xMoveForward = xSpeedBySecond;
-		}
 
 		xMoveForward *= Time.deltaTime; // keep this line or it will be framerate dependant
 		float grav = isGravityNullified() ? 0.0f : -currentGravity;
@@ -753,6 +750,9 @@ public class CharacterController2D : MonoBehaviour
 		currentVelocity = 0.0f; // start stop
 		currentGravity = gravityFactor;
 		canBeRepelled = true;
+
+		maxVelocity.Clear();
+		maxVelocity.Push(xSpeedBySecond, gameObject);
 
 		runDirStack.Clear();
 		runDirStack.Push(runDir, gameObject);
