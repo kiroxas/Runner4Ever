@@ -16,6 +16,17 @@ public class RaycastCollision
 	}
 }
 
+public class InnerState
+{
+	public bool isGrounded { get; set; }
+	public bool isCollidingAbove { get; set; }
+	public bool isCollidingRight { get; set; }
+	public bool isCollidingLeft { get; set; }
+	public bool isCollidingSide { get {return isCollidingRight || isCollidingLeft;}}
+	public bool isGrabingEdge { get; set; }
+	public bool isWallSticking { get{ return isCollidingSide && !isGrabingEdge;} }	
+}
+
 
 public class CharacterState : MonoBehaviour
 {
@@ -32,12 +43,14 @@ public class CharacterState : MonoBehaviour
 	private Collider2D myCollider;
 	//private Transform transform;
 
-	public bool isGrounded { get; private set; }
-	public bool isCollidingAbove { get; private set; }
-	public bool isCollidingRight { get; private set; }
-	public bool isCollidingLeft { get; private set; }
+	InnerState innerState;
+
+	public bool isGrounded { get{ return innerState.isGrounded;} }
+	public bool isCollidingAbove {  get{ return innerState.isCollidingAbove;} }
+	public bool isCollidingRight {  get{ return innerState.isCollidingRight;}}
+	public bool isCollidingLeft { get{ return innerState.isCollidingLeft;}}
 	public bool isCollidingSide { get {return isCollidingRight || isCollidingLeft;}}
-	public bool isGrabingEdge { get; private set; }
+	public bool isGrabingEdge { get{ return innerState.isGrabingEdge;} }
 	public bool isWallSticking { get{ return isCollidingSide && !isGrabingEdge;} }
 
 	public float yRightColDetDelta = 0.02f;
@@ -47,6 +60,19 @@ public class CharacterState : MonoBehaviour
 	public int groundedRayCasts = 8;
 	public int rightCollisionRayCasts = 16;
 	public LayerMask PlatformMask;
+
+	public InnerState deepCopy()
+	{
+		InnerState state = new InnerState();
+
+		state.isGrounded = isGrounded;
+		state.isCollidingAbove = isCollidingAbove;
+		state.isCollidingRight = isCollidingRight;
+		state.isCollidingLeft = isCollidingLeft;
+		state.isGrabingEdge = isGrabingEdge;
+
+		return state;
+	} 
 
 	private class ColliderInstances
 	{
@@ -80,16 +106,17 @@ public class CharacterState : MonoBehaviour
 
 	public void Start()
 	{
+		innerState = new InnerState();
 		colliderHitThisFrame = new List<ColliderInstances>();
 		colliderHitLastFrame = new List<ColliderInstances>();
 
 		rb = GetComponent<Rigidbody2D>();
 		myCollider = GetComponent<Collider2D>();
 		//transform = GetComponent<Transform>();
-		isGrounded = false;
-		isCollidingRight = false;
-		isCollidingLeft = false;
-		isGrabingEdge = false;
+		innerState.isGrounded = false;
+		innerState.isCollidingRight = false;
+		innerState.isCollidingLeft = false;
+		innerState.isGrabingEdge = false;
 	}
 
 	public void updateState()
@@ -170,7 +197,7 @@ public class CharacterState : MonoBehaviour
 	{
 		Collider2D myCollider = GetComponent<Collider2D>();
 		float step = (float)myCollider.bounds.size.x / (float)groundedRayCasts;
-		isGrounded = false;
+		innerState.isGrounded = false;
 
 		Vector2 rayDirection = Vector2.down;
 
@@ -236,7 +263,7 @@ public class CharacterState : MonoBehaviour
 						addCollider(raycastHit.collider, raycastHit.point);
 						if(raycastHit.collider.isTrigger == false)
 						{
-							isGrounded = true;
+							innerState.isGrounded = true;
 						}
 					}
 				}
@@ -245,7 +272,7 @@ public class CharacterState : MonoBehaviour
 					addCollider(raycastHit.collider, raycastHit.point);
 					if(raycastHit.collider.isTrigger == false)
 					{
-						isGrounded = true;
+						innerState.isGrounded = true;
 					}
 				}
 			}
@@ -258,7 +285,7 @@ public class CharacterState : MonoBehaviour
 	{
 		Collider2D myCollider = GetComponent<Collider2D>();
 		float step = (float)myCollider.bounds.size.x / (float)groundedRayCasts;
-		isCollidingAbove = false;
+		innerState.isCollidingAbove = false;
 
 		Vector2 rayDirection = Vector2.up;
 
@@ -278,7 +305,7 @@ public class CharacterState : MonoBehaviour
 						addCollider(raycastHit.collider, raycastHit.point);
 						if(raycastHit.collider.isTrigger == false)
 						{
-							isCollidingAbove = true;
+							innerState.isCollidingAbove = true;
 						}
 					}
 				}
@@ -287,7 +314,7 @@ public class CharacterState : MonoBehaviour
 					addCollider(raycastHit.collider, raycastHit.point);
 					if(raycastHit.collider.isTrigger == false)
 					{
-						isCollidingAbove = true;
+						innerState.isCollidingAbove = true;
 					}
 				}
 			}
@@ -306,7 +333,7 @@ public class CharacterState : MonoBehaviour
 						addCollider(raycastHit.collider, raycastHit.point);
 						if(raycastHit.collider.isTrigger == false)
 						{
-							isCollidingAbove = true;
+							innerState.isCollidingAbove = true;
 						}
 					}
 				}
@@ -315,7 +342,7 @@ public class CharacterState : MonoBehaviour
 					addCollider(raycastHit.collider, raycastHit.point);
 					if(raycastHit.collider.isTrigger == false)
 					{
-						isCollidingAbove = true;
+						innerState.isCollidingAbove = true;
 					}
 				}
 			}
@@ -336,7 +363,7 @@ public class CharacterState : MonoBehaviour
 						addCollider(raycastHit.collider, raycastHit.point);
 						if(raycastHit.collider.isTrigger == false)
 						{
-							isCollidingAbove = true;
+							innerState.isCollidingAbove = true;
 						}
 					}
 				}
@@ -345,7 +372,7 @@ public class CharacterState : MonoBehaviour
 					addCollider(raycastHit.collider, raycastHit.point);
 					if(raycastHit.collider.isTrigger == false)
 					{
-						isCollidingAbove = true;
+						innerState.isCollidingAbove = true;
 					}
 				}
 			}
@@ -364,11 +391,11 @@ public class CharacterState : MonoBehaviour
 			|| (edgeStrategy == EdgeGrabingStrategy.GoingDownOnly && yVelocity > 0)
 			|| (edgeStrategy == EdgeGrabingStrategy.None))
 		{
-			isGrabingEdge = false;
+			innerState.isGrabingEdge = false;
 			return isGrabingEdge;
 		}
 
-		isGrabingEdge = false;
+		innerState.isGrabingEdge = false;
 
 		// Right
 		if(xVelocity >= 0) // if 0, could be grabing ledge, so must check
@@ -388,7 +415,7 @@ public class CharacterState : MonoBehaviour
 
 				if (!raycastHit && collided)
 				{
-					isGrabingEdge = true;
+					innerState.isGrabingEdge = true;
 					break;
 				}
 			}
@@ -411,7 +438,7 @@ public class CharacterState : MonoBehaviour
 
 				if (!raycastHit && collided)
 				{
-					isGrabingEdge = true;
+					innerState.isGrabingEdge = true;
 					break;
 				}
 			}
@@ -476,7 +503,7 @@ public class CharacterState : MonoBehaviour
 	{
 		Collider2D myCollider = GetComponent<Collider2D>();
 		float step = (float)myCollider.bounds.size.y / (float)rightCollisionRayCasts;
-		isCollidingLeft = false;
+		innerState.isCollidingLeft = false;
 
 		Vector2 rayDirection = Vector2.left;
 		float leftX = Mathf.Min(myCollider.bounds.max.x , myCollider.bounds.min.x);
@@ -493,7 +520,7 @@ public class CharacterState : MonoBehaviour
 				addCollider(raycastHit.collider, raycastHit.point);
 				if(raycastHit.collider.isTrigger == false)
 				{
-					isCollidingLeft = true;
+					innerState.isCollidingLeft = true;
 				}
 			}
 		}
@@ -507,7 +534,7 @@ public class CharacterState : MonoBehaviour
 			{
 				if(raycastHit.collider.isTrigger == false)
 				{
-					isCollidingLeft = true;
+					innerState.isCollidingLeft = true;
 				}
 				addCollider(raycastHit.collider, raycastHit.point);
 			}
@@ -520,7 +547,7 @@ public class CharacterState : MonoBehaviour
 	{
 		Collider2D myCollider = GetComponent<Collider2D>();
 		float step = (float)myCollider.bounds.size.y / (float)rightCollisionRayCasts;
-		isCollidingRight = false;
+		innerState.isCollidingRight = false;
 
 		Vector2 rayDirection = Vector2.right;
 		float rightX = Mathf.Max(myCollider.bounds.max.x , myCollider.bounds.min.x);
@@ -536,7 +563,7 @@ public class CharacterState : MonoBehaviour
 			{
 				if(raycastHit.collider.isTrigger == false)
 				{
-					isCollidingRight = true;
+					innerState.isCollidingRight = true;
 				}
 				addCollider(raycastHit.collider, raycastHit.point);
 			}
@@ -551,7 +578,7 @@ public class CharacterState : MonoBehaviour
 			{
 				if(raycastHit.collider.isTrigger == false)
 				{
-					isCollidingRight = true;
+					innerState.isCollidingRight = true;
 				}
 				addCollider(raycastHit.collider, raycastHit.point);
 			}

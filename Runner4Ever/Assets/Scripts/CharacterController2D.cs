@@ -60,6 +60,7 @@ public class CharacterController2D : MonoBehaviour
 
 	// ---------------------------------------- Other Components
 	public CharacterState state; // State about if we hit ground/walls
+	public InnerState previousFrameState; // State about if we hit ground/walls
 	public Animator animator; // Animator for the character
 	private Transform characTransform; // characTransform
 	private Rigidbody2D rb; // rigidbody
@@ -78,6 +79,8 @@ public class CharacterController2D : MonoBehaviour
 	private float yVelocity;
 	public float xSpeedBySecond = 0.1f;
 	public float gravityFactor = 0.2f;
+	public float momenutmHangWalljumpTime = 0.3f;
+	public float timeHanging = 0.0f;
 	private float currentGravity;
 	private Vector2 outsideForce;
 
@@ -150,6 +153,11 @@ public class CharacterController2D : MonoBehaviour
 		colliderOffset = GetComponent<BoxCollider2D>().offset;
 	}
 
+	public bool firstWallJumpCollision()
+	{
+		return previousFrameState.isWallSticking == false && state.isWallSticking;
+	}
+
 	public void Update()
 	{
 		if(isDead())
@@ -164,6 +172,7 @@ public class CharacterController2D : MonoBehaviour
 		makeItRunRightOnGround();
 		//putCorrectGravityScale();
 
+		updateActionTimer(ref timeHanging);
 		updateActionTimer(ref jumpIn);
 		updateActionTimer(ref lastJumpFailedAttempt);
 		if(updateActionTimer(ref dashIn))
@@ -181,6 +190,16 @@ public class CharacterController2D : MonoBehaviour
 		}
 
 		// ------------------------------- Frame actions -------------------------------
+		if(firstWallJumpCollision()) // disable gravity for a short time
+		{
+			timeHanging = momenutmHangWalljumpTime;
+		}
+		if(isJumping()) // if jumping, do not nullify gravity
+		{
+			timeHanging = 0;
+		}
+
+
 		if(lastJumpFailedAttempt > 0.0f) // Time buffer, if we pressed jump not so long ago, and now we can jump, let's jump
 		{
 			if(canJump())
@@ -251,14 +270,15 @@ public class CharacterController2D : MonoBehaviour
 		animator.SetBool("isRunning", running);
 		animator.SetBool("isJumping", jumpIn > 0);
 		animator.SetBool("isSliding", isDashing());
-		
+
+		previousFrameState = state.deepCopy();		
 	}
 		
 	/* ------------------------------------------------------ Functions -------------------------------------------------------*/
 
 	private bool isGravityNullified()
 	{
-		return (nullifyGravityOnDash && isDashing()) || (grounded() && currentGravity > 0);
+		return (nullifyGravityOnDash && isDashing()) || (grounded() && currentGravity > 0) || (timeHanging > 0 && outsideForce.magnitude == 0);
 	}
 
 	public void pushWallStack(JumpDirectionOnWallOrEdge d)
@@ -680,6 +700,7 @@ public class CharacterController2D : MonoBehaviour
 			Flip();
 
 		state.clean();
+		previousFrameState = state.deepCopy();
 
 		jumpCollec.reset();
 		jumpCollec.reinit();
