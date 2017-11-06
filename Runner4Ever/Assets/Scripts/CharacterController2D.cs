@@ -105,6 +105,7 @@ public class CharacterController2D : MonoBehaviour
 	private float jumpIn; // variable to register when we last jumped
 	private JumpCollection jumpCollec; // where we store the jumps, and it will manage the order and the proper end of each jump
 	public bool firstJumpInAirEnabled = true;
+	private bool wasJumpingLastFrame = false;
 
 	// ---------------------------------------- Health Related
 	public int maxHealth = 10;
@@ -209,7 +210,8 @@ public class CharacterController2D : MonoBehaviour
 
 	public bool firstWallJumpCollision()
 	{
-		return previousFrameState.isWallSticking == false && wallSticking();
+
+		return (previousFrameState.isWallSticking == false && wallSticking()) || (previousFrameState.isWallSticking && wasJumpingLastFrame && wallSticking() && isJumping() == false);
 	}
 
 	public void Update()
@@ -261,6 +263,7 @@ public class CharacterController2D : MonoBehaviour
 
 		bool jumped = upSpeed > 0;
 		
+
 		if(jumped)
 		{
 			upSpeed = 0;
@@ -269,6 +272,7 @@ public class CharacterController2D : MonoBehaviour
 		
 		// ----------------------- Jump part ------------------------------
 		handleJump(jumped);
+		bool isJumpingNow = isJumping();
 		Vector3 offset;
 
 		currentVelocity = Mathf.Lerp(currentVelocity, areWeGoingRight() ? maxVelocity.Peek() : -maxVelocity.Peek(), Time.deltaTime * accelerationSmooth);
@@ -281,7 +285,7 @@ public class CharacterController2D : MonoBehaviour
 
 		grav *= Time.deltaTime;
 
-		if(isJumping())
+		if(isJumpingNow)
 		{
 			offset = jumpCollec.getNext();
 			offset.x = xMoveForward;
@@ -317,7 +321,10 @@ public class CharacterController2D : MonoBehaviour
 		animator.SetBool("isJumping", jumpIn > 0);
 		animator.SetBool("isSliding", isDashing());
 
-		previousFrameState = state.deepCopy();		
+		// Record of this frame for next frame
+
+		previousFrameState = state.deepCopy();	
+		wasJumpingLastFrame = isJumpingNow;	
 	}
 		
 	/* ------------------------------------------------------ Functions -------------------------------------------------------*/
@@ -612,7 +619,6 @@ public class CharacterController2D : MonoBehaviour
 	public bool isJumping()
 	{
 		return jumpCollec.isJumping();
-		//return movstate == MovementState.Transform;
 	}
 
 	public bool isDashing()
@@ -680,7 +686,7 @@ public class CharacterController2D : MonoBehaviour
 			return false;
 		}
 
-		if(firstJumpInAirEnabled == false && !grounded() && getCurrentJumpCount() == 0)
+		if(firstJumpInAirEnabled == false && (!grounded() && !wallSticking()) && getCurrentJumpCount() == 0)
 			return false;
 
 		if(getMaxJumps() <= getCurrentJumpCount())
