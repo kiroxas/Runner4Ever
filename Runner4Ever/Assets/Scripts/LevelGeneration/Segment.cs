@@ -33,6 +33,100 @@ public class Deepness
 	{
 		return top == 0 && bottom == 0 && right == 0 && left == 0;
 	}
+
+	static public List<Deepness> calculateDeepness(List<int> indexes, List<char> layout, int xSize, int ySize)
+	{
+		List<Deepness> deepness = Enumerable.Repeat(new Deepness(0,0,0,0), layout.Count).ToList(); 
+		// first pass, from left bottom to top right
+		for(int y = 0; y < ySize; ++y)
+		{
+			for(int x = 0; x < xSize; ++x)
+			{
+				int index = Segment.getStaticIndex(x,y, xSize, ySize);
+				char value = layout[index];
+				int poolIndex = PoolIndexes.fileToPoolMapping[value];
+
+				int left = 0;
+				int bottom = 0;
+
+				// left component
+				if( indexes.Contains(poolIndex) == false )
+				{
+					left = 0;
+				}
+				else if(x == 0) // on earth index, but first of the row
+				{
+					left = 1; // for now deepness inside the segment
+				}
+				else
+				{
+					left = deepness[Segment.getStaticIndex(x-1, y, xSize, ySize)].left + 1;
+				}
+
+				// bottom component
+				if(indexes.Contains(poolIndex) == false )
+				{
+					bottom = 0;
+				}
+				else if(y == 0) // on earth index, but first of the row
+				{
+					bottom = 1; // for now deepness inside the segment
+				}
+				else
+				{
+					bottom = deepness[Segment.getStaticIndex(x, y - 1, xSize, ySize)].bottom + 1;
+				}
+
+				deepness[index] = new Deepness(0,bottom,0,left); 
+			}
+		}
+
+		// second pass, from top right to bottom left
+		for(int y = ySize - 1; y >= 0; --y)
+		{
+			for(int x = xSize - 1; x >= 0; --x)
+			{
+				int index = Segment.getStaticIndex(x,y, xSize, ySize);
+				char value = layout[index];
+				int poolIndex = PoolIndexes.fileToPoolMapping[value];
+
+				int right = 0;
+				int top = 0;
+
+				// right component
+				if(indexes.Contains(poolIndex) == false )
+				{
+					right = 0;
+				}
+				else if(x == xSize - 1) // on earth index, but first of the row
+				{
+					right = 1; // for now deepness inside the segment
+				}
+				else
+				{
+					right = deepness[Segment.getStaticIndex(x + 1, y, xSize, ySize)].right + 1;
+				}
+
+				// top component
+				if(indexes.Contains(poolIndex) == false)
+				{
+					top = 0;
+				}
+				else if(y == ySize - 1) // on earth index, but first of the row
+				{
+					top = 1; // for now deepness inside the segment
+				}
+				else
+				{
+					top = deepness[Segment.getStaticIndex(x, y + 1, xSize, ySize)].top + 1;
+				}
+
+				deepness[index] = new Deepness(top,deepness[index].bottom,right,deepness[index].left); 
+			}
+		}
+
+		return deepness;
+	}
 }
 
 public class LoadedTile
@@ -79,95 +173,9 @@ public class Segment
 		return deepness[index].top == 0 && indexBelow >= 0 && deepness[indexBelow].top == 1;
 	}
 
-	private void calculateDeepness()
+	private void calculateEarthDeepness()
 	{
-		// first pass, from left bottom to top right
-		for(int y = 0; y < info.ySize; ++y)
-		{
-			for(int x = 0; x < info.xSize; ++x)
-			{
-				int index = getIndex(x,y);
-				char value = layout[index];
-				int poolIndex = PoolIndexes.fileToPoolMapping[value];
-
-				int left = 0;
-				int bottom = 0;
-
-				// left component
-				if(poolIndex != PoolIndexes.earthIndex)
-				{
-					left = 0;
-				}
-				else if(x == 0) // on earth index, but first of the row
-				{
-					left = 1; // for now deepness inside the segment
-				}
-				else
-				{
-					left = deepness[getIndex(x-1, y)].left + 1;
-				}
-
-				// bottom component
-				if(poolIndex != PoolIndexes.earthIndex)
-				{
-					bottom = 0;
-				}
-				else if(y == 0) // on earth index, but first of the row
-				{
-					bottom = 1; // for now deepness inside the segment
-				}
-				else
-				{
-					bottom = deepness[getIndex(x, y - 1)].bottom + 1;
-				}
-
-				deepness[index] = new Deepness(0,bottom,0,left); 
-			}
-		}
-
-		// second pass, from top right to bottom left
-		for(int y = info.ySize - 1; y >= 0; --y)
-		{
-			for(int x = info.xSize - 1; x >= 0; --x)
-			{
-				int index = getIndex(x,y);
-				char value = layout[index];
-				int poolIndex = PoolIndexes.fileToPoolMapping[value];
-
-				int right = 0;
-				int top = 0;
-
-				// right component
-				if(poolIndex != PoolIndexes.earthIndex)
-				{
-					right = 0;
-				}
-				else if(x == info.xSize - 1) // on earth index, but first of the row
-				{
-					right = 1; // for now deepness inside the segment
-				}
-				else
-				{
-					right = deepness[getIndex(x + 1, y)].right + 1;
-				}
-
-				// top component
-				if(poolIndex != PoolIndexes.earthIndex)
-				{
-					top = 0;
-				}
-				else if(y == info.ySize - 1) // on earth index, but first of the row
-				{
-					top = 1; // for now deepness inside the segment
-				}
-				else
-				{
-					top = deepness[getIndex(x, y + 1)].top + 1;
-				}
-
-				deepness[index] = new Deepness(top,deepness[index].bottom,right,deepness[index].left); 
-			}
-		}
+		deepness = Deepness.calculateDeepness(new List<int>{PoolIndexes.earthIndex}, layout, info.xSize, info.ySize);
 	}
 
 	private void fillGroundLevel()
@@ -224,7 +232,6 @@ public class Segment
 		loaded = new Dictionary<int, List<GameObject>>();
 		stateLoaded = new  Dictionary<int, List<GameObject>>();
 		bgLoaded = new Dictionary<int, List<GameObject>>();
-		deepness = Enumerable.Repeat(new Deepness(0,0,0,0), _layout.Count).ToList(); 
 		tilesLoaded = new Dictionary<Vector2, LoadedTile>();
 
 		init(PoolIndexes.statelessIndexes, loaded);
@@ -238,7 +245,7 @@ public class Segment
 		topLeft = new Vector3(info.xBegin, info.yBegin + info.ySize * info.tileHeight, 0.0f );
 		topRight = new Vector3(info.xBegin + info.xSize * info.tileWidth, info.yBegin + info.ySize * info.tileHeight, 0.0f);
 
-		calculateDeepness();
+		calculateEarthDeepness();
 		fillGroundLevel();
 
 		if(layout.Count != info.xSize * info.ySize)
@@ -334,14 +341,24 @@ public class Segment
 		}
 	}
 
-	private int getIndex(Vector2 vec)
+	static public int getStaticIndex(Vector2 vec, int xSize, int ySize)
 	{
-		return getIndex((int)vec.x, (int)vec.y);
+		return getStaticIndex((int)vec.x, (int)vec.y, xSize, ySize);
 	}
 
-	private int getIndex(int x, int y)
+	static public int getStaticIndex(int x, int y, int xSize, int ySize)
 	{
-		return (info.ySize - y - 1) * info.xSize + x;
+		return (ySize - y - 1) * xSize + x;
+	}
+
+	public int getIndex(Vector2 vec)
+	{
+		return getStaticIndex((int)vec.x, (int)vec.y, info.xSize, info.ySize);
+	}
+
+	public int getIndex(int x, int y)
+	{
+		return getStaticIndex(x, y, info.xSize, info.ySize);
 	}
 
 	private void loadBgProps(BackgroundPropsHandler bgPool)
