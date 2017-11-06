@@ -65,6 +65,7 @@
      <None Include="Assets\LeanTouch\Examples\Shaders\Skybox.shader" />
      <None Include="Assets\LeanTouch\Examples\Shaders\Smooth.shader" />
      <None Include="Assets\Resources\LevelGeneration\level_1_Cha.txt" />
+     <None Include="Assets\Resources\LevelGeneration\walljump.txt" />
      <None Include="Assets\Resources\LevelGeneration\levelList.txt" />
      <None Include="Assets\Resources\LevelGeneration\three.txt" />
      <None Include="Assets\Resources\Localization\jp.txt" />

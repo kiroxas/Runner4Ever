@@ -244,15 +244,12 @@ public class CharacterController2D : MonoBehaviour
 		}
 
 		// ------------------------------- Frame actions -------------------------------
+		
 		if(firstWallJumpCollision()) // disable gravity for a short time
 		{
 			timeHanging = momenutmHangWalljumpTime;
 		}
-		if(isJumping()) // if jumping, do not nullify gravity
-		{
-			timeHanging = 0;
-		}
-
+		
 
 		if(lastJumpFailedAttempt > 0.0f) // Time buffer, if we pressed jump not so long ago, and now we can jump, let's jump
 		{
@@ -534,6 +531,7 @@ public class CharacterController2D : MonoBehaviour
 			upSpeed = 10.0f;
 			jumpIn = timeBetweenJumps;
 			lastJumpFailedAttempt = 0.0f;
+			timeHanging = 0.0f;
 		}
 		else
 		{
