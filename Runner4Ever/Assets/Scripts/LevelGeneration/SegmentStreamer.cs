@@ -109,7 +109,6 @@ public class SegmentStreamer : MonoBehaviour
 	/* Stateless prefabs */
 	public GameObject hurtTiles;
 	public GameObject bumper;
-	public GameObject standOn;
 	public GameObject jumper;
 
 	/* State prefabs */
@@ -150,6 +149,8 @@ public class SegmentStreamer : MonoBehaviour
 	public GameObject[] leftInvertTiles;
 	public GameObject[] topPillarInvertTiles;
 	public GameObject[] innerPillarInvertTiles;
+
+	public GameObject[] standOnTiles;
 
 	/* Poolers */
 	PoolCollection statePool;
@@ -225,6 +226,7 @@ public class SegmentStreamer : MonoBehaviour
 
 		deep[PoolIndexes.earthIndex] = Deepness.calculateDeepness(new List<int>{PoolIndexes.earthIndex, PoolIndexes.inverseEarthIndex, PoolIndexes.stopTileIndex, PoolIndexes.accelerateTileIndex, PoolIndexes.decelerateTileIndex}, level, xTotalLevel, yTotalLevel);
 		deep[PoolIndexes.waterIndex] = Deepness.calculateDeepness(new List<int>{PoolIndexes.waterIndex}, level, xTotalLevel, yTotalLevel);
+		deep[PoolIndexes.standOnIndex] = Deepness.calculateDeepness(new List<int>{PoolIndexes.standOnIndex}, level, xTotalLevel, yTotalLevel);
 		deep[PoolIndexes.inverseEarthIndex] = Deepness.calculateDeepness(new List<int>{PoolIndexes.earthIndex, PoolIndexes.inverseEarthIndex}, level, xTotalLevel, yTotalLevel);
 
 		return deep;
@@ -466,7 +468,6 @@ public class SegmentStreamer : MonoBehaviour
 		statePool.addPool(movingTile, PoolIndexes.movingIndex, PoolIndexes.smallPoolingStrategy);
 		statePool.addPool(killMovingTile, PoolIndexes.killMovingIndex, PoolIndexes.smallPoolingStrategy);
 		statePool.addPool(bumper, PoolIndexes.bumperIndex, PoolIndexes.smallPoolingStrategy);
-		statePool.addPool(standOn, PoolIndexes.standOnIndex, PoolIndexes.smallPoolingStrategy);
 		statePool.addPool(jumper, PoolIndexes.jumperIndex, PoolIndexes.smallPoolingStrategy);
 		statePool.addPool(finalCheckpoint, PoolIndexes.finalCheckpointIndex, PoolIndexes.smallPoolingStrategy);
 		statePool.addPool(stopTile, PoolIndexes.stopTileIndex, PoolIndexes.smallPoolingStrategy);
@@ -532,6 +533,27 @@ public class SegmentStreamer : MonoBehaviour
 		tilesHandler.addTileType(PoolIndexes.inverseEarthIndex, TilesHandler.TilePlacement.PillarUp, topPillarInvertTiles);
 		tilesHandler.addTileType(PoolIndexes.inverseEarthIndex, TilesHandler.TilePlacement.PillarInner, innerPillarInvertTiles);
 		tilesHandler.addTileType(PoolIndexes.inverseEarthIndex, TilesHandler.TilePlacement.PillarBottom, innerPillarInvertTiles);
+
+		// StandOn
+		tilesHandler.addTileType(PoolIndexes.standOnIndex, TilesHandler.TilePlacement.OnTop, standOnTiles);
+		tilesHandler.addTileType(PoolIndexes.standOnIndex, TilesHandler.TilePlacement.BelowTop, standOnTiles);
+		tilesHandler.addTileType(PoolIndexes.standOnIndex, TilesHandler.TilePlacement.Right, standOnTiles);
+		tilesHandler.addTileType(PoolIndexes.standOnIndex, TilesHandler.TilePlacement.Left, standOnTiles);
+		tilesHandler.addTileType(PoolIndexes.standOnIndex, TilesHandler.TilePlacement.InnerRight, standOnTiles);
+		tilesHandler.addTileType(PoolIndexes.standOnIndex, TilesHandler.TilePlacement.InnerLeft, standOnTiles);
+		tilesHandler.addTileType(PoolIndexes.standOnIndex, TilesHandler.TilePlacement.Inner, standOnTiles);
+		tilesHandler.addTileType(PoolIndexes.standOnIndex, TilesHandler.TilePlacement.Bottom, standOnTiles);
+		tilesHandler.addTileType(PoolIndexes.standOnIndex, TilesHandler.TilePlacement.InnerBottom, standOnTiles);
+		tilesHandler.addTileType(PoolIndexes.standOnIndex, TilesHandler.TilePlacement.Floating, standOnTiles);
+		tilesHandler.addTileType(PoolIndexes.standOnIndex, TilesHandler.TilePlacement.BottomLeft, standOnTiles);
+		tilesHandler.addTileType(PoolIndexes.standOnIndex, TilesHandler.TilePlacement.BottomRight, standOnTiles);
+		tilesHandler.addTileType(PoolIndexes.standOnIndex, TilesHandler.TilePlacement.TopLeft, standOnTiles);
+		tilesHandler.addTileType(PoolIndexes.standOnIndex, TilesHandler.TilePlacement.TopRight, standOnTiles);
+		tilesHandler.addTileType(PoolIndexes.standOnIndex, TilesHandler.TilePlacement.PillarUp, standOnTiles);
+		tilesHandler.addTileType(PoolIndexes.standOnIndex, TilesHandler.TilePlacement.PillarInner, standOnTiles);
+		tilesHandler.addTileType(PoolIndexes.standOnIndex, TilesHandler.TilePlacement.PillarBottom, standOnTiles);
+
+		
 	}
 
 	public void load(GameConstants.LoadLevelArgument arg)
