@@ -131,13 +131,15 @@ public class Deepness
 
 public class LoadedTile
 	{
+		public int tileIndex;
 		public int poolIndex;
 		public GameObject obj;
 
-		public LoadedTile(int pi, GameObject o)
+		public LoadedTile(int ind, int pi, GameObject o)
 		{
-			poolIndex = pi;
+			tileIndex = pi;
 			obj = o;
+			poolIndex = ind;
 		}
 	}
 
@@ -445,7 +447,7 @@ public class Segment
 				{
 					int tileIndex = tileHandler.getRandomTileIndex(poolIndex, deepness[poolIndex][index]);
 					GameObject g = tileHandler.getFromPool(poolIndex, deepness[poolIndex][index], tileIndex, position);
-					tilesLoaded[new Vector2(x ,y)] = new LoadedTile(tileIndex, g);
+					tilesLoaded[new Vector2(x ,y)] = new LoadedTile(poolIndex, tileIndex, g);
 				}
 			}
 		}
@@ -489,7 +491,8 @@ public class Segment
 		foreach(var tileLoaded in tilesLoaded)
 		{
 			int index = getIndex(tileLoaded.Key);
-			tileHandler.free(tileLoaded.Value.poolIndex, tileLoaded.Value.obj, deepness[tileLoaded.Value.poolIndex][index], tileLoaded.Value.poolIndex);
+			
+			tileHandler.free(tileLoaded.Value.poolIndex, tileLoaded.Value.obj, deepness[tileLoaded.Value.poolIndex][index], tileLoaded.Value.tileIndex);
 		}
 
 		foreach(var entry in bgLoaded)
