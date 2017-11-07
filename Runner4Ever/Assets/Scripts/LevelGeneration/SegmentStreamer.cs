@@ -107,8 +107,6 @@ public class SegmentStreamer : MonoBehaviour
 	public GameObject finalCheckpoint;
 
 	/* Stateless prefabs */
-	public GameObject inverseLandTiles;
-	public GameObject waterTiles;
 	public GameObject hurtTiles;
 	public GameObject bumper;
 	public GameObject standOn;
@@ -145,6 +143,13 @@ public class SegmentStreamer : MonoBehaviour
 
 	public GameObject[] topWaterTiles;
 	public GameObject[] innerWaterTiles;
+
+	public GameObject[] topRightInvertTiles;
+	public GameObject[] topLeftInvertTiles;
+	public GameObject[] rightInvertTiles;
+	public GameObject[] leftInvertTiles;
+	public GameObject[] topPillarInvertTiles;
+	public GameObject[] innerPillarInvertTiles;
 
 	/* Poolers */
 	PoolCollection statePool;
@@ -218,8 +223,9 @@ public class SegmentStreamer : MonoBehaviour
 	{
 		Dictionary<int, List<Deepness>> deep = new Dictionary<int, List<Deepness>>();
 
-		deep[PoolIndexes.earthIndex] = Deepness.calculateDeepness(new List<int>{PoolIndexes.earthIndex}, level, xTotalLevel, yTotalLevel);
+		deep[PoolIndexes.earthIndex] = Deepness.calculateDeepness(new List<int>{PoolIndexes.earthIndex, PoolIndexes.inverseEarthIndex, PoolIndexes.stopTileIndex, PoolIndexes.accelerateTileIndex, PoolIndexes.decelerateTileIndex}, level, xTotalLevel, yTotalLevel);
 		deep[PoolIndexes.waterIndex] = Deepness.calculateDeepness(new List<int>{PoolIndexes.waterIndex}, level, xTotalLevel, yTotalLevel);
+		deep[PoolIndexes.inverseEarthIndex] = Deepness.calculateDeepness(new List<int>{PoolIndexes.earthIndex, PoolIndexes.inverseEarthIndex}, level, xTotalLevel, yTotalLevel);
 
 		return deep;
 	}
@@ -450,9 +456,6 @@ public class SegmentStreamer : MonoBehaviour
 		segments = new List<Segment>();
 		statePool = new PoolCollection();
 
-		//statePool.addPool(landTiles, PoolIndexes.earthIndex, PoolIndexes.bigPoolingStrategy);
-		statePool.addPool(inverseLandTiles, PoolIndexes.inverseEarthIndex, PoolIndexes.mediumPoolingStrategy);
-		statePool.addPool(waterTiles, PoolIndexes.waterIndex , PoolIndexes.mediumPoolingStrategy);
 		statePool.addPool(hurtTiles, PoolIndexes.hurtIndex, PoolIndexes.mediumPoolingStrategy);
 		statePool.addPool(objectTiles, PoolIndexes.objectIndex, PoolIndexes.mediumPoolingStrategy);
 		statePool.addPool(enemies, PoolIndexes.enemiesIndex, PoolIndexes.mediumPoolingStrategy);
@@ -488,6 +491,9 @@ public class SegmentStreamer : MonoBehaviour
 		tilesHandler.addTileType(PoolIndexes.earthIndex, TilesHandler.TilePlacement.BottomRight, bottomRightTiles);
 		tilesHandler.addTileType(PoolIndexes.earthIndex, TilesHandler.TilePlacement.TopLeft, topLeftTiles);
 		tilesHandler.addTileType(PoolIndexes.earthIndex, TilesHandler.TilePlacement.TopRight, topRightTiles);
+		tilesHandler.addTileType(PoolIndexes.earthIndex, TilesHandler.TilePlacement.PillarUp, topLandTiles);
+		tilesHandler.addTileType(PoolIndexes.earthIndex, TilesHandler.TilePlacement.PillarInner, innerLandTiles);
+		tilesHandler.addTileType(PoolIndexes.earthIndex, TilesHandler.TilePlacement.PillarBottom, bottomLandTiles);
 
 		// Water
 		tilesHandler.addTileType(PoolIndexes.waterIndex, TilesHandler.TilePlacement.OnTop, topWaterTiles);
@@ -504,6 +510,28 @@ public class SegmentStreamer : MonoBehaviour
 		tilesHandler.addTileType(PoolIndexes.waterIndex, TilesHandler.TilePlacement.BottomRight, innerWaterTiles);
 		tilesHandler.addTileType(PoolIndexes.waterIndex, TilesHandler.TilePlacement.TopLeft, topWaterTiles);
 		tilesHandler.addTileType(PoolIndexes.waterIndex, TilesHandler.TilePlacement.TopRight, topWaterTiles);
+		tilesHandler.addTileType(PoolIndexes.waterIndex, TilesHandler.TilePlacement.PillarUp, topWaterTiles);
+		tilesHandler.addTileType(PoolIndexes.waterIndex, TilesHandler.TilePlacement.PillarInner, innerWaterTiles);
+		tilesHandler.addTileType(PoolIndexes.waterIndex, TilesHandler.TilePlacement.PillarBottom, innerWaterTiles);
+
+		// Invert
+		tilesHandler.addTileType(PoolIndexes.inverseEarthIndex, TilesHandler.TilePlacement.OnTop, topRightInvertTiles);
+		tilesHandler.addTileType(PoolIndexes.inverseEarthIndex, TilesHandler.TilePlacement.BelowTop, rightInvertTiles);
+		tilesHandler.addTileType(PoolIndexes.inverseEarthIndex, TilesHandler.TilePlacement.Right, rightInvertTiles);
+		tilesHandler.addTileType(PoolIndexes.inverseEarthIndex, TilesHandler.TilePlacement.Left, leftInvertTiles);
+		tilesHandler.addTileType(PoolIndexes.inverseEarthIndex, TilesHandler.TilePlacement.InnerRight, topRightInvertTiles);
+		tilesHandler.addTileType(PoolIndexes.inverseEarthIndex, TilesHandler.TilePlacement.InnerLeft, topRightInvertTiles);
+		tilesHandler.addTileType(PoolIndexes.inverseEarthIndex, TilesHandler.TilePlacement.Inner, topRightInvertTiles);
+		tilesHandler.addTileType(PoolIndexes.inverseEarthIndex, TilesHandler.TilePlacement.Bottom, rightInvertTiles);
+		tilesHandler.addTileType(PoolIndexes.inverseEarthIndex, TilesHandler.TilePlacement.InnerBottom, topRightInvertTiles);
+		tilesHandler.addTileType(PoolIndexes.inverseEarthIndex, TilesHandler.TilePlacement.Floating, topRightInvertTiles);
+		tilesHandler.addTileType(PoolIndexes.inverseEarthIndex, TilesHandler.TilePlacement.BottomLeft, leftInvertTiles);
+		tilesHandler.addTileType(PoolIndexes.inverseEarthIndex, TilesHandler.TilePlacement.BottomRight, rightInvertTiles);
+		tilesHandler.addTileType(PoolIndexes.inverseEarthIndex, TilesHandler.TilePlacement.TopLeft, topLeftInvertTiles);
+		tilesHandler.addTileType(PoolIndexes.inverseEarthIndex, TilesHandler.TilePlacement.TopRight, topRightInvertTiles);
+		tilesHandler.addTileType(PoolIndexes.inverseEarthIndex, TilesHandler.TilePlacement.PillarUp, topPillarInvertTiles);
+		tilesHandler.addTileType(PoolIndexes.inverseEarthIndex, TilesHandler.TilePlacement.PillarInner, innerPillarInvertTiles);
+		tilesHandler.addTileType(PoolIndexes.inverseEarthIndex, TilesHandler.TilePlacement.PillarBottom, innerPillarInvertTiles);
 	}
 
 	public void load(GameConstants.LoadLevelArgument arg)

@@ -27,7 +27,6 @@ public class TilesSuperHandler
 		if(myPools.ContainsKey(tiletype) == false)
 		{
 			myPools[tiletype] = new TilesHandler();
-			Debug.Log("Create TileHandler for " + tiletype);
 		}
 
 		myPools[tiletype].addTileType(placement, tiles);
@@ -68,6 +67,9 @@ public class TilesHandler
 		BottomRight,
 		TopRight,
 		TopLeft,
+		PillarUp,
+		PillarInner,
+		PillarBottom,
 		None
 	}
 
@@ -76,6 +78,18 @@ public class TilesHandler
 		if(tileDeepness.empty())
 		{
 			return TilePlacement.None;
+		}
+		else if(tileDeepness.top == 1 && tileDeepness.right == 1 && tileDeepness.left == 1)
+		{
+			return TilePlacement.PillarUp;
+		}
+		else if(tileDeepness.bottom == 1 && tileDeepness.right == 1 && tileDeepness.left == 1)
+		{
+			return TilePlacement.PillarBottom;
+		}
+		else if(tileDeepness.right == 1 && tileDeepness.left == 1)
+		{
+			return TilePlacement.PillarInner;
 		}
 		else if(tileDeepness.top == 1 && tileDeepness.bottom == 1)
 		{
@@ -88,6 +102,14 @@ public class TilesHandler
 		else if(tileDeepness.left == 1 && tileDeepness.top == 1)
 		{
 			return TilePlacement.TopLeft;
+		}
+		else if(tileDeepness.right == 1)
+		{
+			return TilePlacement.Right;
+		}
+		else if(tileDeepness.left == 1)
+		{
+			return TilePlacement.Left;
 		}
 		else if(tileDeepness.top == 1) // on top
 		{
@@ -104,14 +126,6 @@ public class TilesHandler
 		else if(tileDeepness.left == 1 && tileDeepness.bottom == 1)
 		{
 			return TilePlacement.BottomLeft;
-		}
-		else if(tileDeepness.right == 1)
-		{
-			return TilePlacement.Right;
-		}
-		else if(tileDeepness.left == 1)
-		{
-			return TilePlacement.Left;
 		}
 		else if(tileDeepness.bottom == 1)
 		{

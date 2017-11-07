@@ -78,6 +78,8 @@
      <None Include="Assets\Resources\LevelGeneration\gold.txt" />
      <None Include="Assets\dummy.txt" />
      <None Include="Assets\Resources\LevelGeneration\level_test_01.txt" />
+     <None Include="Assets\Resources\LevelGeneration\tutorialStage_02_Wael.txt" />
+     <None Include="Assets\Resources\LevelGeneration\tutorialStage_01_Wael.txt" />
  <Reference Include="UnityEditor.Advertisements">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Advertisements/Editor/UnityEditor.Advertisements.dll</HintPath>
  </Reference>

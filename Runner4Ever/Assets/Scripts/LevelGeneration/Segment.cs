@@ -445,6 +445,10 @@ public class Segment
 				}
 				else // tile
 				{
+					if(deepness.ContainsKey(poolIndex) == false)
+					{
+						Debug.LogError("You must calculate the deepness of key : " + poolIndex + " in segmentStreamer");
+					}
 					int tileIndex = tileHandler.getRandomTileIndex(poolIndex, deepness[poolIndex][index]);
 					GameObject g = tileHandler.getFromPool(poolIndex, deepness[poolIndex][index], tileIndex, position);
 					tilesLoaded[new Vector2(x ,y)] = new LoadedTile(poolIndex, tileIndex, g);
