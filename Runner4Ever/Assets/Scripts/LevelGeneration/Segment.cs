@@ -152,7 +152,7 @@ public class Segment
 	private bool firstLoad = true; // first time loading ?
 
 	private List<char> layout; // the layout in char format
-	private List<Deepness> deepness; // deepness of earth tiles
+	private Dictionary<int, List<Deepness>> deepness; // deepness of earth tiles
 	public SegmentInfo info;
 
 	private string name; // name, for debug purpose
@@ -170,12 +170,7 @@ public class Segment
 		int index = getIndex(x,y);
 		int indexBelow = getIndex(x,y - 1);
 
-		return deepness[index].top == 0 && indexBelow >= 0 && deepness[indexBelow].top == 1;
-	}
-
-	private void calculateEarthDeepness()
-	{
-		deepness = Deepness.calculateDeepness(new List<int>{PoolIndexes.earthIndex}, layout, info.xSize, info.ySize);
+		return deepness[PoolIndexes.earthIndex][index].top == 0 && indexBelow >= 0 && deepness[PoolIndexes.earthIndex][indexBelow].top == 1;
 	}
 
 	private void fillGroundLevel()
@@ -227,7 +222,7 @@ public class Segment
 		}
 	}
 
-	public Segment(SegmentInfo inf, List<char> _layout)
+	public Segment(SegmentInfo inf, List<char> _layout, Dictionary<int, List<Deepness>> deep)
 	{
 		loaded = new Dictionary<int, List<GameObject>>();
 		stateLoaded = new  Dictionary<int, List<GameObject>>();
@@ -239,13 +234,13 @@ public class Segment
 
 		layout = new List<char>(_layout);
 		info = inf;
+		deepness = new Dictionary<int, List<Deepness>>(deep);
 
 		bottomLeft = new Vector3(info.xBegin, info.yBegin, 0.0f);
 		bottomRight = new Vector3(info.xBegin + info.xSize * info.tileWidth, info.yBegin, 0.0f);
 		topLeft = new Vector3(info.xBegin, info.yBegin + info.ySize * info.tileHeight, 0.0f );
 		topRight = new Vector3(info.xBegin + info.xSize * info.tileWidth, info.yBegin + info.ySize * info.tileHeight, 0.0f);
-
-		calculateEarthDeepness();
+		
 		fillGroundLevel();
 
 		if(layout.Count != info.xSize * info.ySize)
@@ -348,7 +343,7 @@ public class Segment
 
 	static public int getStaticIndex(int x, int y, int xSize, int ySize)
 	{
-		return (ySize - y - 1) * xSize + x;
+		return  y * xSize + x;
 	}
 
 	public int getIndex(Vector2 vec)
@@ -448,8 +443,8 @@ public class Segment
 				}
 				else // tile
 				{
-					int tileIndex = tileHandler.getRandomTileIndex(deepness[index]);
-					GameObject g = tileHandler.getFromPool(deepness[index], tileIndex, position);
+					int tileIndex = tileHandler.getRandomTileIndex(deepness[poolIndex][index]);
+					GameObject g = tileHandler.getFromPool(deepness[poolIndex][index], tileIndex, position);
 					tilesLoaded[new Vector2(x ,y)] = new LoadedTile(tileIndex, g);
 				}
 			}
@@ -494,7 +489,7 @@ public class Segment
 		foreach(var tileLoaded in tilesLoaded)
 		{
 			int index = getIndex(tileLoaded.Key);
-			tileHandler.free(tileLoaded.Value.obj, deepness[index], tileLoaded.Value.poolIndex);
+			tileHandler.free(tileLoaded.Value.obj, deepness[tileLoaded.Value.poolIndex][index], tileLoaded.Value.poolIndex);
 		}
 
 		foreach(var entry in bgLoaded)

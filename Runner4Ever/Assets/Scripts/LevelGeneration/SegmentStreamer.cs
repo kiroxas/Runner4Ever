@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using Random = UnityEngine.Random;
+using System.Linq;
 
 // How will we load the segments
 public enum SegmentStrategy
@@ -45,6 +46,25 @@ public class SegmentInfo
 */
 public class SegmentStreamer : MonoBehaviour 
 {
+
+	public static List<T> Rotate<T>(ref List<T> list, int offset)
+	{
+    	return list.Skip(offset).Concat(list.Take(offset)).ToList();
+	}
+
+	public static List<T> Symetry<T>(List<T> list, int xSize, int ySize)
+	{
+    	List<T> symList = new List<T>();
+
+    	for(int y = ySize - 1; y >= 0; --y)
+    	{
+    		int begR = y * xSize;
+    		symList.AddRange(list.GetRange( begR , xSize));
+    	}
+
+    	return symList;
+	}
+
 	public static string layoutAsString(List<char> layout, int xSize, int ySize)
 	{
 		StringBuilder sb = new StringBuilder();
@@ -149,64 +169,56 @@ public class SegmentStreamer : MonoBehaviour
 	{
 		List<char> subList = new List<char>();
 
-		if(verbose)
+		int xOrigin = xSegment * xTilePerSegment;
+		int yOrigin = ySegment * yTilePerSegment;
+
+		for(int y = 0; y <ySize; ++y)
 		{
-			Debug.Log("ySegments : " + ySegments + " ySegment " + ySegment );
-			Debug.Log("xSegments : " + xSegments + " xSegment " + xSegment );
-		}
-
-		int originX = xSegment * xTilePerSegment;
-		
-		int startY = (ySegments -1 - ySegment); // inverse the y
-
-		int fullYCells = startY - 1 > 0 ? startY - 1 : 0;
-		int smallestYCell = startY > 0 ? 1 : 0;
-
-		if(verbose)
-		{
-			Debug.Log("fullYCells : " + fullYCells + " smallestYCell  : " + smallestYCell + " smallestSize : " + getSmallestYCell());
-		}
-
-		int originY = (smallestYCell * getSmallestYCell()) + (fullYCells * yTilePerSegment) + ySize - 1;
-		originY = Mathf.Clamp(originY, 1, yTotalLevel - 1);
-
-		int index = (originY * xTotalLevel) + originX;
-
-		if(verbose)
-		{
-			Debug.Log("startY " + startY + " originX : " + originX + " originY " + originY + " index " + index + " total : " + wholeLevel.Count);
-			Debug.Log("xSize : " + xSize + " ySize " + ySize );
-		}
-
-		List<List<char>> lists = new List<List<char>>();
-		int subListIndex = 0;
-
-		for(int y = 0; y < ySize; ++y)
-		{
-			lists.Add(new List<char>());
-
 			for(int x = 0; x < xSize; ++x)
 			{
-				if(index >= wholeLevel.Count)
-				{
-					Debug.LogError("Index : " + index + " origin : " + originX + "," + originY);
-				}
-				lists[subListIndex].Add(wholeLevel[index]);
-				++index;
+				int index = Segment.getStaticIndex(xOrigin + x, yOrigin + y, xTotalLevel, yTotalLevel);
+				subList.Add(wholeLevel[index]);
 			}
-			index--; // remove the ++ of the end loop above
-			index -= (xSize - 1); // Should realign on the first of this line
-			index -= xTotalLevel; 
-			subListIndex++;
-		}
-		//subList.Reverse();
-		lists.Reverse();
-		foreach(List<char> lc in lists)
-		{
-			subList.AddRange(lc);
 		}
 
 		return subList;
+	}
+
+	private Dictionary<int, List<Deepness>> extractDeepness(Dictionary<int, List<Deepness>> deepness, int xSegment, int ySegment, int xSize, int ySize)
+	{
+		Dictionary<int, List<Deepness>> deep = new Dictionary<int, List<Deepness>>();
+
+		foreach(int key in deepness.Keys)
+		{
+			deep[key] = new List<Deepness>();
+		}
+
+		int xOrigin = xSegment * xTilePerSegment;
+		int yOrigin = ySegment * yTilePerSegment;
+
+		for(int y = 0; y < ySize; ++y)
+		{
+			for(int x = 0; x < xSize; ++x)
+			{
+				int index = Segment.getStaticIndex(xOrigin + x, yOrigin + y, xTotalLevel, yTotalLevel);
+				foreach(int key in deepness.Keys)
+				{
+					deep[key].Add(deepness[key][index]);
+				}
+			}
+		}
+
+		return deep;
+	}
+
+	private Dictionary<int, List<Deepness>> calculateDeepnesses(List<char> level)
+	{
+		Dictionary<int, List<Deepness>> deep = new Dictionary<int, List<Deepness>>();
+
+		deep[PoolIndexes.earthIndex] = Deepness.calculateDeepness(new List<int>{PoolIndexes.earthIndex}, level, xTotalLevel, yTotalLevel);
+		deep[PoolIndexes.waterIndex] = Deepness.calculateDeepness(new List<int>{PoolIndexes.waterIndex}, level, xTotalLevel, yTotalLevel);
+
+		return deep;
 	}
 
 	public void createSegments()
@@ -218,6 +230,11 @@ public class SegmentStreamer : MonoBehaviour
 
 		xSegments = (int)Mathf.Ceil((float)xTotalLevel / (float)xTilePerSegment);
 		ySegments = (int)Mathf.Ceil((float)yTotalLevel / (float)yTilePerSegment);
+
+		level = Symetry(level, xTotalLevel, yTotalLevel);
+	
+		var deep = calculateDeepnesses(level);
+
 
 		int segmentNumber = 1;
 
@@ -237,8 +254,9 @@ public class SegmentStreamer : MonoBehaviour
 				bool verbose = false;
 
 				SegmentInfo info = new SegmentInfo(xBegin, yBegin, tileWidth, tileHeight, xSize, ySize, x, y);
+				var segmentDeepness = extractDeepness(deep, x, y, xSize, ySize);
 
-				segments.Add(new Segment(info, extractSegmentList(level, x, y, verbose, xSize, ySize)));
+				segments.Add(new Segment(info, extractSegmentList(level, x, y, verbose, xSize, ySize), segmentDeepness));
 				segments[segments.Count -1].setName(segmentNumber.ToString());
 
 				if(verbose)
