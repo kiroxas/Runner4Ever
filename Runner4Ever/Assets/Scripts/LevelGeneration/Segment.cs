@@ -194,7 +194,7 @@ public class Segment
 		return enabled;
 	}
 
-	public void enable(PoolCollection statePool, BackgroundPropsHandler bgPool, TilesHandler tiles)
+	public void enable(PoolCollection statePool, BackgroundPropsHandler bgPool, TilesSuperHandler tiles)
 	{
 		if(!isEnabled())
 		{
@@ -205,7 +205,7 @@ public class Segment
 		}
 	}
 
-	public void disable(PoolCollection statePool, BackgroundPropsHandler bgPool, TilesHandler tiles)
+	public void disable(PoolCollection statePool, BackgroundPropsHandler bgPool, TilesSuperHandler tiles)
 	{
 		if(isEnabled())
 		{
@@ -400,7 +400,7 @@ public class Segment
 		return  new Vector3(info.xBegin + x * info.tileWidth - (info.tileWidth / 2.0f), info.yBegin + y * info.tileHeight - (info.tileHeight / 2.0f), 0.0f); 
 	}
 
-	private void load(PoolCollection statePool, BackgroundPropsHandler bgPool, TilesHandler tileHandler)
+	private void load(PoolCollection statePool, BackgroundPropsHandler bgPool, TilesSuperHandler tileHandler)
 	{
 		if(layout.Count != info.xSize * info.ySize)
 		{
@@ -422,7 +422,7 @@ public class Segment
 				int poolIndex = PoolIndexes.fileToPoolMapping[value];
 				Vector3 position = getPosition(x,y); 
 
-				if(poolIndex != PoolIndexes.earthIndex)
+				if(tileHandler.containsKey(poolIndex) == false)
 				{
 					bool loadedContains = loaded.ContainsKey(poolIndex);
 					bool stateLoadedContains = stateLoaded.ContainsKey(poolIndex);
@@ -443,8 +443,8 @@ public class Segment
 				}
 				else // tile
 				{
-					int tileIndex = tileHandler.getRandomTileIndex(deepness[poolIndex][index]);
-					GameObject g = tileHandler.getFromPool(deepness[poolIndex][index], tileIndex, position);
+					int tileIndex = tileHandler.getRandomTileIndex(poolIndex, deepness[poolIndex][index]);
+					GameObject g = tileHandler.getFromPool(poolIndex, deepness[poolIndex][index], tileIndex, position);
 					tilesLoaded[new Vector2(x ,y)] = new LoadedTile(tileIndex, g);
 				}
 			}
@@ -466,7 +466,7 @@ public class Segment
 		firstLoad = false;
 	}
 
-	private void unload(PoolCollection statePool, BackgroundPropsHandler bgPool, TilesHandler tileHandler)
+	private void unload(PoolCollection statePool, BackgroundPropsHandler bgPool, TilesSuperHandler tileHandler)
 	{
 		foreach(int index in PoolIndexes.statelessIndexes)
 		{
@@ -489,7 +489,7 @@ public class Segment
 		foreach(var tileLoaded in tilesLoaded)
 		{
 			int index = getIndex(tileLoaded.Key);
-			tileHandler.free(tileLoaded.Value.obj, deepness[tileLoaded.Value.poolIndex][index], tileLoaded.Value.poolIndex);
+			tileHandler.free(tileLoaded.Value.poolIndex, tileLoaded.Value.obj, deepness[tileLoaded.Value.poolIndex][index], tileLoaded.Value.poolIndex);
 		}
 
 		foreach(var entry in bgLoaded)

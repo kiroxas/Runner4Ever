@@ -143,10 +143,13 @@ public class SegmentStreamer : MonoBehaviour
 	public GameObject[] topRightTiles;
 	public GameObject[] topLeftTiles;
 
+	public GameObject[] topWaterTiles;
+	public GameObject[] innerWaterTiles;
+
 	/* Poolers */
 	PoolCollection statePool;
 	BackgroundPropsHandler bgHandler;
-	TilesHandler tilesHandler;
+	TilesSuperHandler tilesHandler;
 
 	public Bounds containingBox;
 	public int propsPerSegment = 3;
@@ -468,22 +471,39 @@ public class SegmentStreamer : MonoBehaviour
 		statePool.addPool(decelerateTile, PoolIndexes.decelerateTileIndex, PoolIndexes.smallPoolingStrategy);
 	
 		bgHandler = new BackgroundPropsHandler(propsPerSegment, backgroundObjects, tileWidth);
-		tilesHandler = new TilesHandler();
+		tilesHandler = new TilesSuperHandler();
 
-		tilesHandler.addTileType(TilesHandler.TilePlacement.OnTop, topLandTiles);
-		tilesHandler.addTileType(TilesHandler.TilePlacement.BelowTop, topInnerLandTiles);
-		tilesHandler.addTileType(TilesHandler.TilePlacement.Right, rightLandTiles);
-		tilesHandler.addTileType(TilesHandler.TilePlacement.Left, leftLandTiles);
-		tilesHandler.addTileType(TilesHandler.TilePlacement.InnerRight, rightInnerLandTiles);
-		tilesHandler.addTileType(TilesHandler.TilePlacement.InnerLeft, leftInnerLandTiles);
-		tilesHandler.addTileType(TilesHandler.TilePlacement.Inner, innerLandTiles);
-		tilesHandler.addTileType(TilesHandler.TilePlacement.Bottom, bottomLandTiles);
-		tilesHandler.addTileType(TilesHandler.TilePlacement.InnerBottom, bottomInnerLandTiles);
-		tilesHandler.addTileType(TilesHandler.TilePlacement.Floating, floatingTiles);
-		tilesHandler.addTileType(TilesHandler.TilePlacement.BottomLeft, bottomLeftTiles);
-		tilesHandler.addTileType(TilesHandler.TilePlacement.BottomRight, bottomRightTiles);
-		tilesHandler.addTileType(TilesHandler.TilePlacement.TopLeft, topLeftTiles);
-		tilesHandler.addTileType(TilesHandler.TilePlacement.TopRight, topRightTiles);
+		// Earth
+		tilesHandler.addTileType(PoolIndexes.earthIndex, TilesHandler.TilePlacement.OnTop, topLandTiles);
+		tilesHandler.addTileType(PoolIndexes.earthIndex, TilesHandler.TilePlacement.BelowTop, topInnerLandTiles);
+		tilesHandler.addTileType(PoolIndexes.earthIndex, TilesHandler.TilePlacement.Right, rightLandTiles);
+		tilesHandler.addTileType(PoolIndexes.earthIndex, TilesHandler.TilePlacement.Left, leftLandTiles);
+		tilesHandler.addTileType(PoolIndexes.earthIndex, TilesHandler.TilePlacement.InnerRight, rightInnerLandTiles);
+		tilesHandler.addTileType(PoolIndexes.earthIndex, TilesHandler.TilePlacement.InnerLeft, leftInnerLandTiles);
+		tilesHandler.addTileType(PoolIndexes.earthIndex, TilesHandler.TilePlacement.Inner, innerLandTiles);
+		tilesHandler.addTileType(PoolIndexes.earthIndex, TilesHandler.TilePlacement.Bottom, bottomLandTiles);
+		tilesHandler.addTileType(PoolIndexes.earthIndex, TilesHandler.TilePlacement.InnerBottom, bottomInnerLandTiles);
+		tilesHandler.addTileType(PoolIndexes.earthIndex, TilesHandler.TilePlacement.Floating, floatingTiles);
+		tilesHandler.addTileType(PoolIndexes.earthIndex, TilesHandler.TilePlacement.BottomLeft, bottomLeftTiles);
+		tilesHandler.addTileType(PoolIndexes.earthIndex, TilesHandler.TilePlacement.BottomRight, bottomRightTiles);
+		tilesHandler.addTileType(PoolIndexes.earthIndex, TilesHandler.TilePlacement.TopLeft, topLeftTiles);
+		tilesHandler.addTileType(PoolIndexes.earthIndex, TilesHandler.TilePlacement.TopRight, topRightTiles);
+
+		// Water
+		tilesHandler.addTileType(PoolIndexes.waterIndex, TilesHandler.TilePlacement.OnTop, topWaterTiles);
+		tilesHandler.addTileType(PoolIndexes.waterIndex, TilesHandler.TilePlacement.BelowTop, innerWaterTiles);
+		tilesHandler.addTileType(PoolIndexes.waterIndex, TilesHandler.TilePlacement.Right, innerWaterTiles);
+		tilesHandler.addTileType(PoolIndexes.waterIndex, TilesHandler.TilePlacement.Left, innerWaterTiles);
+		tilesHandler.addTileType(PoolIndexes.waterIndex, TilesHandler.TilePlacement.InnerRight, innerWaterTiles);
+		tilesHandler.addTileType(PoolIndexes.waterIndex, TilesHandler.TilePlacement.InnerLeft, innerWaterTiles);
+		tilesHandler.addTileType(PoolIndexes.waterIndex, TilesHandler.TilePlacement.Inner, innerWaterTiles);
+		tilesHandler.addTileType(PoolIndexes.waterIndex, TilesHandler.TilePlacement.Bottom, innerWaterTiles);
+		tilesHandler.addTileType(PoolIndexes.waterIndex, TilesHandler.TilePlacement.InnerBottom, innerWaterTiles);
+		tilesHandler.addTileType(PoolIndexes.waterIndex, TilesHandler.TilePlacement.Floating, innerWaterTiles);
+		tilesHandler.addTileType(PoolIndexes.waterIndex, TilesHandler.TilePlacement.BottomLeft, innerWaterTiles);
+		tilesHandler.addTileType(PoolIndexes.waterIndex, TilesHandler.TilePlacement.BottomRight, innerWaterTiles);
+		tilesHandler.addTileType(PoolIndexes.waterIndex, TilesHandler.TilePlacement.TopLeft, topWaterTiles);
+		tilesHandler.addTileType(PoolIndexes.waterIndex, TilesHandler.TilePlacement.TopRight, topWaterTiles);
 	}
 
 	public void load(GameConstants.LoadLevelArgument arg)

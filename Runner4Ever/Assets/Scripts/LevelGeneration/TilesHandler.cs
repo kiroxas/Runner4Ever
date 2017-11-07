@@ -8,6 +8,48 @@ using System.Collections.Generic;
 using System.Text;
 using Random = UnityEngine.Random;
 
+public class TilesSuperHandler
+{
+	private Dictionary<int, TilesHandler> myPools;
+
+	public TilesSuperHandler()
+	{
+		myPools = new Dictionary<int, TilesHandler>();
+	}
+
+	public bool containsKey(int key)
+	{
+		return myPools.ContainsKey(key);
+	}
+
+	public void addTileType(int tiletype, TilesHandler.TilePlacement placement, GameObject[] tiles)
+	{
+		if(myPools.ContainsKey(tiletype) == false)
+		{
+			myPools[tiletype] = new TilesHandler();
+			Debug.Log("Create TileHandler for " + tiletype);
+		}
+
+		myPools[tiletype].addTileType(placement, tiles);
+	}
+
+	public int getRandomTileIndex(int tiletype, Deepness tileDeepness)
+	{
+		return myPools[tiletype].getRandomTileIndex(tileDeepness);
+	}
+
+	public GameObject getFromPool(int tileType, Deepness tileDeepness, int index, Vector3 position)
+	{
+		return myPools[tileType].getFromPool(tileDeepness, index, position);
+	}
+
+	public void free(int tiletype, GameObject g, Deepness tileDeepness, int index)
+	{
+		myPools[tiletype].free(g, tileDeepness, index);
+	}
+
+}
+
 public class TilesHandler
 {
 	public enum TilePlacement
@@ -51,6 +93,10 @@ public class TilesHandler
 		{
 			return TilePlacement.OnTop;
 		}
+		else if(tileDeepness.top == 2)
+		{
+			return TilePlacement.BelowTop;
+		}
 		else if(tileDeepness.right == 1 && tileDeepness.bottom == 1)
 		{
 			return TilePlacement.BottomRight;
@@ -70,10 +116,6 @@ public class TilesHandler
 		else if(tileDeepness.bottom == 1)
 		{
 			return TilePlacement.Bottom;
-		}
-		else if(tileDeepness.top == 2)
-		{
-			return TilePlacement.BelowTop;
 		}
 		else if(tileDeepness.right == 2)
 		{
@@ -105,6 +147,11 @@ public class TilesHandler
 		if(myPools.ContainsKey(placement))
 		{
 			Debug.LogError("Already added a pool of placement " + placement);
+		}
+
+		if(tiles == null)
+		{
+			Debug.LogError("Your tiles are null");
 		}
 
 		myPools[placement] = new PoolCollection();
