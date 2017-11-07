@@ -61,9 +61,11 @@
      <None Include="Assets\StreamingAssets\build_info.txt" />
      <None Include="Assets\Resources\LevelGeneration\level_2_Wael.txt" />
      <None Include="Assets\Resources\LevelGeneration\four.txt" />
+     <None Include="Assets\Resources\LevelGeneration\tutorialStage_01_Wael_Part1.txt" />
      <None Include="Assets\Resources\LevelGeneration\one.txt" />
      <None Include="Assets\LeanTouch\Examples\Shaders\Skybox.shader" />
      <None Include="Assets\LeanTouch\Examples\Shaders\Smooth.shader" />
+     <None Include="Assets\Resources\LevelGeneration\tutorialStage_01_Wael_Part3.txt" />
      <None Include="Assets\Resources\LevelGeneration\level_1_Cha.txt" />
      <None Include="Assets\Resources\LevelGeneration\walljump.txt" />
      <None Include="Assets\Resources\LevelGeneration\levelList.txt" />
@@ -78,6 +80,7 @@
      <None Include="Assets\Resources\LevelGeneration\gold.txt" />
      <None Include="Assets\dummy.txt" />
      <None Include="Assets\Resources\LevelGeneration\level_test_01.txt" />
+     <None Include="Assets\Resources\LevelGeneration\tutorialStage_01_Wael_Part2.txt" />
      <None Include="Assets\Resources\LevelGeneration\tutorialStage_02_Wael.txt" />
      <None Include="Assets\Resources\LevelGeneration\tutorialStage_01_Wael.txt" />
  <Reference Include="UnityEditor.Advertisements">
