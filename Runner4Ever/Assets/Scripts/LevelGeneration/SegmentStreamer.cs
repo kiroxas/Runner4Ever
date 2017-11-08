@@ -114,7 +114,6 @@ public class SegmentStreamer : MonoBehaviour
 	/* State prefabs */
 	public GameObject objectTiles;
 	public GameObject enemies;
-	public GameObject disapearingTile;
 	public GameObject escalator;
 	public GameObject movingTile;
 	public GameObject killMovingTile;
@@ -151,6 +150,8 @@ public class SegmentStreamer : MonoBehaviour
 	public GameObject[] innerPillarInvertTiles;
 
 	public GameObject[] standOnTiles;
+
+	public GameObject[] disapearingTiles;
 
 	/* Poolers */
 	PoolCollection statePool;
@@ -228,6 +229,7 @@ public class SegmentStreamer : MonoBehaviour
 		deep[PoolIndexes.waterIndex] = Deepness.calculateDeepness(new List<int>{PoolIndexes.waterIndex}, level, xTotalLevel, yTotalLevel);
 		deep[PoolIndexes.standOnIndex] = Deepness.calculateDeepness(new List<int>{PoolIndexes.standOnIndex}, level, xTotalLevel, yTotalLevel);
 		deep[PoolIndexes.inverseEarthIndex] = Deepness.calculateDeepness(new List<int>{PoolIndexes.earthIndex, PoolIndexes.inverseEarthIndex}, level, xTotalLevel, yTotalLevel);
+		deep[PoolIndexes.disapearingIndex] = Deepness.calculateDeepness(new List<int>{PoolIndexes.disapearingIndex}, level, xTotalLevel, yTotalLevel);
 
 		return deep;
 	}
@@ -461,7 +463,6 @@ public class SegmentStreamer : MonoBehaviour
 		statePool.addPool(hurtTiles, PoolIndexes.hurtIndex, PoolIndexes.mediumPoolingStrategy);
 		statePool.addPool(objectTiles, PoolIndexes.objectIndex, PoolIndexes.mediumPoolingStrategy);
 		statePool.addPool(enemies, PoolIndexes.enemiesIndex, PoolIndexes.mediumPoolingStrategy);
-		statePool.addPool(disapearingTile, PoolIndexes.disapearingIndex, PoolIndexes.mediumPoolingStrategy);
 		statePool.addPool(instancePlayer, PoolIndexes.playerIndex , PoolIndexes.uniquePoolingStrategy);
 		statePool.addPool(checkpoint, PoolIndexes.checkpointIndex, PoolIndexes.smallPoolingStrategy);
 		statePool.addPool(escalator, PoolIndexes.escalatorIndex, PoolIndexes.smallPoolingStrategy);
@@ -553,6 +554,24 @@ public class SegmentStreamer : MonoBehaviour
 		tilesHandler.addTileType(PoolIndexes.standOnIndex, TilesHandler.TilePlacement.PillarInner, standOnTiles);
 		tilesHandler.addTileType(PoolIndexes.standOnIndex, TilesHandler.TilePlacement.PillarBottom, standOnTiles);
 
+		// Disapearing
+		tilesHandler.addTileType(PoolIndexes.disapearingIndex, TilesHandler.TilePlacement.OnTop, disapearingTiles);
+		tilesHandler.addTileType(PoolIndexes.disapearingIndex, TilesHandler.TilePlacement.BelowTop, disapearingTiles);
+		tilesHandler.addTileType(PoolIndexes.disapearingIndex, TilesHandler.TilePlacement.Right, disapearingTiles);
+		tilesHandler.addTileType(PoolIndexes.disapearingIndex, TilesHandler.TilePlacement.Left, disapearingTiles);
+		tilesHandler.addTileType(PoolIndexes.disapearingIndex, TilesHandler.TilePlacement.InnerRight, disapearingTiles);
+		tilesHandler.addTileType(PoolIndexes.disapearingIndex, TilesHandler.TilePlacement.InnerLeft, disapearingTiles);
+		tilesHandler.addTileType(PoolIndexes.disapearingIndex, TilesHandler.TilePlacement.Inner, disapearingTiles);
+		tilesHandler.addTileType(PoolIndexes.disapearingIndex, TilesHandler.TilePlacement.Bottom, disapearingTiles);
+		tilesHandler.addTileType(PoolIndexes.disapearingIndex, TilesHandler.TilePlacement.InnerBottom, disapearingTiles);
+		tilesHandler.addTileType(PoolIndexes.disapearingIndex, TilesHandler.TilePlacement.Floating, disapearingTiles);
+		tilesHandler.addTileType(PoolIndexes.disapearingIndex, TilesHandler.TilePlacement.BottomLeft, disapearingTiles);
+		tilesHandler.addTileType(PoolIndexes.disapearingIndex, TilesHandler.TilePlacement.BottomRight, disapearingTiles);
+		tilesHandler.addTileType(PoolIndexes.disapearingIndex, TilesHandler.TilePlacement.TopLeft, disapearingTiles);
+		tilesHandler.addTileType(PoolIndexes.disapearingIndex, TilesHandler.TilePlacement.TopRight, disapearingTiles);
+		tilesHandler.addTileType(PoolIndexes.disapearingIndex, TilesHandler.TilePlacement.PillarUp, disapearingTiles);
+		tilesHandler.addTileType(PoolIndexes.disapearingIndex, TilesHandler.TilePlacement.PillarInner, disapearingTiles);
+		tilesHandler.addTileType(PoolIndexes.disapearingIndex, TilesHandler.TilePlacement.PillarBottom, disapearingTiles);
 		
 	}
 
