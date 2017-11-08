@@ -220,8 +220,7 @@ public class CharacterController2D : MonoBehaviour
 
 	public bool firstWallJumpCollision()
 	{
-
-		return !jumpCollec.cantJumpReachedMaxJumps() && ((previousFrameState.isWallSticking == false && wallSticking()) || (previousFrameState.isWallSticking && wasJumpingLastFrame && wallSticking() && isJumping() == false));
+		return canJump() && !jumpCollec.cantJumpReachedMaxJumps() && ((previousFrameState.isWallSticking == false && wallSticking()) || (previousFrameState.isWallSticking && wasJumpingLastFrame && wallSticking() && isJumping() == false));
 	}
 
 	public void Update()
@@ -414,22 +413,13 @@ public class CharacterController2D : MonoBehaviour
 
 	public void handleJump(bool jumpedThisFrame)
 	{
-		if(wallSticking() && !isJumping())
-		{
-			//jumpCollec.reset();
-		}
-
 		if(jumpedThisFrame) // jumped this frame
 		{
 			jumpCollec.startJump(characTransform.position);
 		}
-		/*else if(isJumping() && jumpCollec.jumpEnded()) // in jump mode && our jump has ended
-		{
-			jumpCollec.reset();
-		}*/
 
 		// reset consecutive jumps
-		if(grounded() && currentGravity > 0 && !jumpedThisFrame)
+		if(grounded() && !jumpedThisFrame)
 		{
 			jumpCollec.reset();
 		}

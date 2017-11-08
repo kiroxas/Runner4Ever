@@ -54,7 +54,7 @@ public class JumpCollection
 
 	public bool cantJumpReachedMaxJumps()
 	{
-		return currentIndex >= 0 && jumps[currentIndex].jumpEnded() && (currentIndex == jumps.Count - 1);
+		return currentIndex >= 0 && jumps[currentIndex].jumpEnded() && (currentIndex >= jumps.Count - 1);
 	}
 
 	public void startJump(Vector3 position)
