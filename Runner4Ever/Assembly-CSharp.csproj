@@ -104,6 +104,7 @@
      <Compile Include="Assets\Scripts\GoldCollectible.cs" />
      <Compile Include="Assets\Scripts\HurtPlayer.cs" />
      <Compile Include="Assets\Scripts\ImageSelectorOnOrientation.cs" />
+     <Compile Include="Assets\Scripts\InfiniteWallJump.cs" />
      <Compile Include="Assets\Scripts\InputHandler.cs" />
      <Compile Include="Assets\Scripts\InverseJumpWall.cs" />
      <Compile Include="Assets\Scripts\InversePlayerVelocity.cs" />

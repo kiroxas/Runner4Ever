@@ -13,7 +13,14 @@ public class JumpCollection
 	private int currentIndex; // current jump
 	private List<int> jumpsRealised; // keep track of how many jumps we did
 
+	private bool loopJumps = false;
+
 	// --------------------------------- Public functions
+	public void loopingJumps(bool b)
+	{
+		loopJumps = b;
+	}
+
 	public JumpCollection()
 	{
 		jumps = new List<JumpCharacs>();
@@ -37,8 +44,17 @@ public class JumpCollection
 	{
 		if(currentIndex >= 0)
 		{
-			jumps[currentIndex].endJump();	
+			jumps[currentIndex].endJump();
+			if(loopJumps && (currentIndex == jumps.Count - 1))
+			{
+				currentIndex = -1;
+			}	
 		}
+	}
+
+	public bool cantJumpReachedMaxJumps()
+	{
+		return currentIndex >= 0 && jumps[currentIndex].jumpEnded() && (currentIndex == jumps.Count - 1);
 	}
 
 	public void startJump(Vector3 position)
@@ -46,7 +62,6 @@ public class JumpCollection
 		currentIndex++;
 		if(jumps.Count <= currentIndex)
 		{
-			Debug.Log("Looping jumps");
 			currentIndex = 0;
 		}
 
@@ -118,8 +133,6 @@ public class JumpCollection
 
 	private void cleanPrecedentJump()
 	{
-		
-
 		if(jumps.Count == 0)
 		{
 			return;

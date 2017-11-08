@@ -88,6 +88,12 @@ public class CharacterController2D : MonoBehaviour
 		KeepTheAirOne
 	}
 
+	public enum WallJumpStrategy
+	{
+		Infinite,
+		Normal
+	}
+
 	//--------------------------------------- Members ---------------------------------------
 
 	// ------------------------------------------ Jump Related
@@ -155,6 +161,9 @@ public class CharacterController2D : MonoBehaviour
 	private Vector2 colliderOffset;
 	private int objectsCollected = 0;
 
+	private WallJumpStrategy baseStrategy = WallJumpStrategy.Normal;
+	public ItsAlmostAStack<WallJumpStrategy, GameObject> wallJumpStrat;
+
 	/* ------------------------------------------------------ Monobehaviour Functions -------------------------------------------------------*/
 
 	public void Awake()
@@ -204,6 +213,7 @@ public class CharacterController2D : MonoBehaviour
 		jumpWallStack = new ItsAlmostAStack<JumpDirectionOnWallOrEdge, GameObject>();
 		gravity = new ItsAlmostAStack<float, GameObject>();
 		maxVelocity = new ItsAlmostAStack<float, GameObject>();
+		wallJumpStrat = new ItsAlmostAStack<WallJumpStrategy, GameObject>();
 
 		reinit();
 	}
@@ -211,7 +221,7 @@ public class CharacterController2D : MonoBehaviour
 	public bool firstWallJumpCollision()
 	{
 
-		return (previousFrameState.isWallSticking == false && wallSticking()) || (previousFrameState.isWallSticking && wasJumpingLastFrame && wallSticking() && isJumping() == false);
+		return !jumpCollec.cantJumpReachedMaxJumps() && ((previousFrameState.isWallSticking == false && wallSticking()) || (previousFrameState.isWallSticking && wasJumpingLastFrame && wallSticking() && isJumping() == false));
 	}
 
 	public void Update()
@@ -294,10 +304,17 @@ public class CharacterController2D : MonoBehaviour
 			{
 				offset.x = 0;
 
-				if(offset.y <= 0) // if falling while colliding forward, then reset jump (wall jumps)
+				if(offset.y <= 0) 
 				{
 					offset.y = 0;
-					jumpCollec.reset();
+					if((WallJumpStrategy)wallJumpStrat.Peek() == WallJumpStrategy.Normal)
+					{
+						jumpCollec.endJump();
+					}
+					else
+					{
+						jumpCollec.reset();
+					}
 				}
 			}
 
@@ -399,7 +416,7 @@ public class CharacterController2D : MonoBehaviour
 	{
 		if(wallSticking() && !isJumping())
 		{
-			jumpCollec.reset();
+			//jumpCollec.reset();
 		}
 
 		if(jumpedThisFrame) // jumped this frame
@@ -522,6 +539,15 @@ public class CharacterController2D : MonoBehaviour
 		objectsCollected++;
 	}
 
+	public void loopingJumps(bool b)
+	{
+		if(b && !isJumping())
+		{
+			jumpCollec.reset();
+		}
+		
+		jumpCollec.loopingJumps(b);
+	}
 	
 
 	/* ------------------------------------------------------ Player's actions -------------------------------------------------------*/
@@ -754,6 +780,9 @@ public class CharacterController2D : MonoBehaviour
 		currentVelocity = 0.0f; // start stop
 		currentGravity = gravityFactor;
 		canBeRepelled = true;
+
+		wallJumpStrat.Clear();
+		wallJumpStrat.Push(baseStrategy, gameObject);
 
 		maxVelocity.Clear();
 		maxVelocity.Push(xSpeedBySecond, gameObject);
