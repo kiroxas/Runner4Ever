@@ -199,6 +199,30 @@ public class CharacterState : MonoBehaviour
 
 	}
 
+	private bool checkRaycast( RaycastHit2D raycastHit, Collider2D myCollider)
+	{
+		if (raycastHit)
+		{
+			var effector2D = raycastHit.collider.GetComponent<PlatformEffector2D>();
+			if(effector2D != null)
+			{
+				if(effector2D.useOneWay && myCollider.bounds.min.y > raycastHit.collider.bounds.max.y ) // Only allowed if above
+				{
+					addCollider(raycastHit.collider, raycastHit.point);
+					return raycastHit.collider.isTrigger == false;
+				}
+			}
+			else
+			{
+				addCollider(raycastHit.collider, raycastHit.point);
+				return raycastHit.collider.isTrigger == false;					
+			}
+		}
+
+		return false;
+	}
+
+
 	public bool updateGrounded()
 	{
 		Collider2D myCollider = GetComponent<Collider2D>();
@@ -213,29 +237,21 @@ public class CharacterState : MonoBehaviour
 			Vector2 rayVector = new Vector2(myCollider.bounds.min.x + i * step, myCollider.bounds.min.y);
 			var raycastHit = Physics2D.Raycast(rayVector, rayDirection, groundedCastDistance, PlatformMask);
 			Debug.DrawRay(rayVector, rayDirection * groundedCastDistance, Color.green);
-			if (raycastHit)
+			if (checkRaycast(raycastHit, myCollider))
 			{
-				var effector2D = raycastHit.collider.GetComponent<PlatformEffector2D>();
-				if(effector2D != null)
-				{
-					if(effector2D.useOneWay && myCollider.bounds.min.y > raycastHit.collider.bounds.max.y ) // Only allowed if above
-					{
-						addCollider(raycastHit.collider, raycastHit.point);
-						if(raycastHit.collider.isTrigger == false)
-						{
-							innerState.isGrounded = true;
-						}
-					}
-				}
-				else
-				{
-					addCollider(raycastHit.collider, raycastHit.point);
-					if(raycastHit.collider.isTrigger == false)
-					{
-						innerState.isGrounded = true;
-					}
-				}
+				innerState.isGrounded = true;
 			}
+
+			if(raycastHit.collider && raycastHit.collider.isTrigger) // if it's a trigger, let's recast, ignoring triggers
+			{
+				Physics2D.queriesHitTriggers = false;
+				raycastHit = Physics2D.Raycast(rayVector, rayDirection, groundedCastDistance, PlatformMask);
+				if(checkRaycast(raycastHit, myCollider))
+				{
+					innerState.isGrounded = true;
+				}
+				Physics2D.queriesHitTriggers = true;
+			}			
 		}
 
 		return isGrounded;
@@ -255,56 +271,18 @@ public class CharacterState : MonoBehaviour
 			Vector2 rayVector = new Vector2(myCollider.bounds.min.x , myCollider.bounds.max.y);
 			var raycastHit = Physics2D.Raycast(rayVector, dir, rcCastDistance, PlatformMask);
 			Debug.DrawRay(rayVector, dir * groundedCastDistance, Color.green);
-			if (raycastHit)
+			if(checkRaycast(raycastHit, myCollider))
 			{
-				var effector2D = raycastHit.collider.GetComponent<PlatformEffector2D>();
-				if(effector2D != null)
-				{
-					if(effector2D.useOneWay && myCollider.bounds.min.y > raycastHit.collider.bounds.center.y ) // Only allowed if above
-					{
-						addCollider(raycastHit.collider, raycastHit.point);
-						if(raycastHit.collider.isTrigger == false)
-						{
-							innerState.isCollidingAbove = true;
-						}
-					}
-				}
-				else
-				{
-					addCollider(raycastHit.collider, raycastHit.point);
-					if(raycastHit.collider.isTrigger == false)
-					{
-						innerState.isCollidingAbove = true;
-					}
-				}
+				innerState.isCollidingAbove = true;
 			}
-		
+			
 			dir.x = 0.0f;
 			rayVector = new Vector2(myCollider.bounds.max.x , myCollider.bounds.max.y);
 			raycastHit = Physics2D.Raycast(rayVector, dir, rcCastDistance, PlatformMask);
 			Debug.DrawRay(rayVector, dir * groundedCastDistance, Color.green);
-			if (raycastHit)
+			if(checkRaycast(raycastHit, myCollider))
 			{
-				var effector2D = raycastHit.collider.GetComponent<PlatformEffector2D>();
-				if(effector2D != null)
-				{
-					if(effector2D.useOneWay && myCollider.bounds.min.y > raycastHit.collider.bounds.center.y ) // Only allowed if above
-					{
-						addCollider(raycastHit.collider, raycastHit.point);
-						if(raycastHit.collider.isTrigger == false)
-						{
-							innerState.isCollidingAbove = true;
-						}
-					}
-				}
-				else
-				{
-					addCollider(raycastHit.collider, raycastHit.point);
-					if(raycastHit.collider.isTrigger == false)
-					{
-						innerState.isCollidingAbove = true;
-					}
-				}
+				innerState.isCollidingAbove = true;
 			}
 		}
 
@@ -313,28 +291,9 @@ public class CharacterState : MonoBehaviour
 			Vector2 rayVector = new Vector2(myCollider.bounds.min.x + i * step, myCollider.bounds.max.y);
 			var raycastHit = Physics2D.Raycast(rayVector, rayDirection, groundedCastDistance, PlatformMask);
 			Debug.DrawRay(rayVector, rayDirection * groundedCastDistance, Color.green);
-			if (raycastHit)
+			if(checkRaycast(raycastHit, myCollider))
 			{
-				var effector2D = raycastHit.collider.GetComponent<PlatformEffector2D>();
-				if(effector2D != null)
-				{
-					if(effector2D.useOneWay && myCollider.bounds.min.y > raycastHit.collider.bounds.center.y ) // Only allowed if above
-					{
-						addCollider(raycastHit.collider, raycastHit.point);
-						if(raycastHit.collider.isTrigger == false)
-						{
-							innerState.isCollidingAbove = true;
-						}
-					}
-				}
-				else
-				{
-					addCollider(raycastHit.collider, raycastHit.point);
-					if(raycastHit.collider.isTrigger == false)
-					{
-						innerState.isCollidingAbove = true;
-					}
-				}
+				innerState.isCollidingAbove = true;
 			}
 		}
 
@@ -475,28 +434,9 @@ public class CharacterState : MonoBehaviour
 			Vector2 rayVector = new Vector2(leftX , myCollider.bounds.min.y + yRightColDetDelta);
 			var raycastHit = Physics2D.Raycast(rayVector, dir, rcCastDistance, PlatformMask);
 			Debug.DrawRay(rayVector, dir * rcCastDistance, Color.red);
-			if (raycastHit)
+			if(checkRaycast(raycastHit, myCollider))
 			{
-				var effector2D = raycastHit.collider.GetComponent<PlatformEffector2D>();
-				if(effector2D != null)
-				{
-					if(effector2D.useOneWay == false) // Only allowed if above
-					{
-						addCollider(raycastHit.collider, raycastHit.point);
-						if(raycastHit.collider.isTrigger == false)
-						{
-							innerState.isCollidingLeft = true;
-						}
-					}
-				}
-				else
-				{
-					addCollider(raycastHit.collider, raycastHit.point);
-					if(raycastHit.collider.isTrigger == false)
-					{
-						innerState.isCollidingLeft = true;
-					}
-				}
+				innerState.isCollidingLeft = true;
 			}
 		}
 
@@ -505,28 +445,9 @@ public class CharacterState : MonoBehaviour
 			Vector2 rayVector = new Vector2(leftX , myCollider.bounds.min.y + yRightColDetDelta + i * step);
 			var raycastHit = Physics2D.Raycast(rayVector, rayDirection, rcCastDistance, PlatformMask);
 			Debug.DrawRay(rayVector, rayDirection * rcCastDistance, Color.red);
-			if (raycastHit)
+			if(checkRaycast(raycastHit, myCollider))
 			{
-				var effector2D = raycastHit.collider.GetComponent<PlatformEffector2D>();
-				if(effector2D != null)
-				{
-					if(effector2D.useOneWay == false) // Only allowed if above
-					{
-						addCollider(raycastHit.collider, raycastHit.point);
-						if(raycastHit.collider.isTrigger == false)
-						{
-							innerState.isCollidingLeft = true;
-						}
-					}
-				}
-				else
-				{
-					addCollider(raycastHit.collider, raycastHit.point);
-					if(raycastHit.collider.isTrigger == false)
-					{
-						innerState.isCollidingLeft = true;
-					}
-				}
+				innerState.isCollidingLeft = true;
 			}
 		}
 
@@ -549,28 +470,9 @@ public class CharacterState : MonoBehaviour
 			Vector2 rayVector = new Vector2(rightX , myCollider.bounds.min.y + yRightColDetDelta);
 			var raycastHit = Physics2D.Raycast(rayVector, dir, rcCastDistance, PlatformMask);
 			Debug.DrawRay(rayVector, dir * rcCastDistance, Color.black);
-			if (raycastHit)
+			if(checkRaycast(raycastHit, myCollider))
 			{
-				var effector2D = raycastHit.collider.GetComponent<PlatformEffector2D>();
-				if(effector2D != null)
-				{
-					if(effector2D.useOneWay == false) // Only allowed if above
-					{
-						addCollider(raycastHit.collider, raycastHit.point);
-						if(raycastHit.collider.isTrigger == false)
-						{
-							innerState.isCollidingRight = true;
-						}
-					}
-				}
-				else
-				{
-					addCollider(raycastHit.collider, raycastHit.point);
-					if(raycastHit.collider.isTrigger == false)
-					{
-						innerState.isCollidingRight = true;
-					}
-				}
+				innerState.isCollidingRight = true;
 			}
 		}
 
@@ -579,28 +481,9 @@ public class CharacterState : MonoBehaviour
 			Vector2 rayVector = new Vector2(rightX , myCollider.bounds.min.y + yRightColDetDelta + i * step);
 			var raycastHit = Physics2D.Raycast(rayVector, rayDirection, rcCastDistance, PlatformMask);
 			Debug.DrawRay(rayVector, rayDirection * rcCastDistance, Color.black);
-			if (raycastHit)
+			if(checkRaycast(raycastHit, myCollider))
 			{
-				var effector2D = raycastHit.collider.GetComponent<PlatformEffector2D>();
-				if(effector2D != null)
-				{
-					if(effector2D.useOneWay == false) // Only allowed if above
-					{
-						addCollider(raycastHit.collider, raycastHit.point);
-						if(raycastHit.collider.isTrigger == false)
-						{
-							innerState.isCollidingRight = true;
-						}
-					}
-				}
-				else
-				{
-					addCollider(raycastHit.collider, raycastHit.point);
-					if(raycastHit.collider.isTrigger == false)
-					{
-						innerState.isCollidingRight = true;
-					}
-				}
+				innerState.isCollidingRight = true;
 			}
 		}
 
