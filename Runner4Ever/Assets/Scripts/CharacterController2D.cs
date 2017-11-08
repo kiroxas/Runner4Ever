@@ -423,10 +423,10 @@ public class CharacterController2D : MonoBehaviour
 		{
 			jumpCollec.startJump(characTransform.position);
 		}
-		else if(isJumping() && jumpCollec.jumpEnded()) // in jump mode && our jump has ended
+		/*else if(isJumping() && jumpCollec.jumpEnded()) // in jump mode && our jump has ended
 		{
 			jumpCollec.reset();
-		}
+		}*/
 
 		// reset consecutive jumps
 		if(grounded() && currentGravity > 0 && !jumpedThisFrame)
@@ -545,7 +545,7 @@ public class CharacterController2D : MonoBehaviour
 		{
 			jumpCollec.reset();
 		}
-		
+
 		jumpCollec.loopingJumps(b);
 	}
 	

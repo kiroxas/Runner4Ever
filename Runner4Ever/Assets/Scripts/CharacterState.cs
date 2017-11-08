@@ -137,11 +137,13 @@ public class CharacterState : MonoBehaviour
 		Vector2 topLeft = new Vector2(myCollider.bounds.min.x, myCollider.bounds.max.y);
 		Vector2 bottomRight = new Vector2(myCollider.bounds.max.x, myCollider.bounds.min.y);
 
+		Physics2D.queriesHitTriggers = false;
 		var raycastHitTL = Physics2D.Raycast(topLeft, rayDirectionNorm, distance, PlatformMask);
 		var raycastHitTR = Physics2D.Raycast(myCollider.bounds.max, rayDirectionNorm, distance, PlatformMask);
 		var raycastHitBR = Physics2D.Raycast(bottomRight, rayDirectionNorm, distance, PlatformMask);
 		var raycastHitBL = Physics2D.Raycast(myCollider.bounds.min, rayDirectionNorm, distance, PlatformMask);
 		var raycastHitC = Physics2D.Raycast(myCollider.bounds.center, rayDirectionNorm, distance, PlatformMask);
+		Physics2D.queriesHitTriggers = true;
 
 		var effector2DTL = raycastHitTL.collider ? raycastHitTL.collider.GetComponent<PlatformEffector2D>() : null;
 		var effector2DTR = raycastHitTR.collider ? raycastHitTR.collider.GetComponent<PlatformEffector2D>() : null;
