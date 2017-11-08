@@ -80,6 +80,8 @@ public class CharacterState : MonoBehaviour
 		public int count;
 		public Vector3 hitPoint;
 
+		public bool hitCenterAlready = false;
+
 		public ColliderInstances(Collider2D ins, Vector3 hit)
 		{
 			instance = ins;
@@ -396,6 +398,20 @@ public class CharacterState : MonoBehaviour
 				{
 					collider.instance.SendMessage("OnCollisionStayCustom", new RaycastCollision(myCollider, collider.hitPoint), SendMessageOptions.DontRequireReceiver);
 				}
+			}
+		}
+
+		// Collisions have center aligned
+		foreach(ColliderInstances collider in colliderHitThisFrame)
+		{
+			float epsilon = 0.2f;
+
+			float colCenter = collider.instance.bounds.center.x;
+			float myCenter = myCollider.bounds.center.x;
+
+			if( myCenter >= colCenter - epsilon && myCenter <= myCenter + epsilon)
+			{
+				collider.instance.SendMessage("OnCollisionCenterAlign", new RaycastCollision(myCollider, collider.hitPoint) , SendMessageOptions.DontRequireReceiver); 
 			}
 		}
 
