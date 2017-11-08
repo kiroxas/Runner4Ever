@@ -218,7 +218,7 @@ public class CharacterState : MonoBehaviour
 				var effector2D = raycastHit.collider.GetComponent<PlatformEffector2D>();
 				if(effector2D != null)
 				{
-					if(effector2D.useOneWay && myCollider.bounds.min.y > raycastHit.collider.bounds.center.y ) // Only allowed if above
+					if(effector2D.useOneWay && myCollider.bounds.min.y > raycastHit.collider.bounds.max.y ) // Only allowed if above
 					{
 						addCollider(raycastHit.collider, raycastHit.point);
 						if(raycastHit.collider.isTrigger == false)

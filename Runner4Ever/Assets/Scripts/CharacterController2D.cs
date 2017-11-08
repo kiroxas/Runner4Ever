@@ -412,7 +412,7 @@ public class CharacterController2D : MonoBehaviour
 		}
 
 		// reset consecutive jumps
-		if(grounded() && !jumpedThisFrame)
+		if(grounded() && currentGravity > 0 && !jumpedThisFrame)
 		{
 			jumpCollec.reset();
 		}

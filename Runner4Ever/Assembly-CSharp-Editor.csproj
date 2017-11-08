@@ -70,6 +70,7 @@
      <None Include="Assets\Resources\LevelGeneration\walljump.txt" />
      <None Include="Assets\Resources\LevelGeneration\levelList.txt" />
      <None Include="Assets\Resources\LevelGeneration\three.txt" />
+     <None Include="Assets\Resources\LevelGeneration\tutorialStage_03_Wael.txt" />
      <None Include="Assets\Resources\Localization\jp.txt" />
      <None Include="Assets\Resources\LevelGeneration\level_3_Wael.txt" />
      <None Include="Assets\Resources\Localization\en.txt" />
