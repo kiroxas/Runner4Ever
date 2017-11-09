@@ -22,6 +22,8 @@ public class MoveBlockOnTrigger : MonoBehaviour
 	public bool triggerLeft = false;
 	public bool triggerAbove = true;
 
+	public Vector2 direction;
+
 	public LayerMask triggerMask;
 	public float maxDistance = 10.0f;
 
@@ -159,44 +161,14 @@ public class MoveBlockOnTrigger : MonoBehaviour
 		}
 		else
 		{
-			if(triggerAbove)
+			if((triggerAbove && TriggerUp())
+			|| (triggerLeft && TriggerLeft())
+			|| (triggerRight && TriggerRight())
+			|| (triggerBelow && TriggerDown()))
 			{
-				if(TriggerUp())
-				{
-					originalPos = transform.position;
-					triggered = true;
-					move(Vector2.up);
-				}
-			}
-
-			if(triggerLeft)
-			{
-				if(TriggerLeft())
-				{
-					originalPos = transform.position;
-					triggered = true;
-					move(Vector2.left);
-				}
-			}
-
-			if(triggerRight)
-			{
-				if(TriggerRight())
-				{
-					originalPos = transform.position;
-					triggered = true;
-					move(Vector2.right);
-				}
-			}
-
-			if(triggerBelow)
-			{
-				if(TriggerDown())
-				{
-					originalPos = transform.position;
-					triggered = true;
-					move(Vector2.down);
-				}
+				originalPos = transform.position;
+				triggered = true;
+				move(direction);
 			}
 		}
 	}
