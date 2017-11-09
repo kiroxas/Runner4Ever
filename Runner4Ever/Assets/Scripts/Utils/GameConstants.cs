@@ -106,10 +106,12 @@ public class GameConstants
 	public class LoadLevelArgument
 	{
 		public string levelName;
+		public bool isNetworkGame;
 
-		public LoadLevelArgument(string ln)
+		public LoadLevelArgument(string ln, bool iNG = false)
 		{
 			levelName = ln;
+			isNetworkGame = iNG;
 		}
 	}
 

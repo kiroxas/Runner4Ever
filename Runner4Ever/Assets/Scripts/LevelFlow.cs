@@ -8,7 +8,8 @@ using UnityEngine.SceneManagement;
 */
 public class LevelFlow : MonoBehaviour
 {
-    public GameObject lastHitCheckpoint;
+    private GameObject lastHitCheckpoint;
+    public GameObject networkManagerPrefab;
 	
  	void Awake()
     {
@@ -22,6 +23,8 @@ public class LevelFlow : MonoBehaviour
         EventManager.StartListening (EventManager.get().hitFinalCheckpointEvent, lastCheckpointHit);
         EventManager.StartListening (EventManager.get().hitCheckpointEvent, checkpointHit);
         EventManager.StartListening (EventManager.get().playerDeadEvent, playerIsDead);
+        EventManager.StartListening (EventManager.get().loadLevelEvent, levelIsLoading);
+       
     }
 
     void OnDisable ()
@@ -30,6 +33,15 @@ public class LevelFlow : MonoBehaviour
         EventManager.StopListening (EventManager.get().hitFinalCheckpointEvent, lastCheckpointHit);
         EventManager.StopListening (EventManager.get().hitCheckpointEvent, checkpointHit);
         EventManager.StopListening (EventManager.get().playerDeadEvent, playerIsDead);
+        EventManager.StopListening (EventManager.get().loadLevelEvent, levelIsLoading);
+    }
+
+    void levelIsLoading( GameConstants.LoadLevelArgument arg)
+    {
+       if(arg.isNetworkGame) // network related stuff to initialised
+       {
+           Instantiate(networkManagerPrefab);
+       }
     }
 
     void playerIsDead(GameConstants.PlayerDeadArgument arg)
