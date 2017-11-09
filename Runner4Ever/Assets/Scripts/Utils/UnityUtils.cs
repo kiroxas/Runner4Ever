@@ -82,4 +82,16 @@ public class UnityUtils
         	return CollisionDirection.Nowhere;
         }
 	}
+
+	static public bool isNetworkGame()
+	{
+		LevelFlow flow = (LevelFlow)UnityEngine.Object.FindObjectOfType(typeof(LevelFlow));
+		if(flow)
+		{
+			return flow.isNetworkGame;
+		}
+
+		Debug.LogError("Could not find level flow");
+		return false;
+	}
 }

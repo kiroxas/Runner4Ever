@@ -88,6 +88,11 @@ public class InputHandler : MonoBehaviour
 
 	private bool isItForMe(LeanFinger finger)
 	{
+		if(character.amILocalPlayer() == false)
+		{
+			return false;
+		}
+		
 		Vector2 originPos = finger.StartScreenPosition;
 
 		switch(touchzone)

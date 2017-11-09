@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
 using Lean.Touch;
@@ -58,7 +59,7 @@ public class ItsAlmostAStack<T, Index>
 /*
 	Central class for controlling a character, handles actions and flow 
 */
-public class CharacterController2D : MonoBehaviour
+public class CharacterController2D : NetworkBehaviour
 {
 
 	//--------------------------------------- Enum declarations ---------------------------------------
@@ -164,6 +165,8 @@ public class CharacterController2D : MonoBehaviour
 	private WallJumpStrategy baseStrategy = WallJumpStrategy.Normal;
 	public ItsAlmostAStack<WallJumpStrategy, GameObject> wallJumpStrat;
 
+	public bool networkGame = false;
+
 	/* ------------------------------------------------------ Monobehaviour Functions -------------------------------------------------------*/
 
 	public void Awake()
@@ -214,6 +217,8 @@ public class CharacterController2D : MonoBehaviour
 		gravity = new ItsAlmostAStack<float, GameObject>();
 		maxVelocity = new ItsAlmostAStack<float, GameObject>();
 		wallJumpStrat = new ItsAlmostAStack<WallJumpStrategy, GameObject>();
+
+		networkGame = UnityUtils.isNetworkGame();
 
 		reinit();
 	}
@@ -723,6 +728,11 @@ public class CharacterController2D : MonoBehaviour
 	public bool isDead()
 	{
 		return health <= 0;
+	}
+
+	public bool amILocalPlayer()
+	{
+		return networkGame ? isLocalPlayer : true;
 	}
 
 	/* ------------------------------------------------------ Function about the direction of the character -------------------------------------------------------*/

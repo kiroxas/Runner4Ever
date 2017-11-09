@@ -10,6 +10,8 @@ public class LevelFlow : MonoBehaviour
 {
     private GameObject lastHitCheckpoint;
     public GameObject networkManagerPrefab;
+
+    public bool isNetworkGame = false;
 	
  	void Awake()
     {
@@ -36,9 +38,16 @@ public class LevelFlow : MonoBehaviour
         EventManager.StopListening (EventManager.get().loadLevelEvent, levelIsLoading);
     }
 
+    public bool isItNetworkGame()
+    {
+        return isNetworkGame;
+    }
+
     void levelIsLoading( GameConstants.LoadLevelArgument arg)
     {
-       if(arg.isNetworkGame) // network related stuff to initialised
+       isNetworkGame = arg.isNetworkGame;
+
+       if(isNetworkGame) // network related stuff to initialised
        {
            Instantiate(networkManagerPrefab);
        }
@@ -61,15 +70,9 @@ public class LevelFlow : MonoBehaviour
 
     void startTrackingPlayer(GameConstants.PlayerSpawnArgument arg)
     {
-        var player = FindObjectOfType<CharacterController2D>();
-        if(player == null)
-        {
-            Debug.LogError("Should have a player to start tracking");
-        }
-        else
-        {
-            TrackingManager.get().startLevel(player);
-        }
+        var character = arg.player.GetComponent<CharacterController2D>();
+     
+        TrackingManager.get().startLevel(character);
     }
 
 	void Start()
