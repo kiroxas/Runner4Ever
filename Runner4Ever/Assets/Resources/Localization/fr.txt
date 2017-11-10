@@ -11,4 +11,6 @@
 		  {"key":"sfx", "value":"Bruitages"},
 		  {"key":"levelSelection", "value":"Selection de niveau"},
 		  {"key":"jump", "value":"Sautez"},
-		  {"key":"times", "value":"fois"}]}
+		  {"key":"times", "value":"fois"},
+		  {"key":"solo", "value":"Solo"},
+		  {"key":"multi", "value":"Coopération"}]}

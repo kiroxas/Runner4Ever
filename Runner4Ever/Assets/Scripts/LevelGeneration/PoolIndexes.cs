@@ -35,9 +35,10 @@ public class PoolIndexes
 	public static int stopTileIndex = 16;
 	public static int accelerateTileIndex = 17;
 	public static int decelerateTileIndex = 18;
+	public static int startCheckpointIndex = 19;
 
 	public static int[] statelessIndexes = { earthIndex, inverseEarthIndex, waterIndex, hurtIndex, bumperIndex, standOnIndex, jumperIndex, stopTileIndex, accelerateTileIndex, decelerateTileIndex };
-	public static int[] stateIndexes = { objectIndex, enemiesIndex, disapearingIndex, escalatorIndex, movingIndex, killMovingIndex, checkpointIndex, playerIndex, finalCheckpointIndex};
+	public static int[] stateIndexes = { objectIndex, enemiesIndex, disapearingIndex, escalatorIndex, movingIndex, killMovingIndex, checkpointIndex, playerIndex, finalCheckpointIndex, startCheckpointIndex};
 
 	public static char emptyIndex = '0';
 	public static Dictionary<char, int> fileToPoolMapping = new Dictionary<char, int>
@@ -45,7 +46,7 @@ public class PoolIndexes
 	   {'1', earthIndex}, 
 	   {'2', waterIndex},
 	   {'3', objectIndex},
-	   {'4', checkpointIndex},
+	   {'4', startCheckpointIndex},
 	   {'5', checkpointIndex},
 	   {'6', inverseEarthIndex},
 	   {'7', hurtIndex},

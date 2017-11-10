@@ -121,6 +121,7 @@
      <Compile Include="Assets\Scripts\LevelGeneration\SegmentStreamer.cs" />
      <Compile Include="Assets\Scripts\LevelGeneration\SkyBoxFiller.cs" />
      <Compile Include="Assets\Scripts\LevelGeneration\TilesHandler.cs" />
+     <Compile Include="Assets\Scripts\LevelSelectionMode.cs" />
      <Compile Include="Assets\Scripts\LevelSelectionUI.cs" />
      <Compile Include="Assets\Scripts\Localization\LanguagesButton.cs" />
      <Compile Include="Assets\Scripts\Localization\LocalizationData.cs" />
@@ -152,10 +153,12 @@
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\Test\TestReporter.cs" />
      <None Include="Assets\LeanTouch\Examples\Fonts\OFL.txt" />
      <None Include="Assets\Resources\LevelGeneration\level_test_03.txt" />
+     <None Include="Assets\Resources\LevelGeneration\multiTest1.txt" />
      <None Include="Assets\Resources\LevelGeneration\file_list.xml" />
      <None Include="Assets\Resources\LevelGeneration\bug_level.txt" />
      <None Include="Assets\Resources\LevelGeneration\two.txt" />
      <None Include="Assets\Resources\LevelGeneration\levelList.xml" />
+     <None Include="Assets\Resources\LevelGeneration\multiLevelList.xml" />
      <None Include="Assets\StreamingAssets\build_info.txt" />
      <None Include="Assets\Resources\LevelGeneration\level_2_Wael.txt" />
      <None Include="Assets\Resources\LevelGeneration\four.txt" />

@@ -17,6 +17,18 @@ public class UnityUtils
 		Nowhere
 	}
 
+	public static GameConstants.Mode getMode()
+	{
+		LevelSelectionMode flow = (LevelSelectionMode)UnityEngine.Object.FindObjectOfType(typeof(LevelSelectionMode));
+		if(flow)
+		{
+			return flow.getActiveMode();
+		}
+
+		Debug.LogError("Could not find LevelSelectionMode");
+		return GameConstants.Mode.Solo;
+	}
+
 	public static void Swap<T>(ref List<T> list, int i, int j)
 	{
     	var temp = list[i];

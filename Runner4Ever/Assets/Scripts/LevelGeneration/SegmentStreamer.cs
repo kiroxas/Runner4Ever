@@ -105,6 +105,7 @@ public class SegmentStreamer : MonoBehaviour
 	public GameObject instancePlayer;
 	public GameObject checkpoint;
 	public GameObject finalCheckpoint;
+	public GameObject startCheckpoint;
 
 	/* Stateless prefabs */
 	public GameObject hurtTiles;
@@ -512,6 +513,7 @@ public class SegmentStreamer : MonoBehaviour
 		statePool.addPool(stopTile, PoolIndexes.stopTileIndex, PoolIndexes.smallPoolingStrategy);
 		statePool.addPool(accelerateTile, PoolIndexes.accelerateTileIndex, PoolIndexes.smallPoolingStrategy);
 		statePool.addPool(decelerateTile, PoolIndexes.decelerateTileIndex, PoolIndexes.smallPoolingStrategy);
+		statePool.addPool(startCheckpoint, PoolIndexes.startCheckpointIndex, PoolIndexes.smallPoolingStrategy);
 	
 		bgHandler = new BackgroundPropsHandler(propsPerSegment, backgroundObjects, tileWidth);
 		tilesHandler = new TilesSuperHandler();
@@ -615,15 +617,16 @@ public class SegmentStreamer : MonoBehaviour
 
 	public void load(GameConstants.LoadLevelArgument arg)
 	{
-		//Debug.Log("Load level " + arg.levelName);
-
 		generator = new BasicFileLevelLoader(arg.levelName);
 		generator.generateLayout();
 
 		createSegments();
 		fillContainingBox();
 		loadInitSegments();
-		createPlayer();
+		if(arg.isNetworkGame() == false)
+		{
+			createPlayer();
+		}
 
 		EventManager.TriggerEvent(EventManager.get().levelInitialisedEvent, new GameConstants.LevelInitialisedArgument());
 	}

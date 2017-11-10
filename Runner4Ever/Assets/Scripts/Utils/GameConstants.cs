@@ -4,11 +4,18 @@ using System.Collections.Generic;
 
 public class GameConstants 
 {
+	public enum Mode
+    {
+        Solo,
+        Multiplayer
+    }
+
 	static public string checkpointTag = "CheckPoint";
 	static public string playerTag = "Player";
 	static public string MainGameName = "MainGame";
 	static public string levelFolder = "LevelGeneration/";
 	static public string levelListFile = "levelList";
+	static public string multiLevelListFile = "multiLevelList";
 	static public string[] charactersNames = { "Human", "HumanFlip" };
 	static public string defaultCharac = charactersNames[0];
 
@@ -91,10 +98,12 @@ public class GameConstants
 	public class LevelSelectedArgument
 	{
 		public string levelName;
+		public Mode mode;
 		
-		public LevelSelectedArgument(string s)
+		public LevelSelectedArgument(string s, Mode m)
 		{
 			levelName = s;
+			mode = m;
 		}
 	}
 
@@ -106,12 +115,17 @@ public class GameConstants
 	public class LoadLevelArgument
 	{
 		public string levelName;
-		public bool isNetworkGame;
+		public GameConstants.Mode mode;
 
-		public LoadLevelArgument(string ln, bool iNG = false)
+		public LoadLevelArgument(string ln, GameConstants.Mode m)
 		{
 			levelName = ln;
-			isNetworkGame = iNG;
+			mode = m;
+		}
+
+		public bool isNetworkGame()
+		{
+			return mode == Mode.Multiplayer;
 		}
 	}
 

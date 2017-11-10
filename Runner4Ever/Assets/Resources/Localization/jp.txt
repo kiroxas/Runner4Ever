@@ -11,4 +11,6 @@
 		  {"key":"sfx", "value":"SFX"},
 		  {"key":"levelSelection", "value":"Select a Level"},
 		  {"key":"jump", "value":"Jump"},
-		  {"key":"times", "value":"times"}]}
+		  {"key":"times", "value":"times"},
+		  {"key":"solo", "value":"ソロ"},
+		  {"key":"multi", "value":"協力"}]}

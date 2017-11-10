@@ -45,7 +45,7 @@ public class LevelFlow : MonoBehaviour
 
     void levelIsLoading( GameConstants.LoadLevelArgument arg)
     {
-       isNetworkGame = arg.isNetworkGame;
+       isNetworkGame = arg.isNetworkGame();
 
        if(isNetworkGame) // network related stuff to initialised
        {

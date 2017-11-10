@@ -13,8 +13,10 @@ public class GameFlow : MonoBehaviour
 
     private ScreenOrientation orientation;
     public FileUtils.FileList levels { get; private set;}
+    public FileUtils.FileList multiLevels { get; private set;}
 
     private string levelToLoad;
+    private GameConstants.Mode gameMode;
 
     void OnEnable()
     {
@@ -31,6 +33,7 @@ public class GameFlow : MonoBehaviour
     public void onLevelSelected(GameConstants.LevelSelectedArgument arg)
     {
         levelToLoad = GameConstants.levelFolder + arg.levelName;
+        gameMode = arg.mode;
         LoadMainGame();
     }
 
@@ -54,13 +57,14 @@ public class GameFlow : MonoBehaviour
         setLang(PlayerData.get().lang);
         orientation = Screen.orientation;
         levels = FileUtils.FileList.loadFrom(GameConstants.levelFolder, GameConstants.levelListFile);
+        multiLevels = FileUtils.FileList.loadFrom(GameConstants.levelFolder, GameConstants.multiLevelListFile);
     }
 
     void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
     {
         if(scene.name == GameConstants.MainGameName)
         {
-            EventManager.TriggerEvent(EventManager.get().loadLevelEvent, new GameConstants.LoadLevelArgument(levelToLoad));
+            EventManager.TriggerEvent(EventManager.get().loadLevelEvent, new GameConstants.LoadLevelArgument(levelToLoad, gameMode));
         }
     }
 

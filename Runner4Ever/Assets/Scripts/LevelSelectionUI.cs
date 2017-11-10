@@ -1,10 +1,10 @@
 using UnityEngine;
 
-
 public class LevelSelectionUI : MonoBehaviour
 {
     public RectTransform scrollPlace;
     public GameObject levelZonePrefab;
+    public LevelSelectionMode mode; 
 
     void OnEnable()
     {
@@ -20,15 +20,15 @@ public class LevelSelectionUI : MonoBehaviour
     {
         Close();
     }
-   
-    public void Open()
-    {
-        gameObject.SetActive(true);
 
+    public void populateList()
+    {
         foreach (Transform t in scrollPlace)
             Destroy(t.gameObject);
 
-        foreach(string levelName in  GameFlow.instance.levels.files)
+        var files = mode.getActiveMode() == GameConstants.Mode.Solo ? GameFlow.instance.levels.files : GameFlow.instance.multiLevels.files;
+
+        foreach(string levelName in files)
         {
             GameObject entry = Instantiate(levelZonePrefab);
 
@@ -36,6 +36,13 @@ public class LevelSelectionUI : MonoBehaviour
             LevelEntry level = entry.GetComponent<LevelEntry>();
             level.setName(levelName);
         }     
+    }
+   
+    public void Open()
+    {
+        gameObject.SetActive(true);
+
+        populateList();
     }
 
    

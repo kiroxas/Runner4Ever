@@ -10,10 +10,6 @@ using Random = UnityEngine.Random;
 public class LoopLevel : MonoBehaviour 
 {
 	private GameObject player;
-
-	private float xStart = 0;
-	private float xEnd = 0;
-
 	private SegmentStreamer cam;
 
 	void OnEnable()

@@ -174,7 +174,7 @@ public class Segment
 
 	public bool containsCheckpoint()
 	{
-		return containsIndex(PoolIndexes.checkpointIndex);
+		return containsIndex(PoolIndexes.startCheckpointIndex);
 	}
 
 	private bool isItGround(int x, int y)

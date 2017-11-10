@@ -14,6 +14,6 @@ public class LevelEntry : MonoBehaviour
 
    public void onClick()
    {
-        EventManager.TriggerEvent( EventManager.get().levelSelectedEvent, new GameConstants.LevelSelectedArgument(levelName));
+        EventManager.TriggerEvent( EventManager.get().levelSelectedEvent, new GameConstants.LevelSelectedArgument(levelName, UnityUtils.getMode()));
    }
 }
