@@ -124,6 +124,7 @@ public class CharacterController2D : NetworkBehaviour
 	public Animator animator; // Animator for the character
 	private Transform characTransform; // characTransform
 	private Rigidbody2D rb; // rigidbody
+	private Active active;
 
 	//---------------------------------------- Misc
 	public RunDirectionOnGround runDir = RunDirectionOnGround.KeepTheAirOne;
@@ -186,6 +187,8 @@ public class CharacterController2D : NetworkBehaviour
 		rb = GetComponent<Rigidbody2D>();
 		characTransform = GetComponent<Transform>();
 		state = GetComponent<CharacterState>();
+		active = GetComponent<Active>();
+
 		if(state == null)
 		{
 			Debug.LogError("You need a character State");
@@ -228,9 +231,14 @@ public class CharacterController2D : NetworkBehaviour
 		return canJump() && !jumpCollec.cantJumpReachedMaxJumps() && ((previousFrameState.isWallSticking == false && wallSticking()) || (previousFrameState.isWallSticking && wasJumpingLastFrame && wallSticking() && isJumping() == false));
 	}
 
+	public bool amIActive()
+	{
+		return active.isActive();
+	}
+
 	public void Update()
 	{
-		if(isDead())
+		if(!amIActive() || isDead())
 		{
 			return;
 		}

@@ -159,6 +159,12 @@ public class GameConstants
 		}
 	}
 
+	public class UnPausePlayerArgument
+	{}
+
+	public class PausePlayerArgument
+	{}
+
 
 	// Events
 	public class PlayerSpawnEvent : UnityEvent<PlayerSpawnArgument>
@@ -195,5 +201,11 @@ public class GameConstants
 	{}
 
 	public class PlayerDeadEvent : UnityEvent<PlayerDeadArgument>
+	{}
+
+	public class UnPausePlayerEvent : UnityEvent<UnPausePlayerArgument>
+	{}
+
+	public class PausePlayerEvent : UnityEvent<PausePlayerArgument>
 	{}
 }

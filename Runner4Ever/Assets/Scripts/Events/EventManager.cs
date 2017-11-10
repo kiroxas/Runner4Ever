@@ -18,6 +18,8 @@ public class EventManager : MonoBehaviour
     public GameConstants.HitCheckpointEvent hitCheckpointEvent { get; private set;}
     public GameConstants.HitFinalCheckpointEvent hitFinalCheckpointEvent { get; private set;}
     public GameConstants.PlayerDeadEvent playerDeadEvent { get; private set;}
+    public GameConstants.UnPausePlayerEvent unPausePlayerEvent { get; private set;}
+    public GameConstants.PausePlayerEvent pausePlayerEvent { get; private set;}
 
 
     public static EventManager instance;
@@ -57,6 +59,8 @@ public class EventManager : MonoBehaviour
             hitCheckpointEvent = new GameConstants.HitCheckpointEvent();
             hitFinalCheckpointEvent = new GameConstants.HitFinalCheckpointEvent();  
             playerDeadEvent = new GameConstants.PlayerDeadEvent();
+            unPausePlayerEvent = new GameConstants.UnPausePlayerEvent();
+            pausePlayerEvent = new GameConstants.PausePlayerEvent();
         }
     }
 

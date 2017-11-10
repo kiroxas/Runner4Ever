@@ -629,6 +629,7 @@ public class SegmentStreamer : MonoBehaviour
 		}
 
 		EventManager.TriggerEvent(EventManager.get().levelInitialisedEvent, new GameConstants.LevelInitialisedArgument());
+		EventManager.TriggerEvent(EventManager.get().unPausePlayerEvent, new GameConstants.UnPausePlayerArgument());
 	}
 
 	public void Start()
