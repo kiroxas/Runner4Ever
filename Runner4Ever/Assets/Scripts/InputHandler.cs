@@ -57,12 +57,14 @@ public class InputHandler : MonoBehaviour
  	public Row[] actions = new Row[states]; // all the actions for every state and input
 
  	private CharacterController2D character; // reference to the character
+ 	private Active active;
 
  	// --------------------------------- Functions ---------------------------------
 
  	public void Awake()
 	{
 		character = GetComponent<CharacterController2D>();
+		active = GetComponent<Active>();
 	}
 
  	protected virtual void OnEnable()
@@ -88,7 +90,7 @@ public class InputHandler : MonoBehaviour
 
 	private bool isItForMe(LeanFinger finger)
 	{
-		if(character.amILocalPlayer() == false)
+		if(active.isActive() == false || character.amILocalPlayer() == false)
 		{
 			return false;
 		}

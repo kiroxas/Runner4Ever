@@ -615,6 +615,16 @@ public class SegmentStreamer : MonoBehaviour
 		
 	}
 
+	private void unpausePlayer()
+	{
+		EventManager.TriggerEvent(EventManager.get().unPausePlayerEvent, new GameConstants.UnPausePlayerArgument());
+	}
+
+	private void pausePlayer()
+	{
+		EventManager.TriggerEvent(EventManager.get().pausePlayerEvent, new GameConstants.PausePlayerArgument());
+	}
+
 	public void load(GameConstants.LoadLevelArgument arg)
 	{
 		generator = new BasicFileLevelLoader(arg.levelName);
@@ -629,7 +639,7 @@ public class SegmentStreamer : MonoBehaviour
 		}
 
 		EventManager.TriggerEvent(EventManager.get().levelInitialisedEvent, new GameConstants.LevelInitialisedArgument());
-		EventManager.TriggerEvent(EventManager.get().unPausePlayerEvent, new GameConstants.UnPausePlayerArgument());
+		Invoke("unpausePlayer", 2.5f);
 	}
 
 	public void Start()
