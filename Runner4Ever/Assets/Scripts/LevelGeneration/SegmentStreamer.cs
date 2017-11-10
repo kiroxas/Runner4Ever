@@ -166,18 +166,38 @@ public class SegmentStreamer : MonoBehaviour
 
 	private ILayoutGenerator generator; // abstract class to generate the layout
 
-	private Vector2 findFirstSegmentWithCheckpoint()
+	private List<Segment> findAllSegmentWithCheckpoint()
 	{
+		List<Segment> segmentCheckpoint = new List<Segment>();
+
 		foreach(Segment s in segments)
 		{
 			if(s.containsCheckpoint())
 			{
-				return s.getSegmentGridPlacement();
+				segmentCheckpoint.Add(s);
 			}
 		}
 
-		Debug.LogError("Did not find any checkpoint in any segment");
-		return Vector2.zero;
+		return segmentCheckpoint;
+	}
+
+	private Vector2 findFirstSegmentWithCheckpoint()
+	{
+		var segs = findAllSegmentWithCheckpoint();
+
+		if(segs.Any() == false)
+			return Vector2.zero;
+
+		Vector2 min = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
+
+		for (int i = 0; i < segs.Count; i++)
+		{
+			Vector2 s = segs[i].getSegmentGridPlacement();
+            if (s.x < min.x ) 
+            	min = s;
+        }
+
+		return min;
 	}
 
 	private int getSmallestYCell()

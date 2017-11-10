@@ -144,7 +144,6 @@ public class MoveBlockOnTrigger : MonoBehaviour
 
 			if(player)
 			{
-				Debug.Log("Add Outside " + offsetByUpdate);
 				player.addOutsideForce(offsetByUpdate);
 			}
 

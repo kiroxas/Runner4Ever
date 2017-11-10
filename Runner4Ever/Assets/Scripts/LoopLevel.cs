@@ -30,15 +30,6 @@ public class LoopLevel : MonoBehaviour
     {
 		player = GameObject.FindGameObjectWithTag("Player");
 		cam = FindObjectOfType<SegmentStreamer>();
-
-		GameObject firstCheckpoint = CheckpointUtils.findFirstCheckpoint();
-		GameObject lastCheckpoint = CheckpointUtils.findLastCheckpoint();
-
-		if(firstCheckpoint && lastCheckpoint)
-		{
-			xStart = firstCheckpoint.GetComponent<Transform>().position.x;
-			xEnd = lastCheckpoint.GetComponent<Transform>().position.x;
-		}	
     }
 
 	public void Start()
@@ -50,13 +41,9 @@ public class LoopLevel : MonoBehaviour
 		if(player != null && cam != null)
 		{
 			int xPlayer = (int)player.GetComponent<Transform>().position.x;
-			int yPlayer = (int)player.GetComponent<Transform>().position.y;
+			int yPlayer = (int)player.GetComponent<Transform>().position.y;		
 
-			int distance = (int)(xPlayer - xStart);
-			int maxDistance = (int)xEnd - (int)xStart;
-			float percent =  xStart == xEnd ? 1.0f : (float)distance / (float)maxDistance;
-
-			if(player.GetComponent<CharacterController2D>().isDead() || percent > 1.0f || yPlayer < cam.containingBox.min.y || xPlayer < (cam.containingBox.min.x)|| xPlayer > cam.containingBox.max.x)
+			if(player.GetComponent<CharacterController2D>().isDead() || yPlayer < cam.containingBox.min.y || xPlayer < (cam.containingBox.min.x)|| xPlayer > cam.containingBox.max.x)
 			{
 				EventManager.TriggerEvent(EventManager.get().playerDeadEvent, new GameConstants.PlayerDeadArgument(player));
 				//player.GetComponent<CharacterController2D>().respawn(xStart, yStart);
