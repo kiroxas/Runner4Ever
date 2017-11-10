@@ -166,6 +166,20 @@ public class SegmentStreamer : MonoBehaviour
 
 	private ILayoutGenerator generator; // abstract class to generate the layout
 
+	private Vector2 findFirstSegmentWithCheckpoint()
+	{
+		foreach(Segment s in segments)
+		{
+			if(s.containsCheckpoint())
+			{
+				return s.getSegmentGridPlacement();
+			}
+		}
+
+		Debug.LogError("Did not find any checkpoint in any segment");
+		return Vector2.zero;
+	}
+
 	private int getSmallestYCell()
 	{
 		int yCellsBestCase = yTilePerSegment * ySegments;
@@ -303,15 +317,9 @@ public class SegmentStreamer : MonoBehaviour
     	}
 	}
 
-	public Vector2 getPlayerSegment()
+	private Vector2 getPositionToSegment(Vector3 worldPosition)
 	{
-		GameObject player = statePool.getUsedFromPool(PoolIndexes.playerIndex);
-		if(player == null || player.GetComponent<Transform>() == null)
-    	{
-    		return Vector2.zero;
-    	}
-
-		Vector3 position = player.GetComponent<Transform>().position;
+		Vector3 position = worldPosition;
 
 		float xSegmentSize = xTilePerSegment * tileWidth;
 		int xGridIndex = (int)Mathf.Floor(position.x / xSegmentSize);
@@ -320,6 +328,17 @@ public class SegmentStreamer : MonoBehaviour
 		int yGridIndex = (int)Mathf.Floor(position.y / ySegmentSize);
 
 		return new Vector2(xGridIndex, yGridIndex);
+	}
+
+	public Vector2 getPlayerSegment()
+	{
+		GameObject player = statePool.getUsedFromPool(PoolIndexes.playerIndex);
+		if(player == null || player.GetComponent<Transform>() == null)
+    	{
+    		return findFirstSegmentWithCheckpoint();
+    	}
+
+		return getPositionToSegment(player.GetComponent<Transform>().position);
 	}
 
 	public List<Segment> nineGridSegments(Vector2 gridPos)
@@ -378,8 +397,8 @@ public class SegmentStreamer : MonoBehaviour
 
 	public void updateSegments()
 	{
-		 if(strat == SegmentStrategy.NineGrid)
-		 {	 	
+		if(strat == SegmentStrategy.NineGrid)
+		{	 	
 		 	Vector2 gridIndex = getPlayerSegment();
 
 		 	if(gridIndex != oldPlayerPlacement)
@@ -406,8 +425,7 @@ public class SegmentStreamer : MonoBehaviour
 
 		 		EventManager.TriggerEvent(EventManager.get().segmentsUpdatedEvent, ev);
 		 	}
-
-		 }
+		}
 		else if(strat == SegmentStrategy.LoadOne)
 		{
 			Vector2 gridIndex = getPlayerSegment();

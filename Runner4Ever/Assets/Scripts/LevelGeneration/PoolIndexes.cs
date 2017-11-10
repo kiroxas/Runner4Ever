@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 /* Class that stores all the indexes relative to pooling */
 public class PoolIndexes
@@ -60,5 +61,10 @@ public class PoolIndexes
 	   {'S', stopTileIndex},
 	   {'G', accelerateTileIndex},
 	   {'H', decelerateTileIndex} };
+
+	public static char findKey(int value)
+	{
+		return fileToPoolMapping.FirstOrDefault(x => x.Value == value).Key;
+	}
 
 }

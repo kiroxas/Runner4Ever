@@ -167,12 +167,27 @@ public class Segment
 		return new GameConstants.SegmentEnabledArgument(bottomLeft, topRight);
 	}
 
+	private bool containsIndex(int index)
+	{
+		return layout.Contains(PoolIndexes.findKey(index));
+	}
+
+	public bool containsCheckpoint()
+	{
+		return containsIndex(PoolIndexes.checkpointIndex);
+	}
+
 	private bool isItGround(int x, int y)
 	{
 		int index = getIndex(x,y);
 		int indexBelow = getIndex(x,y - 1);
 
 		return deepness[PoolIndexes.earthIndex][index].top == 0 && indexBelow >= 0 && deepness[PoolIndexes.earthIndex][indexBelow].top == 1;
+	}
+
+	public Vector2 getSegmentGridPlacement()
+	{
+		return new Vector2(info.layoutXGrid, info.layoutYGrid);
 	}
 
 	private void fillGroundLevel()
