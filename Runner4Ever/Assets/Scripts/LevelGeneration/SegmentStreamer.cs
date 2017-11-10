@@ -164,6 +164,7 @@ public class SegmentStreamer : MonoBehaviour
 
 	public SegmentStrategy strat = SegmentStrategy.NineGrid;
 	private Vector2 oldPlayerPlacement; // player placement at precedent frame, int he segment grid
+	private List<Vector2> startPositions; // start checkpoint Positions
 
 	private ILayoutGenerator generator; // abstract class to generate the layout
 
@@ -199,6 +200,24 @@ public class SegmentStreamer : MonoBehaviour
         }
 
 		return min;
+	}
+
+	private void fillStartPositions()
+	{
+		startPositions = new List<Vector2>();
+
+		var segs = findAllSegmentWithCheckpoint();
+
+		foreach(Segment s in segs)
+		{
+			startPositions.AddRange(s.startCheckpointPositions());
+		}
+	}
+
+	public List<Vector2> getStartPositions()
+	{
+		fillStartPositions();
+		return startPositions;
 	}
 
 	private int getSmallestYCell()
@@ -326,15 +345,13 @@ public class SegmentStreamer : MonoBehaviour
 
 	public void createPlayer()
 	{
-    	GameObject firstCheckpoint = CheckpointUtils.findFirstCheckpoint();
-
-    	if(firstCheckpoint)
+    	if(startPositions.Count > 0)
     	{
-    		GameObject player = statePool.getFromPool(PoolIndexes.playerIndex, firstCheckpoint.GetComponent<Transform>().position);
+    		GameObject player = statePool.getFromPool(PoolIndexes.playerIndex, startPositions[0]);
 
     		EventManager.TriggerEvent(EventManager.get().playerSpawnEvent, new GameConstants.PlayerSpawnArgument(player, 
-    																											 player.GetComponent<Transform>().position.x,
-    																											 player.GetComponent<Transform>().position.y));
+    																											 startPositions[0].x,
+    																											 startPositions[0].y));
     	}
 	}
 
@@ -632,14 +649,16 @@ public class SegmentStreamer : MonoBehaviour
 
 		createSegments();
 		fillContainingBox();
+		fillStartPositions();
 		loadInitSegments();
+
 		if(arg.isNetworkGame() == false)
 		{
 			createPlayer();
+			Invoke("unpausePlayer", 2.5f);
 		}
 
-		EventManager.TriggerEvent(EventManager.get().levelInitialisedEvent, new GameConstants.LevelInitialisedArgument());
-		Invoke("unpausePlayer", 2.5f);
+		EventManager.TriggerEvent(EventManager.get().levelInitialisedEvent, new GameConstants.LevelInitialisedArgument());	
 	}
 
 	public void Start()

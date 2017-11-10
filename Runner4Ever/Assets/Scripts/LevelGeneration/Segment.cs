@@ -177,6 +177,27 @@ public class Segment
 		return containsIndex(PoolIndexes.startCheckpointIndex);
 	}
 
+	public List<Vector2> startCheckpointPositions()
+	{
+		List<Vector2> list = new List<Vector2>();
+
+		if(containsCheckpoint())
+		{
+			for(int x = 0; x < info.xSize; ++x)
+			{
+				for(int y = 0; y < info.ySize; ++y)
+				{
+					if(PoolIndexes.fileToPoolMapping[layout[getIndex(x,y)]] == PoolIndexes.startCheckpointIndex)
+					{
+						list.Add(getPosition(x,y));
+					}
+				}
+			}
+		}
+
+		return list;
+	}
+
 	private bool isItGround(int x, int y)
 	{
 		int index = getIndex(x,y);

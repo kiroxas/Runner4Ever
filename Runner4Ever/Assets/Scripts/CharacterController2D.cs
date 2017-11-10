@@ -832,6 +832,13 @@ public class CharacterController2D : NetworkBehaviour
 		characTransform.localScale = theScale;
 	}
 
+	public override void OnStartLocalPlayer()
+	{
+		EventManager.TriggerEvent(EventManager.get().playerSpawnEvent, new GameConstants.PlayerSpawnArgument(gameObject, 
+    																									     transform.position.x,
+    																									     transform.position.y));
+	}
+
 	/* ------------------------------------------------------ Editor functions -------------------------------------------------------*/
 
 	void OnDrawGizmosSelected()

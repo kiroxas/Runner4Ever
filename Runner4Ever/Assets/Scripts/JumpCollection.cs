@@ -87,12 +87,18 @@ public class JumpCollection
 
 	public int getNumberOfFirstJump()
 	{
-		return jumpsRealised[0];
+		if(jumpsRealised.Count > 0)
+			return jumpsRealised[0];
+
+		return 0;
 	}
 
 	public int getNumberOfDoubleJump()
 	{
-		return jumpsRealised[1];
+		if(jumpsRealised.Count > 1)
+			return jumpsRealised[1];
+
+		return 0;
 	}
 
 	public int getNumberOfJumps()

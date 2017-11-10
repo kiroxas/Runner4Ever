@@ -106,4 +106,16 @@ public class UnityUtils
 		Debug.LogError("Could not find level flow");
 		return false;
 	}
+
+	static public List<Vector2> getSpawningLocations()
+	{
+		SegmentStreamer flow = (SegmentStreamer)UnityEngine.Object.FindObjectOfType(typeof(SegmentStreamer));
+		if(flow)
+		{
+			return flow.getStartPositions();
+		}
+
+		Debug.LogError("Could not find SegmentStreamer");
+		return null;
+	}
 }
