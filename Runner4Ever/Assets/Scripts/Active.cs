@@ -22,9 +22,14 @@ public class Active : MonoBehaviour
         EventManager.StopListening(EventManager.get().pausePlayerEvent, setInactive);
     }
 
-    void setActive(GameConstants.UnPausePlayerArgument arg)
+    public void setActive()
     {
     	_isActive = true;
+    }
+
+    void setActive(GameConstants.UnPausePlayerArgument arg)
+    {
+    	setActive();
     }
 
     void setInactive(GameConstants.PausePlayerArgument arg)

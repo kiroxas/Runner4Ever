@@ -13,4 +13,7 @@
 		  {"key":"jump", "value":"Jump"},
 		  {"key":"times", "value":"times"},
 		  {"key":"solo", "value":"ソロ"},
-		  {"key":"multi", "value":"協力"}]}
+		  {"key":"multi", "value":"協力"},
+		  {"key":"pause", "value":"休止"},
+		  {"key":"resume", "value":"レジューム"},
+		  {"key":"quit", "value":"止める"}]}

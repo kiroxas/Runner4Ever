@@ -13,6 +13,7 @@ public class WalkEnemyController2D : MonoBehaviour
 
 	private CharacterState state;
 	private Rigidbody2D rb;
+	private Active active;
 	//private Transform transform;
 
 	public WalkDirection startWalkDirection = WalkDirection.Left;
@@ -24,6 +25,8 @@ public class WalkEnemyController2D : MonoBehaviour
 	{
 		rb = GetComponent<Rigidbody2D>();
 		state = GetComponent<CharacterState>();
+		active = GetComponent<Active>();
+		active.setActive();
 		//transform = GetComponent<Transform>();
 	}
 
@@ -52,15 +55,22 @@ public class WalkEnemyController2D : MonoBehaviour
 
 	public void Update()
 	{
-		state.updateState();
-
-		if((state.isCollidingRight && xSpeed > 0)
-			|| (state.isCollidingLeft && xSpeed < 0))
+		if(active.isActive() == false)
 		{
-			changeDirection();
+			rb.velocity = Vector2.zero;
 		}
+		else
+		{
+			state.updateState();
 
-		rb.velocity = new Vector2(xSpeed, rb.velocity.y);
+			if((state.isCollidingRight && xSpeed > 0)
+				|| (state.isCollidingLeft && xSpeed < 0))
+			{
+				changeDirection();
+			}
+
+			rb.velocity = new Vector2(xSpeed, rb.velocity.y);
+		}
 	}
 
 }

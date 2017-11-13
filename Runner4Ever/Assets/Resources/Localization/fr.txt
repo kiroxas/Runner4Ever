@@ -13,4 +13,7 @@
 		  {"key":"jump", "value":"Sautez"},
 		  {"key":"times", "value":"fois"},
 		  {"key":"solo", "value":"Solo"},
-		  {"key":"multi", "value":"Coopération"}]}
+		  {"key":"multi", "value":"Coopération"},
+		  {"key":"pause", "value":"Pause"},
+		  {"key":"resume", "value":"Reprendre"},
+		  {"key":"quit", "value":"Quitter"}]}

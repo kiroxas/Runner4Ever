@@ -832,12 +832,42 @@ public class CharacterController2D : NetworkBehaviour
 		characTransform.localScale = theScale;
 	}
 
+	
+
+	/* ------------------------------------------------------ Network functions -------------------------------------------------------*/
 	public override void OnStartLocalPlayer()
 	{
 		EventManager.TriggerEvent(EventManager.get().playerSpawnEvent, new GameConstants.PlayerSpawnArgument(gameObject, 
     																									     transform.position.x,
     																									     transform.position.y));
 	}
+
+	[ClientRpc]
+    void RpcUnpause()
+    {
+    	Debug.Log("Rpc Triggered");
+    	EventManager.TriggerEvent(EventManager.get().unPausePlayerEvent, new GameConstants.UnPausePlayerArgument());
+    }
+
+    private void unpausePlayers(GameConstants.UnPauseAllPlayerArgument arg)
+    {
+    	Debug.Log("Received");
+    	if(Network.isServer)
+    	{
+    		Debug.Log("Rpc Launched");
+    		RpcUnpause();
+    	}
+    }
+
+     void OnEnable()
+    {
+        EventManager.StartListening(EventManager.get().unPauseAllPlayerEvent, unpausePlayers);
+    }
+
+    void OnDisable ()
+    {
+        EventManager.StopListening(EventManager.get().unPauseAllPlayerEvent, unpausePlayers);
+    }
 
 	/* ------------------------------------------------------ Editor functions -------------------------------------------------------*/
 

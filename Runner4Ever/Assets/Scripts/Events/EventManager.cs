@@ -20,7 +20,8 @@ public class EventManager : MonoBehaviour
     public GameConstants.PlayerDeadEvent playerDeadEvent { get; private set;}
     public GameConstants.UnPausePlayerEvent unPausePlayerEvent { get; private set;}
     public GameConstants.PausePlayerEvent pausePlayerEvent { get; private set;}
-
+    public GameConstants.UnPauseAllPlayerEvent unPauseAllPlayerEvent { get; private set;}
+    public GameConstants.QuitMainGameEvent quitMainGameEvent { get; private set;}
 
     public static EventManager instance;
 
@@ -61,6 +62,8 @@ public class EventManager : MonoBehaviour
             playerDeadEvent = new GameConstants.PlayerDeadEvent();
             unPausePlayerEvent = new GameConstants.UnPausePlayerEvent();
             pausePlayerEvent = new GameConstants.PausePlayerEvent();
+            unPauseAllPlayerEvent = new GameConstants.UnPauseAllPlayerEvent();
+            quitMainGameEvent = new GameConstants.QuitMainGameEvent();
         }
     }
 

@@ -12,6 +12,12 @@ public class MyNetworkManager : NetworkManager
     {
     }
 
+	void unpausePlayers()
+	{
+		Debug.Log("unpausePlayers");
+    	EventManager.TriggerEvent(EventManager.get().unPauseAllPlayerEvent, new GameConstants.UnPauseAllPlayerArgument());
+	}
+
     public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId)
     {
     	var spawns = UnityUtils.getSpawningLocations();
@@ -27,7 +33,7 @@ public class MyNetworkManager : NetworkManager
     	++playersIn;
     	if(playersIn == expectedPlayers)
     	{
-
+			Invoke("unpausePlayers", 2.0f);
     	}
     }
 }

@@ -26,7 +26,7 @@ public class LevelFlow : MonoBehaviour
         EventManager.StartListening (EventManager.get().hitCheckpointEvent, checkpointHit);
         EventManager.StartListening (EventManager.get().playerDeadEvent, playerIsDead);
         EventManager.StartListening (EventManager.get().loadLevelEvent, levelIsLoading);
-       
+        EventManager.StartListening (EventManager.get().quitMainGameEvent, quitMainGame);
     }
 
     void OnDisable ()
@@ -36,11 +36,17 @@ public class LevelFlow : MonoBehaviour
         EventManager.StopListening (EventManager.get().hitCheckpointEvent, checkpointHit);
         EventManager.StopListening (EventManager.get().playerDeadEvent, playerIsDead);
         EventManager.StopListening (EventManager.get().loadLevelEvent, levelIsLoading);
+        EventManager.StopListening (EventManager.get().quitMainGameEvent, quitMainGame);
     }
 
     public bool isItNetworkGame()
     {
         return isNetworkGame;
+    }
+
+    void quitMainGame( GameConstants.QuitMainGameArgument arg)
+    {
+         GameFlow.get().LoadMainMenu();
     }
 
     void levelIsLoading( GameConstants.LoadLevelArgument arg)

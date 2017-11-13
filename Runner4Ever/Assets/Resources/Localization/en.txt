@@ -13,4 +13,7 @@
 		  {"key":"jump", "value":"Jump"},
 		  {"key":"times", "value":"times"},
 		  {"key":"solo", "value":"Adventure"},
-		  {"key":"multi", "value":"Multiplayer"}]}
+		  {"key":"multi", "value":"Multiplayer"},
+		  {"key":"pause", "value":"Pause"},
+		  {"key":"resume", "value":"Resume"},
+		  {"key":"quit", "value":"Quit"}]}
