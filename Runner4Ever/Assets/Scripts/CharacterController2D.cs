@@ -845,16 +845,13 @@ public class CharacterController2D : NetworkBehaviour
 	[ClientRpc]
     void RpcUnpause()
     {
-    	Debug.Log("Rpc Triggered");
     	EventManager.TriggerEvent(EventManager.get().unPausePlayerEvent, new GameConstants.UnPausePlayerArgument());
     }
 
     private void unpausePlayers(GameConstants.UnPauseAllPlayerArgument arg)
     {
-    	Debug.Log("Received");
-    	if(Network.isServer)
+    	if(isServer)
     	{
-    		Debug.Log("Rpc Launched");
     		RpcUnpause();
     	}
     }
