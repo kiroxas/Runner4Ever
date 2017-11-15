@@ -108,7 +108,10 @@ public class CharacterController2D : NetworkBehaviour
  	public float timeBetweenJumps = 0.25f; // minimum time between 2 jumps
  	public float jumpBufferTime = 0.2f; // buffer time when we register a failed jump attempt
 
+ 	[SyncVar]
 	private float lastJumpFailedAttempt = 0.0f; // private variable to register when was the last failed jump
+
+	[SyncVar]
 	private float jumpIn; // variable to register when we last jumped
 	private JumpCollection jumpCollec; // where we store the jumps, and it will manage the order and the proper end of each jump
 	public bool firstJumpInAirEnabled = true;
@@ -150,6 +153,8 @@ public class CharacterController2D : NetworkBehaviour
 	public float gravitySmooth = 1.0f;
 
 	public float dashSpeedMul = 2.5f;
+
+	[SyncVar]
 	private float upSpeed = 0;
 	public ItsAlmostAStack<float, GameObject> gravity;
 
@@ -564,10 +569,14 @@ public class CharacterController2D : NetworkBehaviour
 				changeDirection();
 			}
 
-			upSpeed = 10.0f;
-			jumpIn = timeBetweenJumps;
-			lastJumpFailedAttempt = 0.0f;
-			timeHanging = 0.0f;
+			if(UnityUtils.isNetworkGame())
+			{
+				CmdJump();
+			}
+			else
+			{
+				actualJump();
+			}
 		}
 		else
 		{
@@ -846,6 +855,20 @@ public class CharacterController2D : NetworkBehaviour
     void RpcUnpause()
     {
     	EventManager.TriggerEvent(EventManager.get().unPausePlayerEvent, new GameConstants.UnPausePlayerArgument());
+    }
+
+    void actualJump()
+    {
+    	upSpeed = 10.0f;
+		jumpIn = timeBetweenJumps;
+		lastJumpFailedAttempt = 0.0f;
+		timeHanging = 0.0f;
+    }
+
+    [Command]
+    void CmdJump()
+    {
+    	actualJump();
     }
 
     private void unpausePlayers(GameConstants.UnPauseAllPlayerArgument arg)

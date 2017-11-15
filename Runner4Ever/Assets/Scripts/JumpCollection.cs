@@ -9,11 +9,11 @@ using System;
 public class JumpCollection
 {
 	//---------------------------------- Members
-	private List<JumpCharacs> jumps; // all jumps
-	private int currentIndex; // current jump
-	private List<int> jumpsRealised; // keep track of how many jumps we did
+	public List<JumpCharacs> jumps; // all jumps
+	public int currentIndex; // current jump
+	public List<int> jumpsRealised; // keep track of how many jumps we did
 
-	private bool loopJumps = false;
+	public bool loopJumps = false;
 
 	// --------------------------------- Public functions
 	public void loopingJumps(bool b)
