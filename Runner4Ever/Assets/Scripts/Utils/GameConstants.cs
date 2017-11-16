@@ -176,6 +176,12 @@ public class GameConstants
 		{}
 	}
 
+	public class NetworkDashArgument : NetworkArgument
+	{
+		public NetworkDashArgument(uint  i) : base(i)
+		{}
+	}
+
 	public class ClientConnectedArgument
 	{
 		public NetworkClient client;
@@ -262,6 +268,9 @@ public class GameConstants
 	public class ServerCreatedEvent : UnityEvent<ServerCreatedArgument>
 	{}
 
+	public class NetworkDashEvent : UnityEvent<NetworkDashArgument>
+	{}	
 	
-
+	public class NetworkOrdersDashEvent : UnityEvent<NetworkDashArgument>
+	{}
 }

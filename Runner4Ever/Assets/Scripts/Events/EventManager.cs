@@ -26,6 +26,8 @@ public class EventManager : MonoBehaviour
     public GameConstants.NetworkOrdersJumpEvent networkOrdersJumpEvent { get; private set;}
     public GameConstants.ClientConnectedEvent clientConnectedEvent { get; private set;}
     public GameConstants.ServerCreatedEvent serverCreatedEvent { get; private set;}
+    public GameConstants.NetworkDashEvent networkDashEvent { get; private set;}
+    public GameConstants.NetworkOrdersDashEvent networkOrdersDashEvent { get; private set;}
 
 
     public static EventManager instance;
@@ -73,6 +75,8 @@ public class EventManager : MonoBehaviour
             networkOrdersJumpEvent = new GameConstants.NetworkOrdersJumpEvent();
             clientConnectedEvent = new GameConstants.ClientConnectedEvent();
             serverCreatedEvent = new GameConstants.ServerCreatedEvent();
+            networkDashEvent = new GameConstants.NetworkDashEvent();
+            networkOrdersDashEvent = new GameConstants.NetworkOrdersDashEvent();
         }
     }
 

@@ -614,12 +614,22 @@ public class CharacterController2D : NetworkBehaviour
 		_actualSpeed = 0;*/
 	}
 
-	public void dash()
-	{	
+	public void actualDash()
+	{
 		currentVelocity *= dashSpeedMul;
 		dashIn = dashTime;
 		GetComponent<BoxCollider2D>().size = new Vector2(xColliderSize, yColliderSize / 2);
 		GetComponent<BoxCollider2D>().offset = new Vector2(colliderOffset.x, colliderOffset.y - (yColliderSize / 4));
+	}
+
+	public void dash()
+	{	
+		if(networkGame)
+		{
+			SendDashNetMessage();
+		}
+
+		actualDash();
 	}
 
 	/* ------------------------------------------------------ Function to inquiry the state -------------------------------------------------------*/
@@ -874,6 +884,11 @@ public class CharacterController2D : NetworkBehaviour
     {
     	EventManager.TriggerEvent(EventManager.get().networkJumpEvent, new GameConstants.NetworkJumpArgument(getMyId()));
     }
+
+     public void SendDashNetMessage()
+    {
+    	EventManager.TriggerEvent(EventManager.get().networkDashEvent, new GameConstants.NetworkDashArgument(getMyId()));
+    }
      
 
     private void unpausePlayers(GameConstants.UnPauseAllPlayerArgument arg)
@@ -892,16 +907,26 @@ public class CharacterController2D : NetworkBehaviour
     	}
     }
 
+    private void netOrderedToDash(GameConstants.NetworkDashArgument arg)
+    {
+    	if(arg.id == getMyId())
+    	{
+    		actualDash();
+    	}
+    }
+
     void OnEnable()
     {
         EventManager.StartListening(EventManager.get().unPauseAllPlayerEvent, unpausePlayers);
         EventManager.StartListening(EventManager.get().networkOrdersJumpEvent, netOrderedToJump);
+        EventManager.StartListening(EventManager.get().networkOrdersDashEvent, netOrderedToDash);
     }
 
     void OnDisable ()
     {
         EventManager.StopListening(EventManager.get().unPauseAllPlayerEvent, unpausePlayers);
         EventManager.StopListening(EventManager.get().networkOrdersJumpEvent, netOrderedToJump);
+        EventManager.StopListening(EventManager.get().networkOrdersDashEvent, netOrderedToDash);
     }
 
 	/* ------------------------------------------------------ Editor functions -------------------------------------------------------*/

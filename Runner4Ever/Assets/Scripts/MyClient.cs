@@ -7,6 +7,9 @@ public class MyClient
 	private const short jumpMessage = 140;
 	private const short jumpServerMessage = 141;
 
+	private const short dashMessage = 142;
+	private const short dashServerMessage = 143;
+
 	NetworkClient client;
 
 	public void OnEnable()
@@ -14,6 +17,7 @@ public class MyClient
     	EventManager.StartListening(EventManager.get().serverCreatedEvent, startServer);
     	EventManager.StartListening(EventManager.get().clientConnectedEvent, setClient);
         EventManager.StartListening(EventManager.get().networkJumpEvent, receiveJumpEvent);
+        EventManager.StartListening(EventManager.get().networkDashEvent, receiveDashEvent);
     }
 
     public void OnDisable ()
@@ -21,6 +25,7 @@ public class MyClient
         EventManager.StopListening(EventManager.get().networkJumpEvent, receiveJumpEvent);
         EventManager.StopListening(EventManager.get().clientConnectedEvent, setClient);
         EventManager.StopListening(EventManager.get().serverCreatedEvent, startServer);
+        EventManager.StopListening(EventManager.get().networkDashEvent, receiveDashEvent);
     }
 
     public void receiveJumpEvent(GameConstants.NetworkJumpArgument arg)
@@ -28,6 +33,13 @@ public class MyClient
     	IntegerMessage msg = new IntegerMessage((int)arg.id);
 
     	client.Send(jumpServerMessage, msg);
+    }
+
+    public void receiveDashEvent(GameConstants.NetworkDashArgument arg)
+    {
+    	IntegerMessage msg = new IntegerMessage((int)arg.id);
+
+    	client.Send(dashServerMessage, msg);
     }
 
     public void startServer(GameConstants.ServerCreatedArgument cl)
@@ -45,18 +57,14 @@ public class MyClient
 
     public void registerClient()
     {
-    	Debug.Log("Registering");
-		
     	client.RegisterHandler(jumpMessage, ReceiveJumpMessage);
+    	client.RegisterHandler(dashMessage, ReceiveDashMessage);
     }
 
     public void registerServer()
     {
-    	Debug.Log("Registering Server");
-    	
-      	//registering the server handler
      	NetworkServer.RegisterHandler(jumpServerMessage, ServerReceiveJumpMessage);
-    	
+    	NetworkServer.RegisterHandler(dashServerMessage, ServerReceiveDashMessage);
     }
 
 	public void Start()
@@ -74,10 +82,24 @@ public class MyClient
      	NetworkServer.SendToAll (jumpMessage, stringMessage);
     }
 
+    private void ServerReceiveDashMessage(NetworkMessage message)
+    {
+     	var stringMessage = message.ReadMessage<IntegerMessage>();
+
+     	NetworkServer.SendToAll (dashMessage, stringMessage);
+    }
+
     private void ReceiveJumpMessage(NetworkMessage message)
     {
     	var NetworkJumpArgument =  message.ReadMessage<IntegerMessage>();
     	
     	EventManager.TriggerEvent(EventManager.get().networkOrdersJumpEvent, new GameConstants.NetworkJumpArgument((uint)NetworkJumpArgument.value));
+    }
+
+     private void ReceiveDashMessage(NetworkMessage message)
+    {
+    	var NetworkJumpArgument =  message.ReadMessage<IntegerMessage>();
+    	
+    	EventManager.TriggerEvent(EventManager.get().networkOrdersDashEvent, new GameConstants.NetworkDashArgument((uint)NetworkJumpArgument.value));
     }
 }
