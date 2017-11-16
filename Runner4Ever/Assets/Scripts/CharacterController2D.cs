@@ -1,5 +1,7 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Networking;
+using UnityEngine.Networking.NetworkSystem;
 using System.Collections;
 using System.Collections.Generic;
 using Lean.Touch;
@@ -108,10 +110,7 @@ public class CharacterController2D : NetworkBehaviour
  	public float timeBetweenJumps = 0.25f; // minimum time between 2 jumps
  	public float jumpBufferTime = 0.2f; // buffer time when we register a failed jump attempt
 
- 	[SyncVar]
 	private float lastJumpFailedAttempt = 0.0f; // private variable to register when was the last failed jump
-
-	[SyncVar]
 	private float jumpIn; // variable to register when we last jumped
 	private JumpCollection jumpCollec; // where we store the jumps, and it will manage the order and the proper end of each jump
 	public bool firstJumpInAirEnabled = true;
@@ -153,8 +152,6 @@ public class CharacterController2D : NetworkBehaviour
 	public float gravitySmooth = 1.0f;
 
 	public float dashSpeedMul = 2.5f;
-
-	[SyncVar]
 	private float upSpeed = 0;
 	public ItsAlmostAStack<float, GameObject> gravity;
 
@@ -172,7 +169,7 @@ public class CharacterController2D : NetworkBehaviour
 	public ItsAlmostAStack<WallJumpStrategy, GameObject> wallJumpStrat;
 
 	public bool networkGame = false;
-
+	public uint myId = 0;
 	/* ------------------------------------------------------ Monobehaviour Functions -------------------------------------------------------*/
 
 	public void Awake()
@@ -227,6 +224,11 @@ public class CharacterController2D : NetworkBehaviour
 		wallJumpStrat = new ItsAlmostAStack<WallJumpStrategy, GameObject>();
 
 		networkGame = UnityUtils.isNetworkGame();
+
+		if(networkGame)
+		{
+			myId = GetComponent<NetworkIdentity>().netId.Value;
+		}
 
 		reinit();
 	}
@@ -569,14 +571,12 @@ public class CharacterController2D : NetworkBehaviour
 				changeDirection();
 			}
 
-			if(UnityUtils.isNetworkGame())
+			if(networkGame)
 			{
-				CmdJump();
+				SendJumpNetMessage();
 			}
-			else
-			{
-				actualJump();
-			}
+			
+			actualJump();
 		}
 		else
 		{
@@ -865,11 +865,16 @@ public class CharacterController2D : NetworkBehaviour
 		timeHanging = 0.0f;
     }
 
-    [Command]
-    void CmdJump()
+    public uint getMyId()
     {
-    	actualJump();
+    	return myId;
     }
+
+    public void SendJumpNetMessage()
+    {
+    	EventManager.TriggerEvent(EventManager.get().networkJumpEvent, new GameConstants.NetworkJumpArgument(getMyId()));
+    }
+     
 
     private void unpausePlayers(GameConstants.UnPauseAllPlayerArgument arg)
     {
@@ -879,14 +884,24 @@ public class CharacterController2D : NetworkBehaviour
     	}
     }
 
-     void OnEnable()
+    private void netOrderedToJump(GameConstants.NetworkJumpArgument arg)
+    {
+    	if(arg.id == getMyId())
+    	{
+    		actualJump();
+    	}
+    }
+
+    void OnEnable()
     {
         EventManager.StartListening(EventManager.get().unPauseAllPlayerEvent, unpausePlayers);
+        EventManager.StartListening(EventManager.get().networkOrdersJumpEvent, netOrderedToJump);
     }
 
     void OnDisable ()
     {
         EventManager.StopListening(EventManager.get().unPauseAllPlayerEvent, unpausePlayers);
+        EventManager.StopListening(EventManager.get().networkOrdersJumpEvent, netOrderedToJump);
     }
 
 	/* ------------------------------------------------------ Editor functions -------------------------------------------------------*/

@@ -22,6 +22,11 @@ public class EventManager : MonoBehaviour
     public GameConstants.PausePlayerEvent pausePlayerEvent { get; private set;}
     public GameConstants.UnPauseAllPlayerEvent unPauseAllPlayerEvent { get; private set;}
     public GameConstants.QuitMainGameEvent quitMainGameEvent { get; private set;}
+    public GameConstants.NetworkJumpEvent networkJumpEvent { get; private set;}
+    public GameConstants.NetworkOrdersJumpEvent networkOrdersJumpEvent { get; private set;}
+    public GameConstants.ClientConnectedEvent clientConnectedEvent { get; private set;}
+    public GameConstants.ServerCreatedEvent serverCreatedEvent { get; private set;}
+
 
     public static EventManager instance;
 
@@ -64,6 +69,10 @@ public class EventManager : MonoBehaviour
             pausePlayerEvent = new GameConstants.PausePlayerEvent();
             unPauseAllPlayerEvent = new GameConstants.UnPauseAllPlayerEvent();
             quitMainGameEvent = new GameConstants.QuitMainGameEvent();
+            networkJumpEvent = new GameConstants.NetworkJumpEvent();
+            networkOrdersJumpEvent = new GameConstants.NetworkOrdersJumpEvent();
+            clientConnectedEvent = new GameConstants.ClientConnectedEvent();
+            serverCreatedEvent = new GameConstants.ServerCreatedEvent();
         }
     }
 

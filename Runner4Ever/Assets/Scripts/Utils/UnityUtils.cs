@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Networking;
 using System;
 using System.IO;
 using System.Xml.Serialization;
@@ -100,11 +101,23 @@ public class UnityUtils
 		LevelFlow flow = (LevelFlow)UnityEngine.Object.FindObjectOfType(typeof(LevelFlow));
 		if(flow)
 		{
-			return flow.isNetworkGame;
+			return flow.isItNetworkGame();
 		}
 
 		Debug.LogError("Could not find level flow");
 		return false;
+	}
+
+	static public NetworkClient getMyClient()
+	{
+		MyNetworkManager flow = (MyNetworkManager)UnityEngine.Object.FindObjectOfType(typeof(MyNetworkManager));
+		if(flow)
+		{
+			return flow.client;
+		}
+
+		Debug.LogError("Could not find MyNetworkManager");
+		return null;
 	}
 
 	static public List<Vector2> getSpawningLocations()

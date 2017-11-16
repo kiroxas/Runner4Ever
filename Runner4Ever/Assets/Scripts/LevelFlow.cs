@@ -10,8 +10,9 @@ public class LevelFlow : MonoBehaviour
 {
     private GameObject lastHitCheckpoint;
     public GameObject networkManagerPrefab;
+    public GameObject networkClientPrefab;
 
-    public bool isNetworkGame = false;
+    private bool isNetworkGame = false;
 	
  	void Awake()
     {
@@ -56,6 +57,7 @@ public class LevelFlow : MonoBehaviour
        if(isNetworkGame) // network related stuff to initialised
        {
            Instantiate(networkManagerPrefab);
+           Instantiate(networkClientPrefab);
        }
     }
 

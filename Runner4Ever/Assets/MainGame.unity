@@ -1559,7 +1559,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   networkManagerPrefab: {fileID: 1681902711756960, guid: e598a36bca36ca04686b48a4ca6ba6cd,
     type: 2}
-  isNetworkGame: 0
+  networkClientPrefab: {fileID: 1276776654106356, guid: 36ab8d87c37c01248b989ac5d2e41024,
+    type: 2}
 --- !u!4 &1734732836
 Transform:
   m_ObjectHideFlags: 0

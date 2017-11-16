@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.Events;
 using System.Collections.Generic;
 
@@ -159,6 +160,35 @@ public class GameConstants
 		}
 	}
 
+	public class NetworkArgument
+	{
+		public uint  id;
+
+		public NetworkArgument(uint  i)
+		{
+			id = i;
+		}
+	}
+
+	public class NetworkJumpArgument : NetworkArgument
+	{
+		public NetworkJumpArgument(uint  i) : base(i)
+		{}
+	}
+
+	public class ClientConnectedArgument
+	{
+		public NetworkClient client;
+
+		public ClientConnectedArgument(NetworkClient c) 
+		{
+			client = c;
+		}
+	}
+
+	public class ServerCreatedArgument
+	{}
+
 	public class UnPausePlayerArgument
 	{}
 
@@ -218,5 +248,20 @@ public class GameConstants
 	{}	
 
 	public class QuitMainGameEvent : UnityEvent<QuitMainGameArgument>
+	{}
+
+	public class NetworkJumpEvent : UnityEvent<NetworkJumpArgument>
 	{}	
+
+	public class NetworkOrdersJumpEvent : UnityEvent<NetworkJumpArgument>
+	{}	
+	
+	public class ClientConnectedEvent : UnityEvent<ClientConnectedArgument>
+	{}
+
+	public class ServerCreatedEvent : UnityEvent<ServerCreatedArgument>
+	{}
+
+	
+
 }
