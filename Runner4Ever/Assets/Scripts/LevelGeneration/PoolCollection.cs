@@ -59,6 +59,11 @@ public class PoolCollection
 		return pools[index].getUsedObject();
 	}
 
+	public List<GameObject> getAllUsedFromPool(int index)
+	{
+		return pools[index].getUsedObjects();
+	}
+
 	public int getRandomIndex()
 	{
 		List<int> keyList = new List<int>(pools.Keys);

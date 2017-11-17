@@ -71,4 +71,9 @@ public class Pooler
 
 		return usedObjects[0];
 	}
+
+	public List<GameObject> getUsedObjects()
+	{
+		return usedObjects;
+	}
 }

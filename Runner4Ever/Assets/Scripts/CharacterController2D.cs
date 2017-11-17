@@ -307,6 +307,9 @@ public class CharacterController2D : NetworkBehaviour
 		currentVelocity = Mathf.Lerp(currentVelocity, areWeGoingRight() ? maxVelocity.Peek() : -maxVelocity.Peek(), Time.deltaTime * accelerationSmooth);
 		currentGravity = Mathf.Lerp(currentGravity, (float)gravity.Peek(), Time.deltaTime * gravitySmooth);
 
+		currentVelocity = (float)Math.Round(currentVelocity, 1);
+		currentGravity = (float)Math.Round(currentGravity, 1);
+
 		float xMoveForward = (collidingForward() || !running) ? 0.0f : currentVelocity;
 
 		xMoveForward *= Time.deltaTime; // keep this line or it will be framerate dependant

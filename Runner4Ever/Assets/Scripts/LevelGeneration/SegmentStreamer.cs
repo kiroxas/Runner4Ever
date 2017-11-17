@@ -163,7 +163,7 @@ public class SegmentStreamer : MonoBehaviour
 	public int propsPerSegment = 3;
 
 	public SegmentStrategy strat = SegmentStrategy.NineGrid;
-	private Vector2 oldPlayerPlacement; // player placement at precedent frame, int he segment grid
+	private List<Vector2> oldPlayerPlacement; // player placement at precedent frame, int he segment grid
 	private List<Vector2> startPositions; // start checkpoint Positions
 
 	private ILayoutGenerator generator; // abstract class to generate the layout
@@ -368,26 +368,38 @@ public class SegmentStreamer : MonoBehaviour
 		return new Vector2(xGridIndex, yGridIndex);
 	}
 
-	public Vector2 getPlayerSegment()
+	public List<Vector2> getPlayerSegment()
 	{
-		GameObject player = statePool.getUsedFromPool(PoolIndexes.playerIndex);
-		if(player == null || player.GetComponent<Transform>() == null)
+		GameObject[] players = GameObject.FindGameObjectsWithTag(GameConstants.playerTag);
+		if(players == null)
     	{
-    		return findFirstSegmentWithCheckpoint();
+    		return new List<Vector2>{findFirstSegmentWithCheckpoint()};
     	}
 
-		return getPositionToSegment(player.GetComponent<Transform>().position);
+    	List<Vector2> segmentPositions = new List<Vector2>();
+
+    	foreach(GameObject g in players)
+    	{
+    		segmentPositions.Add(getPositionToSegment(g.GetComponent<Transform>().position));
+    	}
+
+		return segmentPositions;
 	}
 
-	public List<Segment> nineGridSegments(Vector2 gridPos)
+	public List<Segment> nineGridSegments(List<Vector2> gridPosList)
 	{
 		List<Segment> seg = new List<Segment>();
 
 		foreach (Segment s in segments)
 		{
-			if((s.info.layoutXGrid == gridPos.x || s.info.layoutXGrid == gridPos.x - 1 || s.info.layoutXGrid == gridPos.x + 1) && (s.info.layoutYGrid == gridPos.y || s.info.layoutYGrid == gridPos.y - 1 || s.info.layoutYGrid == gridPos.y + 1))
+			foreach(Vector2 gridPos in gridPosList)
 			{
-				seg.Add(s);
+				if((s.info.layoutXGrid == gridPos.x || s.info.layoutXGrid == gridPos.x - 1 || s.info.layoutXGrid == gridPos.x + 1) 
+				&& (s.info.layoutYGrid == gridPos.y || s.info.layoutYGrid == gridPos.y - 1 || s.info.layoutYGrid == gridPos.y + 1))
+				{
+					seg.Add(s);
+					break;
+				}
 			}
 		}
 
@@ -421,11 +433,14 @@ public class SegmentStreamer : MonoBehaviour
 			oldPlayerPlacement = getPlayerSegment();
 			foreach(Segment s in segments)
 			{
-				if(s.info.layoutXGrid == oldPlayerPlacement.x && s.info.layoutYGrid == oldPlayerPlacement.y)
+				foreach(Vector2 pos in oldPlayerPlacement)
 				{
-					s.enable(statePool, bgHandler, tilesHandler);
-					ev.add(s.getBounds());
-					break;
+					if(s.info.layoutXGrid == pos.x && s.info.layoutYGrid == pos.y)
+					{
+						s.enable(statePool, bgHandler, tilesHandler);
+						ev.add(s.getBounds());
+						break;
+					}
 				}
 			}
 		}
@@ -437,7 +452,7 @@ public class SegmentStreamer : MonoBehaviour
 	{
 		if(strat == SegmentStrategy.NineGrid)
 		{	 	
-		 	Vector2 gridIndex = getPlayerSegment();
+		 	List<Vector2> gridIndex = getPlayerSegment();
 
 		 	if(gridIndex != oldPlayerPlacement)
 		 	{
@@ -466,7 +481,7 @@ public class SegmentStreamer : MonoBehaviour
 		}
 		else if(strat == SegmentStrategy.LoadOne)
 		{
-			Vector2 gridIndex = getPlayerSegment();
+			List<Vector2> gridIndex = getPlayerSegment();
 
 			if(gridIndex != oldPlayerPlacement)
 		 	{
@@ -475,7 +490,7 @@ public class SegmentStreamer : MonoBehaviour
 		 		// Disable
 				foreach(Segment s in segments)
 				{
-					if(s.info.layoutXGrid == oldPlayerPlacement.x && s.info.layoutYGrid == oldPlayerPlacement.y)
+					if(oldPlayerPlacement.Contains(s.getSegmentGridPlacement()) && gridIndex.Contains(s.getSegmentGridPlacement()) == false)
 					{
 						s.disable(statePool, bgHandler, tilesHandler);
 					}
@@ -484,7 +499,7 @@ public class SegmentStreamer : MonoBehaviour
 				// Enable
 				foreach(Segment s in segments)
 				{
-					if(s.info.layoutXGrid == gridIndex.x && s.info.layoutYGrid == gridIndex.y)
+					if(gridIndex.Contains(s.getSegmentGridPlacement()))
 					{
 						s.enable(statePool, bgHandler, tilesHandler);
 						ev.add(s.getBounds());

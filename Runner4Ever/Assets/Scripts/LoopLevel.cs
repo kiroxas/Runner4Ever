@@ -24,8 +24,11 @@ public class LoopLevel : MonoBehaviour
 
     public void selectPlayer(GameConstants.PlayerSpawnArgument arg)
     {
-		player = GameObject.FindGameObjectWithTag("Player");
-		cam = FindObjectOfType<SegmentStreamer>();
+    	if(arg.player.GetComponent<CharacterController2D>().amILocalPlayer())
+    	{
+			player = arg.player;
+			cam = FindObjectOfType<SegmentStreamer>();
+		}
     }
 
 	public void Start()
