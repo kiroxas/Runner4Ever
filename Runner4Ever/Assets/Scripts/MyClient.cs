@@ -33,14 +33,14 @@ public class MyClient
 
     public void receiveJumpEvent(GameConstants.NetworkJumpArgument arg)
     {
-    	IntegerMessage msg = new IntegerMessage((int)arg.id);
+    	var msg = new GameConstants.CustomNetworkMessage(arg.id, arg.position);
 
     	client.Send(NetMessages.jumpServerMessage, msg);
     }
 
     public void receiveDashEvent(GameConstants.NetworkDashArgument arg)
     {
-    	IntegerMessage msg = new IntegerMessage((int)arg.id);
+    	var msg = new GameConstants.CustomNetworkMessage(arg.id, arg.position);
 
     	client.Send(NetMessages.dashServerMessage, msg);
     }
@@ -71,16 +71,16 @@ public class MyClient
 
     private void ReceiveJumpMessage(NetworkMessage message)
     {
-    	var NetworkJumpArgument =  message.ReadMessage<IntegerMessage>();
+    	var NetworkJumpArgument =  message.ReadMessage<GameConstants.CustomNetworkMessage>();
     	
-    	EventManager.TriggerEvent(EventManager.get().networkOrdersJumpEvent, new GameConstants.NetworkJumpArgument((uint)NetworkJumpArgument.value));
+    	EventManager.TriggerEvent(EventManager.get().networkOrdersJumpEvent, new GameConstants.NetworkJumpArgument(NetworkJumpArgument.netId, NetworkJumpArgument.position));
     }
 
      private void ReceiveDashMessage(NetworkMessage message)
     {
-    	var NetworkJumpArgument =  message.ReadMessage<IntegerMessage>();
+    	var NetworkJumpArgument =  message.ReadMessage<GameConstants.CustomNetworkMessage>();
     	
-    	EventManager.TriggerEvent(EventManager.get().networkOrdersDashEvent, new GameConstants.NetworkDashArgument((uint)NetworkJumpArgument.value));
+    	EventManager.TriggerEvent(EventManager.get().networkOrdersDashEvent, new GameConstants.NetworkDashArgument(NetworkJumpArgument.netId, NetworkJumpArgument.position));
     }
 
     private void ReceiveEveryoneHereMessage(NetworkMessage message)
@@ -129,14 +129,14 @@ public class MyServer
 
 	private void ServerReceiveJumpMessage(NetworkMessage message)
     {
-     	var stringMessage =  message.ReadMessage<IntegerMessage>();
+     	var stringMessage =  message.ReadMessage<GameConstants.CustomNetworkMessage>();
 
      	NetworkServer.SendToAll (NetMessages.jumpMessage, stringMessage);
     }
 
     private void ServerReceiveDashMessage(NetworkMessage message)
     {
-     	var stringMessage = message.ReadMessage<IntegerMessage>();
+     	var stringMessage = message.ReadMessage<GameConstants.CustomNetworkMessage>();
 
      	NetworkServer.SendToAll (NetMessages.dashMessage, stringMessage);
     }

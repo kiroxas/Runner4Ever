@@ -11,6 +11,25 @@ public class GameConstants
         Multiplayer
     }
 
+    // Multiplayer Message
+
+    public class CustomNetworkMessage : MessageBase
+	{
+   		public uint netId;
+    	public Vector3 position;
+
+    	public CustomNetworkMessage()
+    	{}
+
+    	public CustomNetworkMessage(uint n, Vector3 pos)
+    	{
+    		netId = n;
+    		position = pos;
+    	}
+    }
+
+    // Constants 
+    static public string multiTag = "Multi";
 	static public string checkpointTag = "CheckPoint";
 	static public string playerTag = "Player";
 	static public string MainGameName = "MainGame";
@@ -163,22 +182,24 @@ public class GameConstants
 	public class NetworkArgument
 	{
 		public uint  id;
+		public Vector3 position;
 
-		public NetworkArgument(uint  i)
+		public NetworkArgument(uint  i, Vector3 pos)
 		{
 			id = i;
+			position = pos;
 		}
 	}
 
 	public class NetworkJumpArgument : NetworkArgument
 	{
-		public NetworkJumpArgument(uint  i) : base(i)
+		public NetworkJumpArgument(uint  i, Vector3 pos) : base(i, pos)
 		{}
 	}
 
 	public class NetworkDashArgument : NetworkArgument
 	{
-		public NetworkDashArgument(uint  i) : base(i)
+		public NetworkDashArgument(uint  i, Vector3 pos) : base(i, pos)
 		{}
 	}
 
@@ -278,7 +299,5 @@ public class GameConstants
 	{}
 
 	public class AllClientsConnectedEvent : UnityEvent<AllClientsConnectedArgument>
-	{}
-
-	
+	{}	
 }

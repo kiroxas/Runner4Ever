@@ -96,6 +96,16 @@ public class UnityUtils
         }
 	}
 
+	static public void disableMultiObjects()
+	{
+		GameObject[] multiObjects = GameObject.FindGameObjectsWithTag(GameConstants.multiTag);
+
+		foreach(GameObject obj in multiObjects)
+		{
+			obj.SetActive(false);
+		}
+	}
+
 	static public bool isNetworkGame()
 	{
 		LevelFlow flow = (LevelFlow)UnityEngine.Object.FindObjectOfType(typeof(LevelFlow));

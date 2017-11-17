@@ -8,6 +8,7 @@ TagManager:
   - Platform
   - CheckPoint
   - InversePlatform
+  - Multi
   layers:
   - Default
   - TransparentFX

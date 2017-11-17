@@ -43,6 +43,7 @@ public class MyNetworkManager : NetworkManager
     	}
 
     	GameObject player = (GameObject)GameObject.Instantiate(playerPrefab, spawns[index], Quaternion.identity);
+    	//NetworkServer.Spawn(player);
     	++index;
 
     	if(!NetworkServer.AddPlayerForConnection(conn, player, playerControllerId))

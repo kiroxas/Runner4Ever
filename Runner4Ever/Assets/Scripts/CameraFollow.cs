@@ -43,7 +43,10 @@ public class CameraFollow : MonoBehaviour {
 
 	public void attachCamera(GameConstants.PlayerSpawnArgument arg)
 	{
-		target = arg.player.GetComponent<Transform>();
+		if(arg.player.GetComponent<CharacterController2D>().amILocalPlayer())
+		{
+			target = arg.player.GetComponent<Transform>();
+		}
 	}
 
 	public void init(GameConstants.LevelInitialisedArgument arg)

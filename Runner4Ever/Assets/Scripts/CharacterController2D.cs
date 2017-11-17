@@ -578,8 +578,10 @@ public class CharacterController2D : NetworkBehaviour
 			{
 				SendJumpNetMessage();
 			}
-			
-			actualJump();
+			else
+			{
+				actualJump();
+			}
 		}
 		else
 		{
@@ -631,8 +633,10 @@ public class CharacterController2D : NetworkBehaviour
 		{
 			SendDashNetMessage();
 		}
-
-		actualDash();
+		else
+		{
+			actualDash();
+		}
 	}
 
 	/* ------------------------------------------------------ Function to inquiry the state -------------------------------------------------------*/
@@ -857,11 +861,17 @@ public class CharacterController2D : NetworkBehaviour
 	
 
 	/* ------------------------------------------------------ Network functions -------------------------------------------------------*/
-	public override void OnStartLocalPlayer()
+
+	public void sendSpawn()
 	{
 		EventManager.TriggerEvent(EventManager.get().playerSpawnEvent, new GameConstants.PlayerSpawnArgument(gameObject, 
     																									     transform.position.x,
     																									     transform.position.y));
+	}
+
+	public override void OnStartLocalPlayer()
+	{
+		sendSpawn();
 	}
 
     void actualJump()
@@ -872,6 +882,11 @@ public class CharacterController2D : NetworkBehaviour
 		timeHanging = 0.0f;
     }
 
+    public void correctPosition(Vector3 otherPos)
+    {
+    	transform.position = otherPos;
+    }
+
     public uint getMyId()
     {
     	return myId;
@@ -879,15 +894,14 @@ public class CharacterController2D : NetworkBehaviour
 
     public void SendJumpNetMessage()
     {
-    	EventManager.TriggerEvent(EventManager.get().networkJumpEvent, new GameConstants.NetworkJumpArgument(getMyId()));
+    	EventManager.TriggerEvent(EventManager.get().networkJumpEvent, new GameConstants.NetworkJumpArgument(getMyId(), transform.position));
     }
 
      public void SendDashNetMessage()
     {
-    	EventManager.TriggerEvent(EventManager.get().networkDashEvent, new GameConstants.NetworkDashArgument(getMyId()));
+    	EventManager.TriggerEvent(EventManager.get().networkDashEvent, new GameConstants.NetworkDashArgument(getMyId(), transform.position));
     }
      
-
     private void unpausePlayers(GameConstants.UnPauseAllPlayerArgument arg)
     {
     	EventManager.TriggerEvent(EventManager.get().unPausePlayerEvent, new GameConstants.UnPausePlayerArgument());
@@ -897,6 +911,11 @@ public class CharacterController2D : NetworkBehaviour
     {
     	if(arg.id == getMyId())
     	{
+    		if(amILocalPlayer() == false)
+    		{
+    			correctPosition(arg.position);
+    		}
+
     		actualJump();
     	}
     }
@@ -905,6 +924,11 @@ public class CharacterController2D : NetworkBehaviour
     {
     	if(arg.id == getMyId())
     	{
+    		if(amILocalPlayer() == false)
+    		{
+    			correctPosition(arg.position);
+    		}
+
     		actualDash();
     	}
     }

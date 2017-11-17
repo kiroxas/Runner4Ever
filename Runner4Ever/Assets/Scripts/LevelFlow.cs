@@ -28,6 +28,7 @@ public class LevelFlow : MonoBehaviour
         EventManager.StartListening (EventManager.get().playerDeadEvent, playerIsDead);
         EventManager.StartListening (EventManager.get().loadLevelEvent, levelIsLoading);
         EventManager.StartListening (EventManager.get().quitMainGameEvent, quitMainGame);
+        EventManager.StartListening (EventManager.get().levelInitialisedEvent, levelInitialised);
     }
 
     void OnDisable ()
@@ -38,11 +39,20 @@ public class LevelFlow : MonoBehaviour
         EventManager.StopListening (EventManager.get().playerDeadEvent, playerIsDead);
         EventManager.StopListening (EventManager.get().loadLevelEvent, levelIsLoading);
         EventManager.StopListening (EventManager.get().quitMainGameEvent, quitMainGame);
+        EventManager.StopListening (EventManager.get().levelInitialisedEvent, levelInitialised);
     }
 
     public bool isItNetworkGame()
     {
         return isNetworkGame;
+    }
+
+     void levelInitialised( GameConstants.LevelInitialisedArgument arg)
+    {
+        if(isNetworkGame == false)
+        {
+            UnityUtils.disableMultiObjects();
+        }
     }
 
     void quitMainGame( GameConstants.QuitMainGameArgument arg)
