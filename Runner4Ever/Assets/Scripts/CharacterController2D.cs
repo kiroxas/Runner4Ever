@@ -861,12 +861,6 @@ public class CharacterController2D : NetworkBehaviour
     																									     transform.position.y));
 	}
 
-	[ClientRpc]
-    void RpcUnpause()
-    {
-    	EventManager.TriggerEvent(EventManager.get().unPausePlayerEvent, new GameConstants.UnPausePlayerArgument());
-    }
-
     void actualJump()
     {
     	upSpeed = 10.0f;
@@ -893,10 +887,7 @@ public class CharacterController2D : NetworkBehaviour
 
     private void unpausePlayers(GameConstants.UnPauseAllPlayerArgument arg)
     {
-    	if(isServer)
-    	{
-    		RpcUnpause();
-    	}
+    	EventManager.TriggerEvent(EventManager.get().unPausePlayerEvent, new GameConstants.UnPausePlayerArgument());
     }
 
     private void netOrderedToJump(GameConstants.NetworkJumpArgument arg)

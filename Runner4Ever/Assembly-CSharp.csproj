@@ -183,6 +183,7 @@
      <None Include="Assets\Resources\LevelGeneration\accelTest.txt" />
      <None Include="Assets\Resources\LevelGeneration\level_test_02.txt" />
      <None Include="Assets\Resources\LevelGeneration\five.txt" />
+     <None Include="Assets\Resources\LevelGeneration\MultiPlayer_01_Wael.txt" />
      <None Include="Assets\Resources\Localization\fr.txt" />
      <None Include="Assets\Resources\LevelGeneration\gold.txt" />
      <None Include="Assets\dummy.txt" />

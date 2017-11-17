@@ -192,6 +192,9 @@ public class GameConstants
 		}
 	}
 
+	public class AllClientsConnectedArgument
+	{}
+
 	public class ServerCreatedArgument
 	{}
 
@@ -273,4 +276,9 @@ public class GameConstants
 	
 	public class NetworkOrdersDashEvent : UnityEvent<NetworkDashArgument>
 	{}
+
+	public class AllClientsConnectedEvent : UnityEvent<AllClientsConnectedArgument>
+	{}
+
+	
 }

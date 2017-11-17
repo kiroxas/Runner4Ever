@@ -28,7 +28,7 @@ public class EventManager : MonoBehaviour
     public GameConstants.ServerCreatedEvent serverCreatedEvent { get; private set;}
     public GameConstants.NetworkDashEvent networkDashEvent { get; private set;}
     public GameConstants.NetworkOrdersDashEvent networkOrdersDashEvent { get; private set;}
-
+    public GameConstants.AllClientsConnectedEvent allClientsConnectedEvent { get; private set;}
 
     public static EventManager instance;
 
@@ -77,6 +77,7 @@ public class EventManager : MonoBehaviour
             serverCreatedEvent = new GameConstants.ServerCreatedEvent();
             networkDashEvent = new GameConstants.NetworkDashEvent();
             networkOrdersDashEvent = new GameConstants.NetworkOrdersDashEvent();
+            allClientsConnectedEvent = new GameConstants.AllClientsConnectedEvent();
         }
     }
 

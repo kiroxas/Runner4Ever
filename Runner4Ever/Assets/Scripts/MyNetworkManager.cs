@@ -12,9 +12,9 @@ public class MyNetworkManager : NetworkManager
     {
     }
 
-	void unpausePlayers()
+	void everyoneConnected()
 	{
-    	EventManager.TriggerEvent(EventManager.get().unPauseAllPlayerEvent, new GameConstants.UnPauseAllPlayerArgument());
+    	EventManager.TriggerEvent(EventManager.get().allClientsConnectedEvent, new GameConstants.AllClientsConnectedArgument());
 	}
 
 	public override void OnStartClient(NetworkClient client)
@@ -53,7 +53,7 @@ public class MyNetworkManager : NetworkManager
     	++playersIn;
     	if(playersIn == expectedPlayers)
     	{
-			unpausePlayers();
+			everyoneConnected();
     	}
     }
 }

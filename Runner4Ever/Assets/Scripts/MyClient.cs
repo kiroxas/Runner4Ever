@@ -2,19 +2,23 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Networking.NetworkSystem;
 
+public class NetMessages
+{
+	static public  short jumpMessage = 140;
+	static public  short jumpServerMessage = 141;
+
+	static public  short dashMessage = 142;
+	static public  short dashServerMessage = 143;
+
+	static public  short everyoneConnectedMessage = 144;
+}
+
 public class MyClient 
 {
-	private const short jumpMessage = 140;
-	private const short jumpServerMessage = 141;
-
-	private const short dashMessage = 142;
-	private const short dashServerMessage = 143;
-
 	NetworkClient client;
 
 	public void OnEnable()
     {
-    	EventManager.StartListening(EventManager.get().serverCreatedEvent, startServer);
     	EventManager.StartListening(EventManager.get().clientConnectedEvent, setClient);
         EventManager.StartListening(EventManager.get().networkJumpEvent, receiveJumpEvent);
         EventManager.StartListening(EventManager.get().networkDashEvent, receiveDashEvent);
@@ -24,7 +28,6 @@ public class MyClient
     {
         EventManager.StopListening(EventManager.get().networkJumpEvent, receiveJumpEvent);
         EventManager.StopListening(EventManager.get().clientConnectedEvent, setClient);
-        EventManager.StopListening(EventManager.get().serverCreatedEvent, startServer);
         EventManager.StopListening(EventManager.get().networkDashEvent, receiveDashEvent);
     }
 
@@ -32,19 +35,14 @@ public class MyClient
     {
     	IntegerMessage msg = new IntegerMessage((int)arg.id);
 
-    	client.Send(jumpServerMessage, msg);
+    	client.Send(NetMessages.jumpServerMessage, msg);
     }
 
     public void receiveDashEvent(GameConstants.NetworkDashArgument arg)
     {
     	IntegerMessage msg = new IntegerMessage((int)arg.id);
 
-    	client.Send(dashServerMessage, msg);
-    }
-
-    public void startServer(GameConstants.ServerCreatedArgument cl)
-    {
-    	registerServer();
+    	client.Send(NetMessages.dashServerMessage, msg);
     }
 
 
@@ -57,15 +55,11 @@ public class MyClient
 
     public void registerClient()
     {
-    	client.RegisterHandler(jumpMessage, ReceiveJumpMessage);
-    	client.RegisterHandler(dashMessage, ReceiveDashMessage);
+    	client.RegisterHandler(NetMessages.jumpMessage, ReceiveJumpMessage);
+    	client.RegisterHandler(NetMessages.dashMessage, ReceiveDashMessage);
+    	client.RegisterHandler(NetMessages.everyoneConnectedMessage, ReceiveEveryoneHereMessage);
     }
 
-    public void registerServer()
-    {
-     	NetworkServer.RegisterHandler(jumpServerMessage, ServerReceiveJumpMessage);
-    	NetworkServer.RegisterHandler(dashServerMessage, ServerReceiveDashMessage);
-    }
 
 	public void Start()
 	{
@@ -74,20 +68,6 @@ public class MyClient
 			Debug.LogError("You should be in a network game to instance myClient");
 		}
 	}
-
-	private void ServerReceiveJumpMessage(NetworkMessage message)
-    {
-     	var stringMessage =  message.ReadMessage<IntegerMessage>();
-
-     	NetworkServer.SendToAll (jumpMessage, stringMessage);
-    }
-
-    private void ServerReceiveDashMessage(NetworkMessage message)
-    {
-     	var stringMessage = message.ReadMessage<IntegerMessage>();
-
-     	NetworkServer.SendToAll (dashMessage, stringMessage);
-    }
 
     private void ReceiveJumpMessage(NetworkMessage message)
     {
@@ -101,5 +81,63 @@ public class MyClient
     	var NetworkJumpArgument =  message.ReadMessage<IntegerMessage>();
     	
     	EventManager.TriggerEvent(EventManager.get().networkOrdersDashEvent, new GameConstants.NetworkDashArgument((uint)NetworkJumpArgument.value));
+    }
+
+    private void ReceiveEveryoneHereMessage(NetworkMessage message)
+    {
+    	EventManager.TriggerEvent(EventManager.get().unPauseAllPlayerEvent, new GameConstants.UnPauseAllPlayerArgument());
+    }
+}
+
+public class MyServer 
+{
+	public void OnEnable()
+    {
+    	EventManager.StartListening(EventManager.get().serverCreatedEvent, startServer);
+    	EventManager.StartListening(EventManager.get().allClientsConnectedEvent, everyoneHere);
+    }
+
+    public void OnDisable ()
+    {
+        EventManager.StopListening(EventManager.get().allClientsConnectedEvent, everyoneHere);
+        EventManager.StopListening(EventManager.get().serverCreatedEvent, startServer);
+    }
+
+    public void everyoneHere(GameConstants.AllClientsConnectedArgument arg)
+    {
+    	NetworkServer.SendToAll (NetMessages.everyoneConnectedMessage, new EmptyMessage());
+    }
+
+    public void startServer(GameConstants.ServerCreatedArgument cl)
+    {
+    	registerServer();
+    }
+
+    public void registerServer()
+    {
+     	NetworkServer.RegisterHandler(NetMessages.jumpServerMessage, ServerReceiveJumpMessage);
+    	NetworkServer.RegisterHandler(NetMessages.dashServerMessage, ServerReceiveDashMessage);
+    }
+
+	public void Start()
+	{
+		if(UnityUtils.isNetworkGame() == false)
+		{
+			Debug.LogError("You should be in a network game to instance MyServer");
+		}
+	}
+
+	private void ServerReceiveJumpMessage(NetworkMessage message)
+    {
+     	var stringMessage =  message.ReadMessage<IntegerMessage>();
+
+     	NetworkServer.SendToAll (NetMessages.jumpMessage, stringMessage);
+    }
+
+    private void ServerReceiveDashMessage(NetworkMessage message)
+    {
+     	var stringMessage = message.ReadMessage<IntegerMessage>();
+
+     	NetworkServer.SendToAll (NetMessages.dashMessage, stringMessage);
     }
 }
