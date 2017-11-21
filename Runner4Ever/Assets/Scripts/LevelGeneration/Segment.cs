@@ -473,13 +473,20 @@ public class Segment
 						Debug.LogError("[Segment/Load] Cannot store gameobject of type :" + poolIndex);
 					}
 
+					GameObject g = statePool.getFromPool(poolIndex, position);
+
+					if( String.IsNullOrEmpty(glyph.getMinor()) == false)
+					{
+						g.AddComponent<AdditionalInformation>().info = glyph.getMinor();
+					}
+
 					if(loadedContains)
 					{
-						loaded[poolIndex].Add(statePool.getFromPool(poolIndex, position));	
+						loaded[poolIndex].Add(g);	
 					}
 					else if(stateLoadedContains && firstLoad)
 					{
-						stateLoaded[poolIndex].Add(statePool.getFromPool(poolIndex, position));
+						stateLoaded[poolIndex].Add(g);
 					}
 				}
 				else // tile
@@ -490,6 +497,11 @@ public class Segment
 					}
 					int tileIndex = tileHandler.getRandomTileIndex(poolIndex, deepness[poolIndex][index]);
 					GameObject g = tileHandler.getFromPool(poolIndex, deepness[poolIndex][index], tileIndex, position);
+					if( String.IsNullOrEmpty(glyph.getMinor()) == false)
+					{
+						g.AddComponent<AdditionalInformation>().info = glyph.getMinor();
+					}
+					
 					tilesLoaded[new Vector2(x ,y)] = new LoadedTile(poolIndex, tileIndex, g);
 				}
 			}
