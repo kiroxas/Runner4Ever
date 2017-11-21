@@ -92,27 +92,5 @@ public class SkyBoxFiller : MonoBehaviour
     }
 
     void Start()
-    {
-       /*var lg = FindObjectOfType<SegmentStreamer>();
-
-        if(lg == null)
-        {
-            Debug.Log("Couldn't find levelGenerator, add one to the scene");
-            containingBox = new Bounds(Vector3.zero, Vector3.zero);
-        }
-        else
-        {
-            containingBox = lg.containingBox;
-        }*/
-
-        
-
-        /*float xSize = containingBox.size.x / skySize.x;
-
-        for(int i = 0; i < (int)Mathf.Ceil(xSize); ++i)
-        {
-            Vector3 position = new Vector3(containingBox.min.x + i * skySize.x , containingBox.min.y, 0.0f); 
-            skies.getFromPool(0, position);
-        }*/
-    }
+    {}
 }

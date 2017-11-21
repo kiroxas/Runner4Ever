@@ -65,7 +65,7 @@ public class SegmentStreamer : MonoBehaviour
     	return symList;
 	}
 
-	public static string layoutAsString(List<char> layout, int xSize, int ySize)
+	public static string layoutAsString(List<FileUtils.Glyph> layout, int xSize, int ySize)
 	{
 		StringBuilder sb = new StringBuilder();
 
@@ -74,7 +74,7 @@ public class SegmentStreamer : MonoBehaviour
 		{
 			for(int x = 0; x < xSize; ++x)
 			{
-				sb.Append(layout[index]);
+				sb.Append(layout[index].getFull());
 				index++;
 			}
 			sb.Append("\n");
@@ -229,9 +229,9 @@ public class SegmentStreamer : MonoBehaviour
 	}
 
 	// Extract the list corresponding to the subblock of the segment
-	private List<char> extractSegmentList(List<char> wholeLevel, int xSegment, int ySegment, bool verbose, int xSize, int ySize)
+	private List<FileUtils.Glyph> extractSegmentList(List<FileUtils.Glyph> wholeLevel, int xSegment, int ySegment, bool verbose, int xSize, int ySize)
 	{
-		List<char> subList = new List<char>();
+		List<FileUtils.Glyph> subList = new List<FileUtils.Glyph>();
 
 		int xOrigin = xSegment * xTilePerSegment;
 		int yOrigin = ySegment * yTilePerSegment;
@@ -275,7 +275,7 @@ public class SegmentStreamer : MonoBehaviour
 		return deep;
 	}
 
-	private Dictionary<int, List<Deepness>> calculateDeepnesses(List<char> level)
+	private Dictionary<int, List<Deepness>> calculateDeepnesses(List<FileUtils.Glyph> level)
 	{
 		Dictionary<int, List<Deepness>> deep = new Dictionary<int, List<Deepness>>();
 
@@ -290,7 +290,7 @@ public class SegmentStreamer : MonoBehaviour
 
 	public void createSegments()
 	{
-		List<char> level = generator.getLayout();
+		List<FileUtils.Glyph> level = generator.getLayout();
 		FileUtils.FileSize levelSize = generator.getLevelSize();
 		xTotalLevel = levelSize.xSize;
 		yTotalLevel = levelSize.ySize;
@@ -301,8 +301,6 @@ public class SegmentStreamer : MonoBehaviour
 		level = Symetry(level, xTotalLevel, yTotalLevel);
 	
 		var deep = calculateDeepnesses(level);
-
-
 		int segmentNumber = 1;
 
 		for(int x = 0; x < xSegments; ++x)

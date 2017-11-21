@@ -40,30 +40,30 @@ public class PoolIndexes
 	public static int[] statelessIndexes = { earthIndex, inverseEarthIndex, waterIndex, hurtIndex, bumperIndex, standOnIndex, jumperIndex, stopTileIndex, accelerateTileIndex, decelerateTileIndex };
 	public static int[] stateIndexes = { objectIndex, enemiesIndex, disapearingIndex, escalatorIndex, movingIndex, killMovingIndex, checkpointIndex, playerIndex, finalCheckpointIndex, startCheckpointIndex};
 
-	public static char emptyIndex = '0';
-	public static Dictionary<char, int> fileToPoolMapping = new Dictionary<char, int>
+	public static string emptyIndex = "0";
+	public static Dictionary<string, int> fileToPoolMapping = new Dictionary<string, int>
 	 { {emptyIndex, emptyLayoutIndex},
-	   {'1', earthIndex}, 
-	   {'2', waterIndex},
-	   {'3', objectIndex},
-	   {'4', startCheckpointIndex},
-	   {'5', checkpointIndex},
-	   {'6', inverseEarthIndex},
-	   {'7', hurtIndex},
-	   {'8', enemiesIndex},
-	   {'9', disapearingIndex},
-	   {'A', escalatorIndex},
-	   {'B', bumperIndex},
-	   {'C', movingIndex},
-	   {'D', killMovingIndex},
-	   {'E', standOnIndex},
-	   {'F', jumperIndex},
-	   {'L', finalCheckpointIndex},
-	   {'S', stopTileIndex},
-	   {'G', accelerateTileIndex},
-	   {'H', decelerateTileIndex} };
+	   {"1", earthIndex}, 
+	   {"2", waterIndex},
+	   {"3", objectIndex},
+	   {"4", startCheckpointIndex},
+	   {"5", checkpointIndex},
+	   {"6", inverseEarthIndex},
+	   {"7", hurtIndex},
+	   {"8", enemiesIndex},
+	   {"9", disapearingIndex},
+	   {"A", escalatorIndex},
+	   {"B", bumperIndex},
+	   {"C", movingIndex},
+	   {"D", killMovingIndex},
+	   {"E", standOnIndex},
+	   {"F", jumperIndex},
+	   {"L", finalCheckpointIndex},
+	   {"S", stopTileIndex},
+	   {"G", accelerateTileIndex},
+	   {"H", decelerateTileIndex} };
 
-	public static char findKey(int value)
+	public static string findKey(int value)
 	{
 		return fileToPoolMapping.FirstOrDefault(x => x.Value == value).Key;
 	}

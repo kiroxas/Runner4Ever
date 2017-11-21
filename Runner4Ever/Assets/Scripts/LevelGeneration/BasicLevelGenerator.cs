@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using System.Linq;
 using System.IO;
 using System.Xml.Serialization;
 using System.Xml;
@@ -9,10 +10,75 @@ using Random = UnityEngine.Random;
 
 namespace FileUtils
 {
+	public class Glyph 
+	{
+		public string major;
+		public string minor;
+
+		static public char[] splitPattern = new char[] { '.'};
+
+		public int split(string glyph)
+		{
+			if(String.IsNullOrEmpty(glyph) || FileSize.isOnlyWhiteSpace(glyph))
+			{
+				Debug.LogError("Empty Glyph !");
+			}
+
+			string[] lines =  glyph.Split(splitPattern);
+
+			if(lines.Length > 0)
+			{
+				major = lines[0];
+			}
+			
+			if (lines.Length > 1 && String.IsNullOrEmpty(lines[1]) == false)
+			{
+				minor = lines[1];
+			}
+			
+			return lines.Length;
+		}
+
+		public Glyph()
+		{}
+
+		public Glyph(string glyph)
+		{
+			split(glyph);
+		}
+
+		public string getMajor()
+		{
+			return major;
+		}
+
+		public string getMinor()
+		{
+			return minor;
+		}
+
+		public string getFull()
+		{
+			return major + (String.IsNullOrEmpty(minor) ? "" : (splitPattern + minor));
+		}
+
+		public bool isEmpty()
+		{
+			return String.IsNullOrEmpty(major) && String.IsNullOrEmpty(minor);
+		}
+	}
+
 	public class FileSize
 	{
 		public int xSize;
 		public int ySize;
+
+		static public char[] whitespace = new char[] { ' ', '\t' };
+
+		public static bool isOnlyWhiteSpace(string s)
+		{
+			return s.All( c => whitespace.Contains(c));
+		}
 
 		public FileSize(int x, int y)
 		{
@@ -38,10 +104,11 @@ namespace FileUtils
 
 			foreach(string s in lines)
 			{
-				int xTemp = s.Length;
-				if(xTemp == 0)
+				if(isOnlyWhiteSpace(s))
 					continue;
 
+				string[] line = splitLine(s); 
+				int xTemp = line.Length;
 				ySize++;
 
 				if(xSize == -1)
@@ -52,7 +119,7 @@ namespace FileUtils
 				{
 					if(xSize != xTemp)
 					{
-						Debug.LogError("The size of lines should be equal xSize : " + xSize + " new : " + xTemp);
+						Debug.LogError("The size of lines should be equal xSize : " + xSize + " new : " + xTemp + " (happened at y : " + ySize + ')' + " with line :" + s);
 					}
 				}
 			}
@@ -60,28 +127,51 @@ namespace FileUtils
 			return new FileSize(xSize, ySize);
 		}
 
-		static public List<char> toChar(string[] lines)
+		static public string[] splitLine(string line)
 		{
-			List<char> list = new List<char>();
-		
-			foreach(string s in lines)
+			return  line.Split(whitespace);
+		}
+
+		static public int lineToGlyph(string line, ref List<Glyph> list)
+		{
+			int glyphCreated = 0;
+			string[] blocks = splitLine(line);
+
+			foreach(string b in blocks)
 			{
-				foreach(char c in s)
-				{
-					list.Add(c);
-				}
+				if(String.IsNullOrEmpty(b) || isOnlyWhiteSpace(b))
+					continue;
+
+				list.Add(new Glyph(b));
+				++glyphCreated;
 			}
+
+			return glyphCreated;
+		}
+
+		static public List<Glyph> toChar(string[] lines)
+		{
+			List<Glyph> list = new List<Glyph>();
 		
+			foreach(string line in lines)
+			{
+				lineToGlyph(line, ref list);
+			}
+			
 			return list;
+		}
+
+		static public string[] splitLinesOfFile(string file)
+		{
+			return System.Text.RegularExpressions.Regex.Split ( file, "\r\n|\n|\r" );
 		}
 
 		public static string[] load(string path)
 		{
 			TextAsset data = Resources.Load(path) as TextAsset;
 			string fs = data.text;
-  			string[] lines = System.Text.RegularExpressions.Regex.Split ( fs, "\n|\r|\r\n" );
-
-			return lines;
+  			
+  			return splitLinesOfFile(fs);
 		}
 	}
 
@@ -95,9 +185,9 @@ namespace FileUtils
 		public int index = 0;
 		
 		public List<FileSize> sizes{ get; set;}
-		public List<List<char>> loaded{ get; set;}
+		public List<List<FileUtils.Glyph>> loaded{ get; set;}
 		
-		public List<char> getOneRandom()
+		public List<FileUtils.Glyph> getOneRandom()
 		{
 			index = Random.Range(0, loaded.Count);
 			return loaded[index];
@@ -108,7 +198,7 @@ namespace FileUtils
 			return sizes[index];
 		}
 
-		public List<char> getNextOne()
+		public List<FileUtils.Glyph> getNextOne()
 		{
 			int ind = index;
 
@@ -152,11 +242,11 @@ namespace FileUtils
 
 public abstract class ILayoutGenerator
 {
-	protected List<char> wholeLayout;
+	protected List<FileUtils.Glyph> wholeLayout;
 
 	protected FileUtils.FileSize totalSize;
 
-	abstract public List<char> getLayout();
+	abstract public List<FileUtils.Glyph> getLayout();
 
 	abstract public void generateLayout();
 
@@ -170,11 +260,11 @@ public class BasicFileLevelLoader : ILayoutGenerator
 	public BasicFileLevelLoader(string file)
 	{
 		filePath = file;
-		wholeLayout = new List<char>();
+		wholeLayout = new List<FileUtils.Glyph>();
 		totalSize = new FileUtils.FileSize();
 	}
 
-	public override List<char> getLayout()
+	public override List<FileUtils.Glyph> getLayout()
 	{
 		return wholeLayout;
 	}
@@ -182,10 +272,8 @@ public class BasicFileLevelLoader : ILayoutGenerator
 	string[] load(string path)
 	{
 		TextAsset data = Resources.Load(path) as TextAsset;
-		string fs = data.text;
-  		string[] lines = System.Text.RegularExpressions.Regex.Split ( fs, "\n|\r|\r\n" );
 
-		return lines;
+		return FileUtils.FileSize.splitLinesOfFile(data.text);
 	}
 
 	public override void generateLayout()
@@ -211,7 +299,7 @@ public class BasicLevelGenerator : ILayoutGenerator
 
 	public GenerationStyle genStyle = GenerationStyle.Random;
 
-	public override List<char> getLayout()
+	public override List<FileUtils.Glyph> getLayout()
 	{
 		return wholeLayout;
 	}
@@ -219,7 +307,7 @@ public class BasicLevelGenerator : ILayoutGenerator
 	public BasicLevelGenerator(GenerationStyle style)
 	{
 		genStyle = style;
-		wholeLayout = new List<char>();
+		wholeLayout = new List<FileUtils.Glyph>();
 		totalSize = new FileUtils.FileSize();
 	}
 
@@ -252,10 +340,8 @@ public class BasicLevelGenerator : ILayoutGenerator
 	{
 		String path = folder + name;
 		TextAsset data = Resources.Load(path) as TextAsset;
-		string fs = data.text;
-  		string[] lines = System.Text.RegularExpressions.Regex.Split ( fs, "\n|\r|\r\n" );
 
-		 return lines;
+		return FileUtils.FileSize.splitLinesOfFile(data.text);
 	}
 
 	void createTileType(GameObject[] tiles, float xPos, float yPos)
@@ -293,9 +379,9 @@ public class BasicLevelGenerator : ILayoutGenerator
 		}
 	}
 
-	private void merge(List<char> layoutToMerge, FileUtils.FileSize size)
+	private void merge(List<FileUtils.Glyph> layoutToMerge, FileUtils.FileSize size)
 	{
-		List<char> newLayout = new List<char>();
+		List<FileUtils.Glyph> newLayout = new List<FileUtils.Glyph>();
 
 		if(totalSize.ySize != 0 && size.ySize != totalSize.ySize)
 		{
@@ -326,7 +412,7 @@ public class BasicLevelGenerator : ILayoutGenerator
 
 		for(int x = 0; x < block.filesNumber(); ++x)
 		{
-			List<char> layout;
+			List<FileUtils.Glyph> layout;
 			
 			if(genStyle == GenerationStyle.Random)
 			{

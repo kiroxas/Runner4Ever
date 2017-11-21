@@ -34,17 +34,18 @@ public class Deepness
 		return top == 0 && bottom == 0 && right == 0 && left == 0;
 	}
 
-	static public List<Deepness> calculateDeepness(List<int> indexes, List<char> layout, int xSize, int ySize)
+	static public List<Deepness> calculateDeepness(List<int> indexes, List<FileUtils.Glyph> layout, int xSize, int ySize)
 	{
 		List<Deepness> deepness = Enumerable.Repeat(new Deepness(0,0,0,0), layout.Count).ToList(); 
+
 		// first pass, from left bottom to top right
 		for(int y = 0; y < ySize; ++y)
 		{
 			for(int x = 0; x < xSize; ++x)
 			{
 				int index = Segment.getStaticIndex(x,y, xSize, ySize);
-				char value = layout[index];
-				int poolIndex = PoolIndexes.fileToPoolMapping[value];
+				string valueMajor = layout[index].getMajor();
+				int poolIndex = PoolIndexes.fileToPoolMapping[valueMajor];
 
 				int left = 0;
 				int bottom = 0;
@@ -87,7 +88,7 @@ public class Deepness
 			for(int x = xSize - 1; x >= 0; --x)
 			{
 				int index = Segment.getStaticIndex(x,y, xSize, ySize);
-				char value = layout[index];
+				string value = layout[index].getMajor();
 				int poolIndex = PoolIndexes.fileToPoolMapping[value];
 
 				int right = 0;
@@ -153,7 +154,7 @@ public class Segment
 	private bool enabled = false; // is this segment enabled
 	private bool firstLoad = true; // first time loading ?
 
-	private List<char> layout; // the layout in char format
+	private List<FileUtils.Glyph> layout; // the layout in char format
 	private Dictionary<int, List<Deepness>> deepness; // deepness of earth tiles
 	public SegmentInfo info;
 
@@ -169,7 +170,7 @@ public class Segment
 
 	private bool containsIndex(int index)
 	{
-		return layout.Contains(PoolIndexes.findKey(index));
+		return layout.Any(glyph => glyph.getMajor() == PoolIndexes.findKey(index));
 	}
 
 	public bool containsCheckpoint()
@@ -187,7 +188,7 @@ public class Segment
 			{
 				for(int y = 0; y < info.ySize; ++y)
 				{
-					if(PoolIndexes.fileToPoolMapping[layout[getIndex(x,y)]] == PoolIndexes.startCheckpointIndex)
+					if(PoolIndexes.fileToPoolMapping[layout[getIndex(x,y)].getMajor()] == PoolIndexes.startCheckpointIndex)
 					{
 						list.Add(getPosition(x,y));
 					}
@@ -260,7 +261,7 @@ public class Segment
 		}
 	}
 
-	public Segment(SegmentInfo inf, List<char> _layout, Dictionary<int, List<Deepness>> deep)
+	public Segment(SegmentInfo inf, List<FileUtils.Glyph> _layout, Dictionary<int, List<Deepness>> deep)
 	{
 		loaded = new Dictionary<int, List<GameObject>>();
 		stateLoaded = new  Dictionary<int, List<GameObject>>();
@@ -270,7 +271,7 @@ public class Segment
 		init(PoolIndexes.statelessIndexes, loaded);
 		init(PoolIndexes.stateIndexes, stateLoaded);
 
-		layout = new List<char>(_layout);
+		layout = new List<FileUtils.Glyph>(_layout);
 		info = inf;
 		deepness = new Dictionary<int, List<Deepness>>(deep);
 
@@ -450,7 +451,9 @@ public class Segment
 			for(int x = 0; x < info.xSize; ++x)
 			{
 				int index = getIndex(x,y);
-				char value = layout[index];
+				var glyph = layout[index];
+
+				string value = glyph.getMajor();
 				
 				if(value == PoolIndexes.emptyIndex)
 				{
