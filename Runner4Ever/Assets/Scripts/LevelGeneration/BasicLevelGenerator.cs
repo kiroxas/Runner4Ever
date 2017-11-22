@@ -24,7 +24,7 @@ namespace FileUtils
 				Debug.LogError("Empty Glyph !");
 			}
 
-			string[] lines =  glyph.Split(splitPattern);
+			string[] lines =  glyph.Split(splitPattern, StringSplitOptions.RemoveEmptyEntries);
 
 			if(lines.Length > 0)
 			{
@@ -104,7 +104,7 @@ namespace FileUtils
 
 			foreach(string s in lines)
 			{
-				if(isOnlyWhiteSpace(s))
+				if(String.IsNullOrEmpty(s) || isOnlyWhiteSpace(s))
 					continue;
 
 				string[] line = splitLine(s); 
@@ -129,7 +129,7 @@ namespace FileUtils
 
 		static public string[] splitLine(string line)
 		{
-			return  line.Split(whitespace);
+			return  line.Split(whitespace, StringSplitOptions.RemoveEmptyEntries);
 		}
 
 		static public int lineToGlyph(string line, ref List<Glyph> list)
