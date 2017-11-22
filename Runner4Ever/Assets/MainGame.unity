@@ -1262,6 +1262,9 @@ MonoBehaviour:
     type: 2}
   decelerateTile: {fileID: 1442056144979826, guid: c00b7d9d354988749b287b6a8509561e,
     type: 2}
+  triggerTile: {fileID: 1456400920556360, guid: eab419f9d5b2aab4f9b00226e45b7818,
+    type: 2}
+  doorTile: {fileID: 1846492377467020, guid: 65f2c51e655ef5d4783e40ad1f679123, type: 2}
   backgroundObjects:
   - {fileID: 1552543463012874, guid: 81da54a410edec44fa2b44b4d672db93, type: 2}
   - {fileID: 1768573753643322, guid: d8ff0e85a427a9e42b07cda1300673f6, type: 2}

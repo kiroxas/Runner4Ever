@@ -213,6 +213,16 @@ public class GameConstants
 		}
 	}
 
+	public class TriggerDoorArgument
+	{
+		public string id;
+
+		public TriggerDoorArgument(string c) 
+		{
+			id = c;
+		}
+	}
+
 	public class AllClientsConnectedArgument
 	{}
 
@@ -300,4 +310,7 @@ public class GameConstants
 
 	public class AllClientsConnectedEvent : UnityEvent<AllClientsConnectedArgument>
 	{}	
+
+	public class TriggerDoorEvent : UnityEvent<TriggerDoorArgument>
+	{}
 }

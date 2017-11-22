@@ -72,7 +72,7 @@ namespace FileUtils
 
 		public bool hasAdditionalInfo()
 		{
-			return !(String.IsNullOrEmpty(minor) || String.IsNullOrEmpty(info));
+			return String.IsNullOrEmpty(minor) == false || String.IsNullOrEmpty(info) == false;
 		}
 
 		public string getFull()

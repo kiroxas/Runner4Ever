@@ -139,11 +139,13 @@
      <Compile Include="Assets\Scripts\MyClient.cs" />
      <Compile Include="Assets\Scripts\MyClientMono.cs" />
      <Compile Include="Assets\Scripts\MyNetworkManager.cs" />
+     <Compile Include="Assets\Scripts\OpenDoor.cs" />
      <Compile Include="Assets\Scripts\PauseMenu.cs" />
      <Compile Include="Assets\Scripts\PlayerData.cs" />
      <Compile Include="Assets\Scripts\ProgressionDisplay.cs" />
      <Compile Include="Assets\Scripts\SettingsUI.cs" />
      <Compile Include="Assets\Scripts\StopPlayer.cs" />
+     <Compile Include="Assets\Scripts\TriggerEvent.cs" />
      <Compile Include="Assets\Scripts\Utils\CheckpointUtils.cs" />
      <Compile Include="Assets\Scripts\Utils\DeviceUtils.cs" />
      <Compile Include="Assets\Scripts\Utils\GameConstants.cs" />

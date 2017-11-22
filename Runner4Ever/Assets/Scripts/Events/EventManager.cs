@@ -30,6 +30,12 @@ public class EventManager : MonoBehaviour
     public GameConstants.NetworkOrdersDashEvent networkOrdersDashEvent { get; private set;}
     public GameConstants.AllClientsConnectedEvent allClientsConnectedEvent { get; private set;}
 
+
+    // Triggers
+    public GameConstants.TriggerDoorEvent triggerDoorEvent { get; private set;}
+
+
+
     public static EventManager instance;
 
     void Awake()
@@ -49,6 +55,14 @@ public class EventManager : MonoBehaviour
     public static EventManager get()
     {
         return instance;
+    }
+
+    public void sendTrigger(string key, string message)
+    {
+        if(key == "P")
+        {
+            TriggerEvent(triggerDoorEvent, new GameConstants.TriggerDoorArgument(message));
+        }
     }
 
     void Init ()
@@ -78,6 +92,7 @@ public class EventManager : MonoBehaviour
             networkDashEvent = new GameConstants.NetworkDashEvent();
             networkOrdersDashEvent = new GameConstants.NetworkOrdersDashEvent();
             allClientsConnectedEvent = new GameConstants.AllClientsConnectedEvent();
+            triggerDoorEvent = new GameConstants.TriggerDoorEvent();
         }
     }
 
