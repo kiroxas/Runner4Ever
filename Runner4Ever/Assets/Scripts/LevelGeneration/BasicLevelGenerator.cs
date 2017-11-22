@@ -12,8 +12,11 @@ namespace FileUtils
 {
 	public class Glyph 
 	{
+		/* major.minor.info */
+
 		public string major;
 		public string minor;
+		public string info;
 
 		static public char[] splitPattern = new char[] { '.'};
 
@@ -34,6 +37,11 @@ namespace FileUtils
 			if (lines.Length > 1 && String.IsNullOrEmpty(lines[1]) == false)
 			{
 				minor = lines[1];
+			}
+
+			if (lines.Length > 2 && String.IsNullOrEmpty(lines[2]) == false)
+			{
+				info = lines[2];
 			}
 			
 			return lines.Length;
@@ -57,14 +65,24 @@ namespace FileUtils
 			return minor;
 		}
 
+		public string getInfo()
+		{
+			return info;
+		}
+
+		public bool hasAdditionalInfo()
+		{
+			return !(String.IsNullOrEmpty(minor) || String.IsNullOrEmpty(info));
+		}
+
 		public string getFull()
 		{
-			return major + (String.IsNullOrEmpty(minor) ? "" : (splitPattern + minor));
+			return major + (String.IsNullOrEmpty(minor) ? "" : (splitPattern + minor)) + (String.IsNullOrEmpty(info) ? "" : (splitPattern + info));
 		}
 
 		public bool isEmpty()
 		{
-			return String.IsNullOrEmpty(major) && String.IsNullOrEmpty(minor);
+			return String.IsNullOrEmpty(major) && String.IsNullOrEmpty(minor) &&  String.IsNullOrEmpty(info);
 		}
 	}
 

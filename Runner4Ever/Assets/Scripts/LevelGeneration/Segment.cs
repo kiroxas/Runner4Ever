@@ -439,6 +439,16 @@ public class Segment
 		return  new Vector3(info.xBegin + x * info.tileWidth - (info.tileWidth / 2.0f), info.yBegin + y * info.tileHeight - (info.tileHeight / 2.0f), 0.0f); 
 	}
 
+	private void addInfosOnObject(GameObject g, FileUtils.Glyph glyph)
+	{
+		if( glyph.hasAdditionalInfo())
+		{
+			var additional = g.AddComponent<AdditionalInformation>();
+			additional.minor = glyph.getMinor();
+			additional.info = glyph.getInfo();
+		}
+	}
+
 	private void load(PoolCollection statePool, BackgroundPropsHandler bgPool, TilesSuperHandler tileHandler)
 	{
 		if(layout.Count != info.xSize * info.ySize)
@@ -475,10 +485,7 @@ public class Segment
 
 					GameObject g = statePool.getFromPool(poolIndex, position);
 
-					if( String.IsNullOrEmpty(glyph.getMinor()) == false)
-					{
-						g.AddComponent<AdditionalInformation>().info = glyph.getMinor();
-					}
+					addInfosOnObject(g, glyph);
 
 					if(loadedContains)
 					{
@@ -497,10 +504,7 @@ public class Segment
 					}
 					int tileIndex = tileHandler.getRandomTileIndex(poolIndex, deepness[poolIndex][index]);
 					GameObject g = tileHandler.getFromPool(poolIndex, deepness[poolIndex][index], tileIndex, position);
-					if( String.IsNullOrEmpty(glyph.getMinor()) == false)
-					{
-						g.AddComponent<AdditionalInformation>().info = glyph.getMinor();
-					}
+					addInfosOnObject(g, glyph);
 					
 					tilesLoaded[new Vector2(x ,y)] = new LoadedTile(poolIndex, tileIndex, g);
 				}

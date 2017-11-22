@@ -21,16 +21,17 @@ namespace LevelGenerator.Tests
 		[Test]
 		public void ReadOneSimpleMultipleGlyph()
 		{
-			string myLine = "0.9";
+			string myLine = "0.9.alpha";
 
 			FileUtils.Glyph g = new FileUtils.Glyph();
 
 			int split = g.split(myLine);
 
-			Assert.That(split, Is.EqualTo(2));
+			Assert.That(split, Is.EqualTo(3));
 
 			Assert.That(g.getMajor(), Is.EqualTo("0"));
 			Assert.That(g.getMinor(), Is.EqualTo("9"));
+			Assert.That(g.getInfo(), Is.EqualTo("alpha"));
 		}
 
 		[Test]
@@ -51,7 +52,7 @@ namespace LevelGenerator.Tests
 			}
 		}
 
-		public void testGlyph(FileUtils.Glyph g, string expectedMajor, string expectedMinor)
+		public void testGlyph(FileUtils.Glyph g, string expectedMajor, string expectedMinor, string expectedInfo = null)
 		{
 			Assert.That(g.getMajor(), Is.EqualTo(expectedMajor));
 			Assert.That(g.getMinor(), Is.EqualTo(expectedMinor));
@@ -60,7 +61,7 @@ namespace LevelGenerator.Tests
 		[Test]
 		public void ReadOneComplicatedLine()
 		{
-			string myLine = "2.5 achie.go   solo.yann                   a.r 0  2. 5.1";
+			string myLine = "2.5 achie.go   solo.yann                   a.r.c 0  2. 5.1";
 
 			List<FileUtils.Glyph> myList = new List<FileUtils.Glyph>();
 
@@ -71,7 +72,7 @@ namespace LevelGenerator.Tests
 			testGlyph(myList[0], "2", "5");
 			testGlyph(myList[1], "achie", "go");
 			testGlyph(myList[2], "solo", "yann");
-			testGlyph(myList[3], "a", "r");
+			testGlyph(myList[3], "a", "r", "c");
 			testGlyph(myList[4], "0", null);
 			testGlyph(myList[5], "2", null);
 			testGlyph(myList[6], "5", "1");
@@ -122,7 +123,7 @@ namespace LevelGenerator.Tests
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.0.2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
@@ -140,7 +141,7 @@ namespace LevelGenerator.Tests
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 2 2 2 2 2 2 2 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 2 2 2 2 2 2 2 2
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 2 2 2 2 2 2 2 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 2 2 2 2 2 2 2 2
 H H H H H H H H H H H H H H H H H H H H H H H H H H H H H H H H H H H H H H H H H H H H H H
-1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1";
+1 1 1 1 1 1.2.8 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1";
 
 			string[] lines = FileUtils.FileSize.splitLinesOfFile(myFile);
 
