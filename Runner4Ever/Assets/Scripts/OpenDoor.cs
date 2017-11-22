@@ -20,7 +20,7 @@ public class OpenDoor : MonoBehaviour
  	
 		if(infos && infos.minor == arg.id)
 		{
-    		Debug.Log("Door Opened");
+    		LeanTween.scale( gameObject, new Vector3(0f, 0f, 1.7f), 1f).setEase(LeanTweenType.easeOutExpo);
     	}
     }
 }

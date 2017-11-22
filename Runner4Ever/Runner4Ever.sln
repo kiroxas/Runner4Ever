@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Runner4Ever", "Assembly-CSharp-firstpass.csproj", "{A5EE8565-40F8-32B8-0616-3D45A22FE8CA}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Runner4Ever", "Assembly-CSharp.csproj", "{5FB9B409-2FFA-019F-4538-DAF8A104A120}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Runner4Ever", "Assembly-CSharp-Editor.csproj", "{0E28FE0E-653D-98E0-A528-1F8832C62478}"
@@ -11,6 +13,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A5EE8565-40F8-32B8-0616-3D45A22FE8CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5EE8565-40F8-32B8-0616-3D45A22FE8CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5EE8565-40F8-32B8-0616-3D45A22FE8CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5EE8565-40F8-32B8-0616-3D45A22FE8CA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5FB9B409-2FFA-019F-4538-DAF8A104A120}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5FB9B409-2FFA-019F-4538-DAF8A104A120}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5FB9B409-2FFA-019F-4538-DAF8A104A120}.Release|Any CPU.ActiveCfg = Release|Any CPU

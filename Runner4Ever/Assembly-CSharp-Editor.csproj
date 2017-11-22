@@ -51,6 +51,7 @@
      <Compile Include="Assets\Editor\LocalizedTextEditor.cs" />
      <Compile Include="Assets\LeanTouch\Editor\LeanSelectable_Editor.cs" />
      <Compile Include="Assets\LeanTouch\Editor\LeanTouch_Editor.cs" />
+     <Compile Include="Assets\LeanTween\Editor\LeanTweenDocumentationEditor.cs" />
      <Compile Include="Assets\Scripts\Editor\Tests\BasicLevelGeneratorTest.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\Editor\ReporterEditor.cs" />
      <None Include="Assets\LeanTouch\Examples\Fonts\OFL.txt" />
@@ -61,11 +62,13 @@
      <None Include="Assets\Resources\LevelGeneration\two.txt" />
      <None Include="Assets\Resources\LevelGeneration\levelList.xml" />
      <None Include="Assets\Resources\LevelGeneration\multiLevelList.xml" />
+     <None Include="Assets\LeanTween\Examples\Archived\2dUnlitWithFade.shader" />
      <None Include="Assets\StreamingAssets\build_info.txt" />
      <None Include="Assets\Resources\LevelGeneration\level_2_Wael.txt" />
      <None Include="Assets\Resources\LevelGeneration\four.txt" />
      <None Include="Assets\Resources\LevelGeneration\tutorialStage_01_Wael_Part1.txt" />
      <None Include="Assets\Resources\LevelGeneration\one.txt" />
+     <None Include="Assets\LeanTween\ReadMe.txt" />
      <None Include="Assets\LeanTouch\Examples\Shaders\Skybox.shader" />
      <None Include="Assets\LeanTouch\Examples\Shaders\Smooth.shader" />
      <None Include="Assets\Resources\LevelGeneration\tutorialStage_01_Wael_Part3.txt" />
@@ -79,6 +82,7 @@
      <None Include="Assets\Resources\Localization\en.txt" />
      <None Include="Assets\Resources\LevelGeneration\accelTest.txt" />
      <None Include="Assets\Resources\LevelGeneration\level_test_02.txt" />
+     <None Include="Assets\LeanTween\License.txt" />
      <None Include="Assets\Resources\LevelGeneration\five.txt" />
      <None Include="Assets\Resources\LevelGeneration\MultiPlayer_01_Wael.txt" />
      <None Include="Assets\Resources\Localization\fr.txt" />
@@ -88,6 +92,9 @@
      <None Include="Assets\Resources\LevelGeneration\tutorialStage_01_Wael_Part2.txt" />
      <None Include="Assets\Resources\LevelGeneration\tutorialStage_02_Wael.txt" />
      <None Include="Assets\Resources\LevelGeneration\tutorialStage_01_Wael.txt" />
+ <Reference Include="Assembly-UnityScript">
+ <HintPath>C:/Users/mouto_000/Documents/Projects/Runner4Ever/Runner4Ever/Library/ScriptAssemblies/Assembly-UnityScript.dll</HintPath>
+ </Reference>
  <Reference Include="UnityEditor.Advertisements">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Advertisements/Editor/UnityEditor.Advertisements.dll</HintPath>
  </Reference>
@@ -156,6 +163,8 @@
  </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
+      <Project>{A5EE8565-40F8-32B8-0616-3D45A22FE8CA}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
     <ProjectReference Include="Assembly-CSharp.csproj">
       <Project>{5FB9B409-2FFA-019F-4538-DAF8A104A120}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
   </ItemGroup>
