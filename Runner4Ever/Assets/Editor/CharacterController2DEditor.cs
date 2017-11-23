@@ -41,8 +41,6 @@ public class CharacterController2DEditor : Editor
 	{
 		CharacterController2D myScript = (CharacterController2D)target;
 
-        myScript.animator = (Animator)EditorGUILayout.ObjectField("Animator", myScript.animator, typeof(Animator), true);
-
         jumpFold = EditorGUILayout.Foldout(jumpFold, "First Jump");
         if (jumpFold)
         {

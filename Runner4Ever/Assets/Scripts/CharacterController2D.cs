@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Lean.Touch;
 using System;
 
+
 public class ItsAlmostAStack<T, Index>
 {
     private List<T> items = new List<T>();
@@ -123,7 +124,6 @@ public class CharacterController2D : NetworkBehaviour
 	// ---------------------------------------- Other Components
 	public CharacterState state; // State about if we hit ground/walls
 	public InnerState previousFrameState; // State about if we hit ground/walls
-	public Animator animator; // Animator for the character
 	private Transform characTransform; // characTransform
 	private Rigidbody2D rb; // rigidbody
 	private Active active;
@@ -139,6 +139,7 @@ public class CharacterController2D : NetworkBehaviour
 	private float totalDistanceRun = 0.0f;
 	private bool running = true;
 	private float currentVelocity;
+	private float frameXVelocity;
 	public ItsAlmostAStack<float, GameObject> maxVelocity;
 	private float yVelocity;
 	public float xSpeedBySecond = 0.1f;
@@ -353,12 +354,9 @@ public class CharacterController2D : NetworkBehaviour
 		applyOutsideForce(ref offset);
 		offset = adjustOffsetCheckingCollision(offset);
 
+		frameXVelocity = offset.x;
 		totalDistanceRun += Mathf.Abs(offset.x);
 		characTransform.position += offset;
-
-		animator.SetBool("isRunning", running);
-		animator.SetBool("isJumping", jumpIn > 0);
-		animator.SetBool("isSliding", isDashing());
 
 		// Record of this frame for next frame
 
@@ -668,7 +666,7 @@ public class CharacterController2D : NetworkBehaviour
 
 	public float runspeed()
 	{
-		return currentVelocity;
+		return frameXVelocity;
 	}
 
 	public bool isJumping()

@@ -1,0 +1,167 @@
+
+human_hero.png
+size: 1024,256
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+bag
+  rotate: false
+  xy: 972, 199
+  size: 45, 55
+  orig: 45, 55
+  offset: 0, 0
+  index: -1
+closed eyes
+  rotate: false
+  xy: 358, 110
+  size: 76, 37
+  orig: 76, 37
+  offset: 0, 0
+  index: -1
+crazy eyes
+  rotate: false
+  xy: 436, 109
+  size: 76, 41
+  orig: 76, 41
+  offset: 0, 0
+  index: -1
+eyes happy
+  rotate: false
+  xy: 137, 79
+  size: 72, 33
+  orig: 72, 33
+  offset: 0, 0
+  index: -1
+head
+  rotate: false
+  xy: 2, 103
+  size: 133, 151
+  orig: 133, 151
+  offset: 0, 0
+  index: -1
+hip
+  rotate: false
+  xy: 274, 125
+  size: 82, 129
+  orig: 82, 129
+  offset: 0, 0
+  index: -1
+hurt mouth
+  rotate: false
+  xy: 211, 79
+  size: 49, 33
+  orig: 49, 33
+  offset: 0, 0
+  index: -1
+hurt mouth 2
+  rotate: false
+  xy: 900, 205
+  size: 70, 49
+  orig: 70, 49
+  offset: 0, 0
+  index: -1
+left foot
+  rotate: false
+  xy: 514, 111
+  size: 77, 41
+  orig: 77, 41
+  offset: 0, 0
+  index: -1
+left__lower_leg
+  rotate: false
+  xy: 433, 152
+  size: 72, 102
+  orig: 72, 102
+  offset: 0, 0
+  index: -1
+left_arm
+  rotate: false
+  xy: 507, 154
+  size: 57, 100
+  orig: 57, 100
+  offset: 0, 0
+  index: -1
+left_hand
+  rotate: false
+  xy: 593, 98
+  size: 63, 54
+  orig: 63, 54
+  offset: 0, 0
+  index: -1
+left_hand_thumb_up
+  rotate: false
+  xy: 669, 200
+  size: 85, 54
+  orig: 85, 54
+  offset: 0, 0
+  index: -1
+left_leg
+  rotate: false
+  xy: 2, 2
+  size: 66, 99
+  orig: 66, 99
+  offset: 0, 0
+  index: -1
+left_lower_arm
+  rotate: true
+  xy: 829, 202
+  size: 52, 69
+  orig: 52, 69
+  offset: 0, 0
+  index: -1
+right_arm
+  rotate: true
+  xy: 566, 199
+  size: 55, 101
+  orig: 55, 101
+  offset: 0, 0
+  index: -1
+right_foot
+  rotate: false
+  xy: 566, 154
+  size: 78, 43
+  orig: 78, 43
+  offset: 0, 0
+  index: -1
+right_hand
+  rotate: false
+  xy: 135, 23
+  size: 63, 54
+  orig: 63, 54
+  offset: 0, 0
+  index: -1
+right_leg
+  rotate: false
+  xy: 70, 15
+  size: 63, 86
+  orig: 63, 86
+  offset: 0, 0
+  index: -1
+right_lower_arm
+  rotate: true
+  xy: 756, 201
+  size: 53, 71
+  orig: 53, 71
+  offset: 0, 0
+  index: -1
+right_lower_leg
+  rotate: false
+  xy: 358, 149
+  size: 73, 105
+  orig: 73, 105
+  offset: 0, 0
+  index: -1
+smile
+  rotate: false
+  xy: 200, 40
+  size: 49, 37
+  orig: 49, 37
+  offset: 0, 0
+  index: -1
+torso
+  rotate: false
+  xy: 137, 114
+  size: 135, 140
+  orig: 135, 140
+  offset: 0, 0
+  index: -1
