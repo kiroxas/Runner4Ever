@@ -21,6 +21,8 @@ public class HandleSpineAnimation : MonoBehaviour
 	{
 		animator.SetBool("isRunning", controller.runspeed() > 0.0f);
 		animator.SetBool("isJumping", controller.isJumping());
+		animator.SetBool("isAscending", controller.getYVelocity() > 0.0f);
+		animator.SetBool("isDescending", controller.getYVelocity() < 0.0f);
 	}
 
 	public void playEndAnimation()

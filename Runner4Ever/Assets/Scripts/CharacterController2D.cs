@@ -140,6 +140,7 @@ public class CharacterController2D : NetworkBehaviour
 	private bool running = true;
 	private float currentVelocity;
 	private float frameXVelocity;
+	private float frameYVelocity;
 	public ItsAlmostAStack<float, GameObject> maxVelocity;
 	private float yVelocity;
 	public float xSpeedBySecond = 0.1f;
@@ -355,6 +356,8 @@ public class CharacterController2D : NetworkBehaviour
 		offset = adjustOffsetCheckingCollision(offset);
 
 		frameXVelocity = offset.x;
+		frameYVelocity = offset.y;
+
 		totalDistanceRun += Mathf.Abs(offset.x);
 		characTransform.position += offset;
 
@@ -667,6 +670,11 @@ public class CharacterController2D : NetworkBehaviour
 	public float runspeed()
 	{
 		return frameXVelocity;
+	}
+
+	public float getYVelocity()
+	{
+		return frameYVelocity;
 	}
 
 	public bool isJumping()
