@@ -44,8 +44,9 @@ GameObject:
   - component: {fileID: 4528857875893704}
   - component: {fileID: 33824699817852832}
   - component: {fileID: 23426891021741290}
-  - component: {fileID: 114143050916731512}
-  - component: {fileID: 114050801034988436}
+  - component: {fileID: 114149289805009284}
+  - component: {fileID: 95764043296706682}
+  - component: {fileID: 114214594095132278}
   m_Layer: 14
   m_Name: Display
   m_TagString: Untagged
@@ -164,6 +165,23 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.55, y: 1.5}
   m_EdgeRadius: 0
+--- !u!95 &95764043296706682
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1616311822899102}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 9d0758f37c1168f4f83e86bb7ecec408, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!114 &114008227527293576
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -263,17 +281,6 @@ MonoBehaviour:
   nullifyGravityOnDash: 0
   networkGame: 0
   myId: 0
---- !u!114 &114050801034988436
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1616311822899102}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 057267b206fe30b44b0af0e7fecafc05, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114127664279025252
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -294,7 +301,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 12544
   edgeStrategy: 3
---- !u!114 &114143050916731512
+--- !u!114 &114149289805009284
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -302,7 +309,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 1616311822899102}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d247ba06193faa74d9335f5481b2b56c, type: 3}
+  m_Script: {fileID: 11500000, guid: 057267b206fe30b44b0af0e7fecafc05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114214594095132278
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1616311822899102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9db98c60740638449864eb028fbe7ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   skeletonDataAsset: {fileID: 11400000, guid: d4648f378cf9ea54daadc3eb55065a11, type: 2}
@@ -316,14 +334,14 @@ MonoBehaviour:
   pmaVertexColors: 1
   clearStateOnDisable: 0
   tintBlack: 0
-  singleSubmesh: 1
+  singleSubmesh: 0
   addNormals: 0
   calculateTangents: 0
   logErrors: 0
   disableRenderingOnOverride: 1
-  _animationName: victory_idle
-  loop: 0
-  timeScale: 1
+  translator:
+    autoReset: 1
+    layerMixModes: 
 --- !u!114 &114327388902528708
 MonoBehaviour:
   m_ObjectHideFlags: 1

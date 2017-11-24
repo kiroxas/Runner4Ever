@@ -149,6 +149,7 @@ public class CharacterController2D : NetworkBehaviour
 	public float timeHanging = 0.0f;
 	private float currentGravity;
 	private Vector2 outsideForce;
+	private bool doubleJumpFrame;
 
 	public float accelerationSmooth = 1.0f;
 	public float gravitySmooth = 1.0f;
@@ -305,6 +306,8 @@ public class CharacterController2D : NetworkBehaviour
 		handleJump(jumped);
 		bool isJumpingNow = isJumping();
 		Vector3 offset;
+
+		doubleJumpFrame = jumped && getCurrentJumpCount() > 1;
 
 		currentVelocity = Mathf.Lerp(currentVelocity, areWeGoingRight() ? maxVelocity.Peek() : -maxVelocity.Peek(), Time.deltaTime * accelerationSmooth);
 		currentGravity = Mathf.Lerp(currentGravity, (float)gravity.Peek(), Time.deltaTime * gravitySmooth);
@@ -675,6 +678,11 @@ public class CharacterController2D : NetworkBehaviour
 	public float getYVelocity()
 	{
 		return frameYVelocity;
+	}
+
+	public bool doubleJumpedThisFrame()
+	{
+		return doubleJumpFrame;
 	}
 
 	public bool isJumping()

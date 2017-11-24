@@ -23,6 +23,8 @@ public class HandleSpineAnimation : MonoBehaviour
 		animator.SetBool("isJumping", controller.isJumping());
 		animator.SetBool("isAscending", controller.getYVelocity() > 0.0f);
 		animator.SetBool("isDescending", controller.getYVelocity() < 0.0f);
+		animator.SetBool("isGrounded", controller.grounded());
+		animator.SetBool("doubleJump", controller.doubleJumpedThisFrame());
 	}
 
 	public void playEndAnimation()
