@@ -25,6 +25,8 @@ public class HandleSpineAnimation : MonoBehaviour
 		animator.SetBool("isDescending", controller.getYVelocity() < 0.0f);
 		animator.SetBool("isGrounded", controller.grounded());
 		animator.SetBool("doubleJump", controller.doubleJumpedThisFrame());
+		animator.SetBool("isWallSticking", controller.wallSticking());
+		animator.SetBool("isCollidingForward", controller.collidingForward());
 	}
 
 	public void playEndAnimation()

@@ -702,7 +702,7 @@ public class CharacterController2D : NetworkBehaviour
 
 	public bool collidingForward()
 	{
-		return currentVelocity > 0 && state.isCollidingRight || currentVelocity < 0 && state.isCollidingLeft;
+		return currentVelocity >= 0 && state.isCollidingRight || currentVelocity <= 0 && state.isCollidingLeft;
 	}
 
 	public bool collidingRight()
