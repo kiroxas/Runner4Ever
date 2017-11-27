@@ -458,6 +458,11 @@ public class CharacterController2D : NetworkBehaviour
 	public void doDamage(int damage)
 	{
 		health -= damage;
+
+		if(isDead())
+		{
+			EventManager.TriggerEvent(EventManager.get().playerDeadEvent, new GameConstants.PlayerDeadArgument(gameObject));
+		}
 	}
 
 
@@ -476,7 +481,6 @@ public class CharacterController2D : NetworkBehaviour
 		}
 		reinit();
 
-		health = maxHealth;
 		characTransform.position = new Vector2(x, y); 
 	}
 
@@ -870,6 +874,8 @@ public class CharacterController2D : NetworkBehaviour
 		GetComponent<BoxCollider2D>().offset = new Vector2(colliderOffset.x, colliderOffset.y);
 
 		CancelInvoke(); // cancel all invokes
+
+		EventManager.TriggerEvent(EventManager.get().initPlayerEvent, new GameConstants.InitPlayerArgument());
 	}
 
 	public bool flipped()

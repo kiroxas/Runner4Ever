@@ -223,6 +223,9 @@ public class GameConstants
 		}
 	}
 
+	public class InitPlayerArgument
+	{}
+
 	public class AllClientsConnectedArgument
 	{}
 
@@ -312,5 +315,8 @@ public class GameConstants
 	{}	
 
 	public class TriggerDoorEvent : UnityEvent<TriggerDoorArgument>
+	{}
+
+	public class InitPlayerEvent : UnityEvent<InitPlayerArgument>
 	{}
 }

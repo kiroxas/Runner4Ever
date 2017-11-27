@@ -71,9 +71,16 @@ public class LevelFlow : MonoBehaviour
        }
     }
 
+    void respawn(GameObject player)
+    {   
+        player.GetComponent<CharacterController2D>().respawn(lastHitCheckpoint.GetComponent<Transform>().position.x, lastHitCheckpoint.GetComponent<Transform>().position.y);
+    }
+
+
     void playerIsDead(GameConstants.PlayerDeadArgument arg)
     {
-        arg.player.GetComponent<CharacterController2D>().respawn(lastHitCheckpoint.GetComponent<Transform>().position.x, lastHitCheckpoint.GetComponent<Transform>().position.y);
+        GameObject player = arg.player;
+        Run.After(2.5f, ()=>{ respawn(player);});
     }
 
     void checkpointHit(GameConstants.HitCheckpointArgument arg)

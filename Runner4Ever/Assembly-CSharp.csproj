@@ -122,6 +122,12 @@
      <Compile Include="Assets\Scripts\CharacterController2D.cs" />
      <Compile Include="Assets\Scripts\CharacterState.cs" />
      <Compile Include="Assets\Scripts\Checkpoint.cs" />
+     <Compile Include="Assets\Scripts\CoroutineHelper\CoroutineHelper.cs" />
+     <Compile Include="Assets\Scripts\CoroutineHelper\GUIHelper.cs" />
+     <Compile Include="Assets\Scripts\CoroutineHelper\MonoBehaviourSingleton.cs" />
+     <Compile Include="Assets\Scripts\CoroutineHelper\Run.cs" />
+     <Compile Include="Assets\Scripts\CoroutineHelper\SimpleEvent.cs" />
+     <Compile Include="Assets\Scripts\CoroutineHelper\TestBehaviour.cs" />
      <Compile Include="Assets\Scripts\Events\EventManager.cs" />
      <Compile Include="Assets\Scripts\ExploseTile.cs" />
      <Compile Include="Assets\Scripts\FaceToward.cs" />

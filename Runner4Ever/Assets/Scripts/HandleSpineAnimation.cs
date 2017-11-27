@@ -23,15 +23,20 @@ public class HandleSpineAnimation : MonoBehaviour
 	private int stopSlidingHash = Animator.StringToHash("stopSliding");
 	private int finishHash = Animator.StringToHash("finished");
 	private int deadHash = Animator.StringToHash("isDead");
+	private int initHash = Animator.StringToHash("init");
 
 	void OnEnable ()
     {
         EventManager.StartListening (EventManager.get().hitFinalCheckpointEvent, lastCheckpointHit);
+        EventManager.StartListening (EventManager.get().playerDeadEvent, playerIsDead);
+        EventManager.StartListening (EventManager.get().initPlayerEvent, playerInit);
     }
 
     void OnDisable ()
     {
         EventManager.StopListening (EventManager.get().hitFinalCheckpointEvent, lastCheckpointHit);
+        EventManager.StopListening (EventManager.get().playerDeadEvent, playerIsDead);
+        EventManager.StopListening (EventManager.get().initPlayerEvent, playerInit);
     }
 
 	public void Awake()
@@ -45,6 +50,17 @@ public class HandleSpineAnimation : MonoBehaviour
 		playEndAnimation();
 	}
 
+	void playerIsDead(GameConstants.PlayerDeadArgument arg)
+    {
+        playDeadAnimation();
+    }
+
+    void playerInit(GameConstants.InitPlayerArgument arg)
+    {
+        animator.SetBool(initHash, true);
+        animator.SetBool(deadHash, false);
+    }
+
 	public void LateUpdate()
 	{
 		animator.SetBool(runHash, controller.runspeed() > 0.0f);
@@ -57,11 +73,17 @@ public class HandleSpineAnimation : MonoBehaviour
 		animator.SetBool(collidingForwardHash, controller.collidingForward());
 		animator.SetBool(slidingHash, controller.isSliding());
 		animator.SetBool(stopSlidingHash, controller.endSlide());
+		animator.SetBool(initHash, false);
 	}
 
 	public void playEndAnimation()
 	{
 		animator.SetTrigger(finishHash);
+	}
+
+	public void playDeadAnimation()
+	{
+		animator.SetBool(deadHash, true);
 	}
 }
 

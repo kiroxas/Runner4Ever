@@ -42,7 +42,7 @@ public class LoopLevel : MonoBehaviour
 			int xPlayer = (int)player.GetComponent<Transform>().position.x;
 			int yPlayer = (int)player.GetComponent<Transform>().position.y;		
 
-			if(player.GetComponent<CharacterController2D>().isDead() || yPlayer < cam.containingBox.min.y || xPlayer < (cam.containingBox.min.x)|| xPlayer > cam.containingBox.max.x)
+			if(yPlayer < cam.containingBox.min.y || xPlayer < (cam.containingBox.min.x)|| xPlayer > cam.containingBox.max.x)
 			{
 				EventManager.TriggerEvent(EventManager.get().playerDeadEvent, new GameConstants.PlayerDeadArgument(player));
 				//player.GetComponent<CharacterController2D>().respawn(xStart, yStart);
