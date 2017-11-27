@@ -161,6 +161,7 @@ public class CharacterController2D : NetworkBehaviour
 	private float dashIn = 0.0f;
 	public float dashTime = 1.0f;
 	public bool nullifyGravityOnDash = false;
+	private bool stopSlidingThisFrame = false;
 
 	private float xColliderSize = 0.0f;
 	private float yColliderSize = 0.0f;
@@ -263,6 +264,7 @@ public class CharacterController2D : NetworkBehaviour
 		updateActionTimer(ref timeHanging);
 		updateActionTimer(ref jumpIn);
 		updateActionTimer(ref lastJumpFailedAttempt);
+		stopSlidingThisFrame = false;
 		if(updateActionTimer(ref dashIn))
 		{
 			float upDistance = yColliderSize / 2.0f;
@@ -272,6 +274,7 @@ public class CharacterController2D : NetworkBehaviour
 			}
 			else
 			{
+				stopSlidingThisFrame = true;
 				GetComponent<BoxCollider2D>().size = new Vector2(xColliderSize, yColliderSize);
 				GetComponent<BoxCollider2D>().offset = new Vector2(colliderOffset.x, colliderOffset.y);
 			}
@@ -644,6 +647,16 @@ public class CharacterController2D : NetworkBehaviour
 	}
 
 	/* ------------------------------------------------------ Function to inquiry the state -------------------------------------------------------*/
+
+	public bool isSliding()
+	{
+		return dashIn > 0.0f;
+	}
+
+	public bool endSlide()
+	{
+		return stopSlidingThisFrame;
+	}
 
 	public int getObjectsAcquiredCount()
 	{

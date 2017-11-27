@@ -11,6 +11,19 @@ public class HandleSpineAnimation : MonoBehaviour
 
 	private CharacterController2D controller;
 
+	private int runHash = Animator.StringToHash("isRunning");
+	private int jumpHash = Animator.StringToHash("isJumping");
+	private int ascendingHash = Animator.StringToHash("isAscending");
+	private int descendingHash = Animator.StringToHash("isDescending");
+	private int groundedHash = Animator.StringToHash("isGrounded");
+	private int doubleJumpHash = Animator.StringToHash("doubleJump");
+	private int wallStickingHash = Animator.StringToHash("isWallSticking");
+	private int collidingForwardHash = Animator.StringToHash("isCollidingForward");
+	private int slidingHash = Animator.StringToHash("isSliding");
+	private int stopSlidingHash = Animator.StringToHash("stopSliding");
+	private int finishHash = Animator.StringToHash("finished");
+	private int deadHash = Animator.StringToHash("isDead");
+
 	void OnEnable ()
     {
         EventManager.StartListening (EventManager.get().hitFinalCheckpointEvent, lastCheckpointHit);
@@ -34,19 +47,21 @@ public class HandleSpineAnimation : MonoBehaviour
 
 	public void LateUpdate()
 	{
-		animator.SetBool("isRunning", controller.runspeed() > 0.0f);
-		animator.SetBool("isJumping", controller.isJumping());
-		animator.SetBool("isAscending", controller.getYVelocity() > 0.0f);
-		animator.SetBool("isDescending", controller.getYVelocity() < 0.0f);
-		animator.SetBool("isGrounded", controller.grounded());
-		animator.SetBool("doubleJump", controller.doubleJumpedThisFrame());
-		animator.SetBool("isWallSticking", controller.wallSticking());
-		animator.SetBool("isCollidingForward", controller.collidingForward());
+		animator.SetBool(runHash, controller.runspeed() > 0.0f);
+		animator.SetBool(jumpHash, controller.isJumping());
+		animator.SetBool(ascendingHash, controller.getYVelocity() > 0.0f);
+		animator.SetBool(descendingHash, controller.getYVelocity() < 0.0f);
+		animator.SetBool(groundedHash, controller.grounded());
+		animator.SetBool(doubleJumpHash, controller.doubleJumpedThisFrame());
+		animator.SetBool(wallStickingHash, controller.wallSticking());
+		animator.SetBool(collidingForwardHash, controller.collidingForward());
+		animator.SetBool(slidingHash, controller.isSliding());
+		animator.SetBool(stopSlidingHash, controller.endSlide());
 	}
 
 	public void playEndAnimation()
 	{
-		animator.SetBool("finished", true);
+		animator.SetTrigger(finishHash);
 	}
 }
 
