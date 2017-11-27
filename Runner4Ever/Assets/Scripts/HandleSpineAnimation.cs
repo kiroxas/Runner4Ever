@@ -11,10 +11,25 @@ public class HandleSpineAnimation : MonoBehaviour
 
 	private CharacterController2D controller;
 
+	void OnEnable ()
+    {
+        EventManager.StartListening (EventManager.get().hitFinalCheckpointEvent, lastCheckpointHit);
+    }
+
+    void OnDisable ()
+    {
+        EventManager.StopListening (EventManager.get().hitFinalCheckpointEvent, lastCheckpointHit);
+    }
+
 	public void Awake()
 	{
 		controller = GetComponentInParent<CharacterController2D>();
 		animator = GetComponent<Animator>();
+	}
+
+	public void lastCheckpointHit(GameConstants.HitFinalCheckpointArgument arg)
+	{
+		playEndAnimation();
 	}
 
 	public void LateUpdate()

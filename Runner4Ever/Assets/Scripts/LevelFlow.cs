@@ -81,9 +81,14 @@ public class LevelFlow : MonoBehaviour
          lastHitCheckpoint = arg.checkpoint;
     }
 
-    void lastCheckpointHit(GameConstants.HitFinalCheckpointArgument arg)
+    void loadMainGame()
     {
          GameFlow.get().LoadMainMenu();
+    }
+
+    void lastCheckpointHit(GameConstants.HitFinalCheckpointArgument arg)
+    {
+        Invoke("loadMainGame", 2.5f);
     }
 
     void startTrackingPlayer(GameConstants.PlayerSpawnArgument arg)

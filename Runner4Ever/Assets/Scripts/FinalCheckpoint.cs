@@ -9,5 +9,6 @@ public class FinalCheckpoint : MonoBehaviour
         return;
 
        EventManager.TriggerEvent( EventManager.get().hitFinalCheckpointEvent, new GameConstants.HitFinalCheckpointArgument(gameObject));
+       other.other.GetComponent<CharacterController2D>().stop();
     }
 }
