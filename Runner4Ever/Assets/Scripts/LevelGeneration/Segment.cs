@@ -45,6 +45,12 @@ public class Deepness
 			{
 				int index = Segment.getStaticIndex(x,y, xSize, ySize);
 				string valueMajor = layout[index].getMajor();
+
+				if(PoolIndexes.fileToPoolMapping.ContainsKey(valueMajor) == false)
+				{
+					Debug.LogError("The key " + valueMajor + " was not found in fileToPoolMapping");
+				}
+				
 				int poolIndex = PoolIndexes.fileToPoolMapping[valueMajor];
 
 				int left = 0;

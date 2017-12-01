@@ -60,6 +60,7 @@ public class CharacterState : MonoBehaviour
 	public int groundedRayCasts = 8;
 	public int rightCollisionRayCasts = 16;
 	public LayerMask PlatformMask;
+	public float xGroundedOffset = 0.02f;
 
 	public InnerState deepCopy()
 	{
@@ -226,19 +227,19 @@ public class CharacterState : MonoBehaviour
 		return false;
 	}
 
+	
 
 	public bool updateGrounded()
 	{
 		Collider2D myCollider = GetComponent<Collider2D>();
-		float step = (float)myCollider.bounds.size.x / (float)groundedRayCasts;
+		float step = (float)(myCollider.bounds.size.x - (2 * xGroundedOffset)) / (float)groundedRayCasts;
 		innerState.isGrounded = false;
 
 		Vector2 rayDirection = Vector2.down;
 
 		for(int i = 0; i <= groundedRayCasts; ++i)
 		{
-
-			Vector2 rayVector = new Vector2(myCollider.bounds.min.x + i * step, myCollider.bounds.min.y);
+			Vector2 rayVector = new Vector2(myCollider.bounds.min.x + xGroundedOffset + i * step, myCollider.bounds.min.y);
 			var raycastHit = Physics2D.Raycast(rayVector, rayDirection, groundedCastDistance, PlatformMask);
 			Debug.DrawRay(rayVector, rayDirection * groundedCastDistance, Color.green);
 			if (checkRaycast(raycastHit, myCollider))
@@ -264,35 +265,14 @@ public class CharacterState : MonoBehaviour
 	public bool updateAbove()
 	{
 		Collider2D myCollider = GetComponent<Collider2D>();
-		float step = (float)myCollider.bounds.size.x / (float)groundedRayCasts;
+		float step = (float)(myCollider.bounds.size.x - (2 * xGroundedOffset))/ (float)groundedRayCasts;
 		innerState.isCollidingAbove = false;
 
 		Vector2 rayDirection = Vector2.up;
 
-		{
-			Vector2 dir = rayDirection;
-			dir.x = -0.0f;
-			Vector2 rayVector = new Vector2(myCollider.bounds.min.x , myCollider.bounds.max.y);
-			var raycastHit = Physics2D.Raycast(rayVector, dir, rcCastDistance, PlatformMask);
-			Debug.DrawRay(rayVector, dir * groundedCastDistance, Color.green);
-			if(checkRaycast(raycastHit, myCollider))
-			{
-				innerState.isCollidingAbove = true;
-			}
-			
-			dir.x = 0.0f;
-			rayVector = new Vector2(myCollider.bounds.max.x , myCollider.bounds.max.y);
-			raycastHit = Physics2D.Raycast(rayVector, dir, rcCastDistance, PlatformMask);
-			Debug.DrawRay(rayVector, dir * groundedCastDistance, Color.green);
-			if(checkRaycast(raycastHit, myCollider))
-			{
-				innerState.isCollidingAbove = true;
-			}
-		}
-
 		for(int i = 0; i <= groundedRayCasts; ++i)
 		{
-			Vector2 rayVector = new Vector2(myCollider.bounds.min.x + i * step, myCollider.bounds.max.y);
+			Vector2 rayVector = new Vector2(myCollider.bounds.min.x + xGroundedOffset + i * step, myCollider.bounds.max.y);
 			var raycastHit = Physics2D.Raycast(rayVector, rayDirection, groundedCastDistance, PlatformMask);
 			Debug.DrawRay(rayVector, rayDirection * groundedCastDistance, Color.green);
 			if(checkRaycast(raycastHit, myCollider))

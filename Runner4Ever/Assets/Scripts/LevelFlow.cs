@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using System;
 using UnityEngine.SceneManagement;
 
@@ -13,6 +14,7 @@ public class LevelFlow : MonoBehaviour
     public GameObject networkClientPrefab;
 
     private bool isNetworkGame = false;
+    private List<Run> launched = new List<Run>();
 	
  	void Awake()
     {
@@ -80,7 +82,7 @@ public class LevelFlow : MonoBehaviour
     void playerIsDead(GameConstants.PlayerDeadArgument arg)
     {
         GameObject player = arg.player;
-        Run.After(2.5f, ()=>{ respawn(player);});
+        launched.Add(Run.After(2.5f, ()=>{ respawn(player);}));
     }
 
     void checkpointHit(GameConstants.HitCheckpointArgument arg)
@@ -93,9 +95,20 @@ public class LevelFlow : MonoBehaviour
          GameFlow.get().LoadMainMenu();
     }
 
+    void OnDestroy() 
+    {
+        foreach(Run r in launched)
+        {
+            if(r.isDone == false)
+            {
+                r.Abort();
+            }
+        }
+    }
+
     void lastCheckpointHit(GameConstants.HitFinalCheckpointArgument arg)
     {
-        Invoke("loadMainGame", 2.5f);
+        launched.Add(Run.After(2.5f, ()=>{ loadMainGame();}));
     }
 
     void startTrackingPlayer(GameConstants.PlayerSpawnArgument arg)

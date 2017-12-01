@@ -38,7 +38,8 @@ public class CharacterStateEditor : Editor
 	public override void OnInspectorGUI()
 	{
 		CharacterState myScript = (CharacterState)target;
-       
+
+        myScript.xGroundedOffset = EditorGUILayout.FloatField("xGroundedOffset", myScript.xGroundedOffset);
         myScript.yRightColDetDelta = EditorGUILayout.FloatField("yRightColDetDelta", myScript.yRightColDetDelta);
         myScript.groundedCastDistance = EditorGUILayout.FloatField("groundedCastDistance", myScript.groundedCastDistance);
         myScript.rcCastDistance = EditorGUILayout.FloatField("rcCastDistance", myScript.rcCastDistance);
