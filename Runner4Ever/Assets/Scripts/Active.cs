@@ -27,6 +27,11 @@ public class Active : MonoBehaviour
     	_isActive = true;
     }
 
+    public void setInactive()
+    {
+        _isActive = false;
+    }
+
     void setActive(GameConstants.UnPausePlayerArgument arg)
     {
     	setActive();
@@ -34,7 +39,7 @@ public class Active : MonoBehaviour
 
     void setInactive(GameConstants.PausePlayerArgument arg)
     {
-    	_isActive = false;
+    	setInactive();
     }
 
     public bool isActive()

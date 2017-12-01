@@ -971,6 +971,7 @@ public class CharacterController2D : NetworkBehaviour
         EventManager.StartListening(EventManager.get().unPauseAllPlayerEvent, unpausePlayers);
         EventManager.StartListening(EventManager.get().networkOrdersJumpEvent, netOrderedToJump);
         EventManager.StartListening(EventManager.get().networkOrdersDashEvent, netOrderedToDash);
+        EventManager.StartListening(EventManager.get().hitFinalCheckpointEvent, hitFinalCheckpoint);
     }
 
     void OnDisable ()
@@ -978,6 +979,16 @@ public class CharacterController2D : NetworkBehaviour
         EventManager.StopListening(EventManager.get().unPauseAllPlayerEvent, unpausePlayers);
         EventManager.StopListening(EventManager.get().networkOrdersJumpEvent, netOrderedToJump);
         EventManager.StopListening(EventManager.get().networkOrdersDashEvent, netOrderedToDash);
+        EventManager.StopListening(EventManager.get().hitFinalCheckpointEvent, hitFinalCheckpoint);
+    }
+
+    void hitFinalCheckpoint(GameConstants.HitFinalCheckpointArgument arg)
+    {
+    	if(arg.player == gameObject)
+    	{
+    		stop();
+    		GetComponent<Active>().setInactive();
+    	}
     }
 
 	/* ------------------------------------------------------ Editor functions -------------------------------------------------------*/

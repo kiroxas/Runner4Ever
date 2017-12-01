@@ -152,20 +152,24 @@ public class GameConstants
 	public class HitCheckpointArgument
 	{
 		public GameObject checkpoint;
+		public GameObject player;
 
-		public HitCheckpointArgument(GameObject c)
+		public HitCheckpointArgument(GameObject c, GameObject p)
 		{
 			checkpoint = c;
+			player = p;
 		}
 	}
 
 	public class HitFinalCheckpointArgument
 	{
 		public GameObject checkpoint;
+		public GameObject player;
 
-		public HitFinalCheckpointArgument(GameObject c)
+		public HitFinalCheckpointArgument(GameObject c,GameObject p)
 		{
 			checkpoint = c;
+			player = p;
 		}
 	}
 

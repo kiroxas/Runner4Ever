@@ -43,7 +43,7 @@ public class CharacterState : MonoBehaviour
 	private Collider2D myCollider;
 	//private Transform transform;
 
-	InnerState innerState;
+	public InnerState innerState;
 
 	public bool isGrounded { get{ return innerState.isGrounded;} }
 	public bool isCollidingAbove {  get{ return innerState.isCollidingAbove;} }
