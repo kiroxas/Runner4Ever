@@ -38,9 +38,11 @@ public class PoolIndexes
 	public static int startCheckpointIndex = 19;
 	public static int triggerIndex = 20;
 	public static int doorIndex = 21;
+	public static int moveDiagIndex = 22;
+	public static int accelerateFasterTileIndex = 23;
 
-	public static int[] statelessIndexes = { earthIndex, inverseEarthIndex, waterIndex, hurtIndex, bumperIndex, standOnIndex, jumperIndex, stopTileIndex, accelerateTileIndex, decelerateTileIndex };
-	public static int[] stateIndexes = { objectIndex, enemiesIndex, disapearingIndex, escalatorIndex, movingIndex, killMovingIndex, checkpointIndex, playerIndex, finalCheckpointIndex, startCheckpointIndex, triggerIndex, doorIndex};
+	public static int[] statelessIndexes = { earthIndex, inverseEarthIndex, waterIndex, hurtIndex, bumperIndex, standOnIndex, jumperIndex, stopTileIndex, accelerateTileIndex, accelerateFasterTileIndex, decelerateTileIndex };
+	public static int[] stateIndexes = { objectIndex, enemiesIndex, disapearingIndex, escalatorIndex, movingIndex, moveDiagIndex, killMovingIndex, checkpointIndex, playerIndex, finalCheckpointIndex, startCheckpointIndex, triggerIndex, doorIndex};
 
 	public static string emptyIndex = "0";
 	public static Dictionary<string, int> fileToPoolMapping = new Dictionary<string, int>
@@ -57,12 +59,14 @@ public class PoolIndexes
 	   {"A", escalatorIndex},
 	   {"B", bumperIndex},
 	   {"C", movingIndex},
+	   {"CD", moveDiagIndex},
 	   {"D", killMovingIndex},
 	   {"E", standOnIndex},
 	   {"F", jumperIndex},
 	   {"L", finalCheckpointIndex},
 	   {"S", stopTileIndex},
 	   {"G", accelerateTileIndex},
+	   {"GF", accelerateFasterTileIndex},
 	   {"H", decelerateTileIndex},
 	   {"T", triggerIndex},
 	   {"P", doorIndex} };

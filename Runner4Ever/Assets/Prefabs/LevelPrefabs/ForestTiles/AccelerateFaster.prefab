@@ -9,102 +9,82 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1846492377467020}
+  m_RootGameObject: {fileID: 1533532974833966}
   m_IsPrefabParent: 1
---- !u!1 &1846492377467020
+--- !u!1 &1533532974833966
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 4652397804194300}
-  - component: {fileID: 212990577180612362}
-  - component: {fileID: 61546809076098404}
-  - component: {fileID: 50645675663161472}
-  - component: {fileID: 114719302046707362}
-  m_Layer: 8
-  m_Name: Door
-  m_TagString: Platform
+  - component: {fileID: 4545924749548570}
+  - component: {fileID: 212190107270855654}
+  - component: {fileID: 114860556232285044}
+  - component: {fileID: 61589573863980396}
+  m_Layer: 13
+  m_Name: AccelerateFaster
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4652397804194300
+--- !u!4 &4545924749548570
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1846492377467020}
+  m_GameObject: {fileID: 1533532974833966}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.05, y: 0.1, z: 1}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!50 &50645675663161472
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1846492377467020}
-  m_BodyType: 1
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
---- !u!61 &61546809076098404
+--- !u!61 &61589573863980396
 BoxCollider2D:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1846492377467020}
+  m_GameObject: {fileID: 1533532974833966}
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 5.5, y: 6.025}
+  m_Offset: {x: 1, y: 0.5}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
-    oldSize: {x: 11.7699995, y: 12.05}
-    newSize: {x: 11.7699995, y: 12.05}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 11, y: 12.05}
+  m_Size: {x: 2, y: 1}
   m_EdgeRadius: 0
---- !u!114 &114719302046707362
+--- !u!114 &114860556232285044
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1846492377467020}
+  m_GameObject: {fileID: 1533532974833966}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2205551e26a4dd74e964b5858d63e734, type: 3}
+  m_Script: {fileID: 11500000, guid: 196c865fb32aba9418ee6eba00a09029, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!212 &212990577180612362
+  xSpeedBySecond: 28
+--- !u!212 &212190107270855654
 SpriteRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1846492377467020}
+  m_GameObject: {fileID: 1533532974833966}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -131,11 +111,11 @@ SpriteRenderer:
   m_SortingLayerID: 194366603
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300002, guid: 26904fba9039d664ab78d810dcec76f7, type: 3}
+  m_Sprite: {fileID: 21300166, guid: 7c680896492c70b43b4ef4505140b99b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 11.7699995, y: 12.05}
+  m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0

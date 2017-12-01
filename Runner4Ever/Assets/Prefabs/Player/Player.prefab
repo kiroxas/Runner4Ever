@@ -204,19 +204,19 @@ MonoBehaviour:
         outSlope: 24.897541
         tangentMode: 0
       - serializedVersion: 2
-        time: 0.14924306
-        value: 2.2638848
+        time: 0.2314989
+        value: 2.9018655
         inSlope: 0.6580353
         outSlope: 0.6580353
         tangentMode: 0
       - serializedVersion: 2
-        time: 0.19924307
-        value: 2.2638848
+        time: 0.2814989
+        value: 2.9018655
         inSlope: -0.7539163
         outSlope: -0.7539163
         tangentMode: 0
       - serializedVersion: 2
-        time: 0.4496457
+        time: 0.53190154
         value: 0
         inSlope: -26.004114
         outSlope: -26.004114
@@ -238,16 +238,16 @@ MonoBehaviour:
         outSlope: 16.892817
         tangentMode: 0
       - serializedVersion: 2
-        time: 0.17507282
+        time: 0.12
         value: 1.8619177
-        inSlope: 2.6250083
-        outSlope: 2.6250083
+        inSlope: 6.6321254
+        outSlope: 6.6321254
         tangentMode: 0
       - serializedVersion: 2
         time: 0.22507283
         value: 1.8619177
-        inSlope: -2.3378544
-        outSlope: -2.3378544
+        inSlope: -6.55748
+        outSlope: -6.55748
         tangentMode: 0
       - serializedVersion: 2
         time: 0.39968508

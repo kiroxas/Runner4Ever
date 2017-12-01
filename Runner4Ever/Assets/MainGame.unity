@@ -1234,7 +1234,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   xTotalLevel: 6
   yTotalLevel: 6
-  xTilePerSegment: 25
+  xTilePerSegment: 40
   yTilePerSegment: 20
   tileWidth: 0.583
   tileHeight: 0.583
@@ -1255,10 +1255,14 @@ MonoBehaviour:
   enemies: {fileID: 1411564879272584, guid: 7c0fe21a61e7af34dbe50a85b0c05b4a, type: 2}
   escalator: {fileID: 1224733899914416, guid: 96c1117bd1884da449a82a5bb033ccab, type: 2}
   movingTile: {fileID: 1119444770503812, guid: 218df3e9cc367764e8410d3d3c19c255, type: 2}
+  movingTileDiag: {fileID: 1230278015819994, guid: b6a3ef3894780164996937bae1053266,
+    type: 2}
   killMovingTile: {fileID: 1475045993940804, guid: a48c5f0880e3d334bb1032e43f023dee,
     type: 2}
   stopTile: {fileID: 1924629102407694, guid: 7ef709be069d4104aac68ddf3ef17336, type: 2}
   accelerateTile: {fileID: 1439603301208488, guid: 6ec0d852d47802d43b02768201427412,
+    type: 2}
+  accelerateFasterTile: {fileID: 1533532974833966, guid: 39f56cddd93e5dc498e81bf1ce6f849f,
     type: 2}
   decelerateTile: {fileID: 1442056144979826, guid: c00b7d9d354988749b287b6a8509561e,
     type: 2}
@@ -1603,17 +1607,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: Lean.Touch.LeanFingerHeld+FingerEvent, Assembly-CSharp, Version=0.0.0.0,
+    m_TypeName: Lean.Touch.LeanFingerHeld+FingerEvent, Assembly-CSharp, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
   onFingerHeldSet:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: Lean.Touch.LeanFingerHeld+FingerEvent, Assembly-CSharp, Version=0.0.0.0,
+    m_TypeName: Lean.Touch.LeanFingerHeld+FingerEvent, Assembly-CSharp, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
   onFingerHeldUp:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: Lean.Touch.LeanFingerHeld+FingerEvent, Assembly-CSharp, Version=0.0.0.0,
+    m_TypeName: Lean.Touch.LeanFingerHeld+FingerEvent, Assembly-CSharp, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!1 &1734732834
 GameObject:
