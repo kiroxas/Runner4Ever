@@ -361,6 +361,11 @@ public class CharacterController2D : NetworkBehaviour
 		applyOutsideForce(ref offset);
 		offset = adjustOffsetCheckingCollision(offset);
 
+		if(collidingRight() && offset.x > 0.0f)
+		{
+			Debug.LogError("Noooooooooooo");
+		}
+
 		frameXVelocity = offset.x;
 		frameYVelocity = offset.y;
 

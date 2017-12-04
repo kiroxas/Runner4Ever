@@ -926,7 +926,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 313034446}
   offset: {x: 6.15, y: 2.117, z: 0}
-  smoothing: {x: 1, y: 8}
+  smoothing: {x: 1, y: 4}
+  panicLinePercent: 0.2
 --- !u!114 &1030094418
 MonoBehaviour:
   m_ObjectHideFlags: 0
