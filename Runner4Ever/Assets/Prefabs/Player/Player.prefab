@@ -61,7 +61,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1091320906491702}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -73.44996, y: -11.252728, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 0.8}
   m_Children:
   - {fileID: 4528857875893704}
@@ -299,8 +299,11 @@ MonoBehaviour:
   rightCollisionRayCasts: 16
   PlatformMask:
     serializedVersion: 2
-    m_Bits: 12544
+    m_Bits: 8192
+  xGroundedOffset: 0.02
+  wallStickingPercent: 0.2
   edgeStrategy: 3
+  boundsXOffset: 0.02
 --- !u!114 &114149289805009284
 MonoBehaviour:
   m_ObjectHideFlags: 1
