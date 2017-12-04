@@ -16,4 +16,5 @@
 		  {"key":"multi", "value":"Coopération"},
 		  {"key":"pause", "value":"Pause"},
 		  {"key":"resume", "value":"Reprendre"},
-		  {"key":"quit", "value":"Quitter"}]}
+		  {"key":"quit", "value":"Quitter"},
+		  {"key":"replay", "value":"Charger dernier checkpoint"}]}

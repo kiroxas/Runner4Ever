@@ -16,4 +16,5 @@
 		  {"key":"multi", "value":"Multiplayer"},
 		  {"key":"pause", "value":"Pause"},
 		  {"key":"resume", "value":"Resume"},
-		  {"key":"quit", "value":"Quit"}]}
+		  {"key":"quit", "value":"Quit"},
+		  {"key":"replay", "value":"Reload Checkpoint"}]}

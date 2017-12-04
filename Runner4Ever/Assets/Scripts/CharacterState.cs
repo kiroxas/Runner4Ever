@@ -22,9 +22,11 @@ public class InnerState
 	public bool isCollidingAbove { get; set; }
 	public bool isCollidingRight { get; set; }
 	public bool isCollidingLeft { get; set; }
+	public bool isWallstickingLeft { get; set; }
+	public bool isWallstickingRight { get; set; }
 	public bool isCollidingSide { get {return isCollidingRight || isCollidingLeft;}}
 	public bool isGrabingEdge { get; set; }
-	public bool isWallSticking { get{ return isCollidingSide && !isGrabingEdge;} }	
+	public bool isWallSticking { get{ return isCollidingSide && (isWallstickingLeft || isWallstickingRight);} }	
 }
 
 
@@ -49,9 +51,9 @@ public class CharacterState : MonoBehaviour
 	public bool isCollidingAbove {  get{ return innerState.isCollidingAbove;} }
 	public bool isCollidingRight {  get{ return innerState.isCollidingRight;}}
 	public bool isCollidingLeft { get{ return innerState.isCollidingLeft;}}
-	public bool isCollidingSide { get {return isCollidingRight || isCollidingLeft;}}
+	public bool isCollidingSide { get {return innerState.isCollidingSide;}}
 	public bool isGrabingEdge { get{ return innerState.isGrabingEdge;} }
-	public bool isWallSticking { get{ return isCollidingSide && !isGrabingEdge;} }
+	public bool isWallSticking { get{ return innerState.isWallSticking;} }
 
 	public float yRightColDetDelta = 0.02f;
 
@@ -61,6 +63,7 @@ public class CharacterState : MonoBehaviour
 	public int rightCollisionRayCasts = 16;
 	public LayerMask PlatformMask;
 	public float xGroundedOffset = 0.02f;
+	public float wallStickingPercent = 0.5f;
 
 	public InnerState deepCopy()
 	{
@@ -71,6 +74,8 @@ public class CharacterState : MonoBehaviour
 		state.isCollidingRight = isCollidingRight;
 		state.isCollidingLeft = isCollidingLeft;
 		state.isGrabingEdge = isGrabingEdge;
+		state.isWallstickingLeft = innerState.isWallstickingLeft;
+		state.isWallstickingRight = innerState.isWallstickingRight;
 
 		return state;
 	} 
@@ -426,31 +431,25 @@ public class CharacterState : MonoBehaviour
 		Collider2D myCollider = GetComponent<Collider2D>();
 		float step = (float)myCollider.bounds.size.y / (float)rightCollisionRayCasts;
 		innerState.isCollidingLeft = false;
+		innerState.isWallstickingLeft = false;
 
 		Vector2 rayDirection = Vector2.left;
 		float leftX = Mathf.Min(myCollider.bounds.max.x , myCollider.bounds.min.x);
-		
-		{
-			Vector2 dir = rayDirection;
-			dir.y = -0.5f;
-			dir.x = -1.3f;
-			Vector2 rayVector = new Vector2(leftX , myCollider.bounds.min.y + yRightColDetDelta);
-			var raycastHit = Physics2D.Raycast(rayVector, dir, rcCastDistance, PlatformMask);
-			Debug.DrawRay(rayVector, dir * rcCastDistance, Color.red);
-			if(checkRaycast(raycastHit, myCollider))
-			{
-				innerState.isCollidingLeft = true;
-			}
-		}
+
+		float threshold = myCollider.bounds.min.y + (myCollider.bounds.size.y * wallStickingPercent);
 
 		for(int i = 0; i < rightCollisionRayCasts; ++i)
 		{
-			Vector2 rayVector = new Vector2(leftX , myCollider.bounds.min.y + yRightColDetDelta + i * step);
+			float y = myCollider.bounds.min.y + yRightColDetDelta + i * step;
+
+			Vector2 rayVector = new Vector2(leftX , y);
 			var raycastHit = Physics2D.Raycast(rayVector, rayDirection, rcCastDistance, PlatformMask);
 			Debug.DrawRay(rayVector, rayDirection * rcCastDistance, Color.red);
 			if(checkRaycast(raycastHit, myCollider))
 			{
 				innerState.isCollidingLeft = true;
+				if(y >= threshold)
+					innerState.isWallstickingLeft = true;
 			}
 		}
 
@@ -462,31 +461,25 @@ public class CharacterState : MonoBehaviour
 		Collider2D myCollider = GetComponent<Collider2D>();
 		float step = (float)myCollider.bounds.size.y / (float)rightCollisionRayCasts;
 		innerState.isCollidingRight = false;
+		innerState.isWallstickingRight = false;
 
 		Vector2 rayDirection = Vector2.right;
 		float rightX = Mathf.Max(myCollider.bounds.max.x , myCollider.bounds.min.x);
 
-		{
-			Vector2 dir = rayDirection;
-			dir.y = -0.5f;
-			dir.x = 1.3f;
-			Vector2 rayVector = new Vector2(rightX , myCollider.bounds.min.y + yRightColDetDelta);
-			var raycastHit = Physics2D.Raycast(rayVector, dir, rcCastDistance, PlatformMask);
-			Debug.DrawRay(rayVector, dir * rcCastDistance, Color.black);
-			if(checkRaycast(raycastHit, myCollider))
-			{
-				innerState.isCollidingRight = true;
-			}
-		}
+		float threshold = myCollider.bounds.min.y + (myCollider.bounds.size.y * wallStickingPercent);
 
 		for(int i = 0; i < rightCollisionRayCasts; ++i)
 		{
-			Vector2 rayVector = new Vector2(rightX , myCollider.bounds.min.y + yRightColDetDelta + i * step);
+			float y = myCollider.bounds.min.y + yRightColDetDelta + i * step;
+
+			Vector2 rayVector = new Vector2(rightX ,y);
 			var raycastHit = Physics2D.Raycast(rayVector, rayDirection, rcCastDistance, PlatformMask);
 			Debug.DrawRay(rayVector, rayDirection * rcCastDistance, Color.black);
 			if(checkRaycast(raycastHit, myCollider))
 			{
 				innerState.isCollidingRight = true;
+				if(y >= threshold)
+					innerState.isWallstickingRight = true;
 			}
 		}
 

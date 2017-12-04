@@ -12,6 +12,7 @@ public class PauseMenu : MonoBehaviour
     {
        /* EventManager.StartListening(EventManager.get().unPausePlayerEvent, setActive);
         EventManager.StartListening(EventManager.get().pausePlayerEvent, setInactive);*/
+        transform.Find("Checkpoint").gameObject.SetActive(UnityUtils.isNetworkGame() == false);
     }
 
     void OnDisable ()
@@ -30,6 +31,14 @@ public class PauseMenu : MonoBehaviour
     {
     	gameObject.SetActive(false);
         EventManager.TriggerEvent(EventManager.get().unPausePlayerEvent, new GameConstants.UnPausePlayerArgument());
+    }
+
+     public void reloadCheckpoint()
+    {
+        gameObject.SetActive(false);
+        CharacterController2D player = (CharacterController2D)UnityEngine.Object.FindObjectOfType(typeof(CharacterController2D));
+        GameObject pl = player ? player.gameObject : null; 
+        EventManager.TriggerEvent(EventManager.get().playerDeadEvent, new GameConstants.PlayerDeadArgument(pl));
     }
 
     public void closeGame()

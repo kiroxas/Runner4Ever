@@ -39,6 +39,7 @@ public class CharacterStateEditor : Editor
 	{
 		CharacterState myScript = (CharacterState)target;
 
+        myScript.wallStickingPercent = EditorGUILayout.FloatField("wallStickingPercent", myScript.wallStickingPercent);
         myScript.xGroundedOffset = EditorGUILayout.FloatField("xGroundedOffset", myScript.xGroundedOffset);
         myScript.yRightColDetDelta = EditorGUILayout.FloatField("yRightColDetDelta", myScript.yRightColDetDelta);
         myScript.groundedCastDistance = EditorGUILayout.FloatField("groundedCastDistance", myScript.groundedCastDistance);
