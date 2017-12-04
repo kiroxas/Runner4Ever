@@ -467,6 +467,7 @@ public class CharacterController2D : NetworkBehaviour
 		if(isDead())
 		{
 			EventManager.TriggerEvent(EventManager.get().playerDeadEvent, new GameConstants.PlayerDeadArgument(gameObject));
+			GetComponent<Active>().setInactive();
 		}
 	}
 
@@ -487,6 +488,7 @@ public class CharacterController2D : NetworkBehaviour
 		reinit();
 
 		characTransform.position = new Vector2(x, y); 
+		GetComponent<Active>().setActive();
 	}
 
 	

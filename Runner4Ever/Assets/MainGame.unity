@@ -940,7 +940,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   portraitSize: 10
-  landscapeSize: 4.95
+  landscapeSize: 7
   smoothing: 3
 --- !u!1 &1062137992
 GameObject:
