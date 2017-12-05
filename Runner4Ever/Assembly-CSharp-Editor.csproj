@@ -107,6 +107,7 @@
      <None Include="Assets\spine-unity\Assets\Examples\Spine\FootSoldier\FS_White.atlas.txt" />
      <None Include="Assets\spine-unity\Assets\spine-unity\Modules\Shaders\Sprite\ShaderShared.cginc" />
      <None Include="Assets\Resources\LevelGeneration\level_2_Wael.txt" />
+     <None Include="Assets\Resources\LevelGeneration\level_4_Wael.txt" />
      <None Include="Assets\Resources\LevelGeneration\four.txt" />
      <None Include="Assets\spine-unity\Assets\spine-unity\Modules\CustomMaterials\SkeletonRendererCustomMaterials.txt" />
      <None Include="Assets\Resources\LevelGeneration\tutorialStage_01_Wael_Part1.txt" />

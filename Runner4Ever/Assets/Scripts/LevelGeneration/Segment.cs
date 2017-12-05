@@ -137,25 +137,37 @@ public class Deepness
 }
 
 public class LoadedTile
-	{
-		public int tileIndex;
-		public int poolIndex;
-		public GameObject obj;
+{
+	public int tileIndex;
+	public int poolIndex;
+	public GameObject obj;
 
-		public LoadedTile(int ind, int pi, GameObject o)
-		{
-			tileIndex = pi;
-			obj = o;
-			poolIndex = ind;
-		}
+	public LoadedTile(int ind, int pi, GameObject o)
+	{
+		tileIndex = pi;
+		obj = o;
+		poolIndex = ind;
 	}
+}
+
+public class LoadedBackground
+{
+	public Vector2 position;
+	public GameObject obj;
+
+	public LoadedBackground(Vector2 pos, GameObject o)
+	{
+		position = pos;
+		obj = o;
+	}
+}
 
 /* Class that represents a portion of the level, can load and unload itself */
 public class Segment
 {
 	private Dictionary<int, List<GameObject>> loaded; // All gameobject loaded in the segment
 	private Dictionary<int, List<GameObject>> stateLoaded; // All gameobject loaded in the segment
-	private Dictionary<int, List<GameObject>> bgLoaded; // All gameobject loaded in the segment
+	private Dictionary<int, List<LoadedBackground>> bgLoaded; // All gameobject loaded in the segment
 	private Dictionary<Vector2, LoadedTile> tilesLoaded; // tiles loaded by position
 	private bool enabled = false; // is this segment enabled
 	private bool firstLoad = true; // first time loading ?
@@ -271,7 +283,7 @@ public class Segment
 	{
 		loaded = new Dictionary<int, List<GameObject>>();
 		stateLoaded = new  Dictionary<int, List<GameObject>>();
-		bgLoaded = new Dictionary<int, List<GameObject>>();
+		bgLoaded = new Dictionary<int, List<LoadedBackground>>();
 		tilesLoaded = new Dictionary<Vector2, LoadedTile>();
 
 		init(PoolIndexes.statelessIndexes, loaded);
@@ -319,9 +331,9 @@ public class Segment
 			
 			foreach(var values in bgLoaded.Values)
 			{
-				foreach(GameObject g in values)
+				foreach(LoadedBackground g in values)
 				{
-					float place = Mathf.Ceil((g.GetComponent<Transform>().position.x - info.xBegin + xOffset ) / info.tileWidth);
+					float place = Mathf.Ceil((g.position.x - info.xBegin + xOffset ) / info.tileWidth);
 					
 					if(place == placement.x + width)
 						return width;
@@ -348,9 +360,9 @@ public class Segment
 
 		foreach(var values in bgLoaded)
 		{
-			foreach(GameObject g in values.Value)
+			foreach(LoadedBackground g in values.Value)
 			{
-				int place = (int)((g.GetComponent<Transform>().position.x - info.xBegin + xOffset )/ info.tileWidth);
+				int place = (int)((g.position.x - info.xBegin + xOffset )/ info.tileWidth);
 				if(place > placement.x && place < placement.x + xSize)
 					return false;
 			}
@@ -364,10 +376,7 @@ public class Segment
 		int i = 0;
 		foreach(var values in bgLoaded)
 		{
-			foreach(GameObject g in values.Value)
-			{
-				++i;
-			}
+			i += values.Value.Count;
 		}
 
 		return i;
@@ -418,13 +427,12 @@ public class Segment
 
 				if(index == -1)
 				{
-					//Debug.Log("Could not find any size " + size + " at " + gridIndex);
 					removeSizeFromGroundAvailable(1, gridIndex);
 					continue;
 				}
 
 				if(bgLoaded.ContainsKey(index) == false)
-					bgLoaded[index] = new List<GameObject>();
+					bgLoaded[index] = new List<LoadedBackground>();
 
 				float xOffset = info.tileWidth / 2.0f;
 				float yOffset = info.tileHeight / 2.0f;
@@ -432,11 +440,30 @@ public class Segment
 				Vector3 position = new Vector3( info.xBegin + gridIndex.x * info.tileWidth - xOffset , info.yBegin + gridIndex.y * info.tileHeight - yOffset, 0.0f);
 
 				GameObject props = bgPool.get(index, position);
-				bgLoaded[index].Add(props);
+				bgLoaded[index].Add(new LoadedBackground(position, props));
 				removeSizeFromGroundAvailable((int)getSpriteSize(props).x, gridIndex);
 			}
+		}
+		else if(bgLoaded.Count != 0)
+		{
+			foreach(var entry in bgLoaded)
+			{
+				foreach(LoadedBackground g in entry.Value)
+				{
+					g.obj = bgPool.get(entry.Key, g.position);
+				}
+			}
+		}
+	}
 
-			//Debug.Log("Added " + bgLoadedCount() + " props to segment");
+	private void unloadBgProps(BackgroundPropsHandler bgPool)
+	{
+		foreach(var entry in bgLoaded)
+		{
+			foreach(LoadedBackground g in entry.Value)
+			{
+				bgPool.free(g.obj, entry.Key);
+			}
 		}
 	}
 
@@ -560,15 +587,7 @@ public class Segment
 			tileHandler.free(tileLoaded.Value.poolIndex, tileLoaded.Value.obj, deepness[tileLoaded.Value.poolIndex][index], tileLoaded.Value.tileIndex);
 		}
 
-		foreach(var entry in bgLoaded)
-		{
-			foreach(GameObject g in entry.Value)
-			{
-				bgPool.free(g, entry.Key);
-			}
-			entry.Value.Clear();
-		}
-		bgLoaded.Clear();
+		unloadBgProps(bgPool);
 	}
 
 	/* --------------------------------- Debug or Unity Utilities ----------------------------------------------- */
