@@ -108,7 +108,6 @@ public class SegmentStreamer : MonoBehaviour
 	public GameObject startCheckpoint;
 
 	/* Stateless prefabs */
-	public GameObject hurtTiles;
 	public GameObject bumper;
 	public GameObject jumper;
 
@@ -143,6 +142,11 @@ public class SegmentStreamer : MonoBehaviour
 	public GameObject[] bottomLeftTiles;
 	public GameObject[] topRightTiles;
 	public GameObject[] topLeftTiles;
+
+	public GameObject[] hurtTiles;
+	public GameObject[] hurtTilesLeft;
+	public GameObject[] hurtTilesRight;
+	public GameObject[] hurtTilesBottom;
 
 	public GameObject[] topWaterTiles;
 	public GameObject[] innerWaterTiles;
@@ -288,6 +292,7 @@ public class SegmentStreamer : MonoBehaviour
 		deep[PoolIndexes.standOnIndex] = Deepness.calculateDeepness(new List<int>{PoolIndexes.standOnIndex}, level, xTotalLevel, yTotalLevel);
 		deep[PoolIndexes.inverseEarthIndex] = Deepness.calculateDeepness(new List<int>{PoolIndexes.earthIndex, PoolIndexes.inverseEarthIndex}, level, xTotalLevel, yTotalLevel);
 		deep[PoolIndexes.disapearingIndex] = Deepness.calculateDeepness(new List<int>{PoolIndexes.disapearingIndex}, level, xTotalLevel, yTotalLevel);
+		deep[PoolIndexes.hurtIndex] = Deepness.calculateDeepness(new List<int>{PoolIndexes.earthIndex, PoolIndexes.hurtIndex}, level, xTotalLevel, yTotalLevel);
 
 		return deep;
 	}
@@ -533,7 +538,6 @@ public class SegmentStreamer : MonoBehaviour
 		segments = new List<Segment>();
 		statePool = new PoolCollection();
 
-		statePool.addPool(hurtTiles, PoolIndexes.hurtIndex, PoolIndexes.mediumPoolingStrategy);
 		statePool.addPool(objectTiles, PoolIndexes.objectIndex, PoolIndexes.mediumPoolingStrategy);
 		statePool.addPool(enemies, PoolIndexes.enemiesIndex, PoolIndexes.mediumPoolingStrategy);
 		statePool.addPool(instancePlayer, PoolIndexes.playerIndex , PoolIndexes.uniquePoolingStrategy);
@@ -650,6 +654,25 @@ public class SegmentStreamer : MonoBehaviour
 		tilesHandler.addTileType(PoolIndexes.disapearingIndex, TilesHandler.TilePlacement.PillarUp, disapearingTiles);
 		tilesHandler.addTileType(PoolIndexes.disapearingIndex, TilesHandler.TilePlacement.PillarInner, disapearingTiles);
 		tilesHandler.addTileType(PoolIndexes.disapearingIndex, TilesHandler.TilePlacement.PillarBottom, disapearingTiles);
+
+		// Spikes
+		tilesHandler.addTileType(PoolIndexes.hurtIndex, TilesHandler.TilePlacement.OnTop, hurtTiles);
+		tilesHandler.addTileType(PoolIndexes.hurtIndex, TilesHandler.TilePlacement.BelowTop, hurtTiles);
+		tilesHandler.addTileType(PoolIndexes.hurtIndex, TilesHandler.TilePlacement.Right, hurtTilesRight);
+		tilesHandler.addTileType(PoolIndexes.hurtIndex, TilesHandler.TilePlacement.Left, hurtTilesLeft);
+		tilesHandler.addTileType(PoolIndexes.hurtIndex, TilesHandler.TilePlacement.InnerRight, hurtTiles);
+		tilesHandler.addTileType(PoolIndexes.hurtIndex, TilesHandler.TilePlacement.InnerLeft, hurtTiles);
+		tilesHandler.addTileType(PoolIndexes.hurtIndex, TilesHandler.TilePlacement.Inner, hurtTiles);
+		tilesHandler.addTileType(PoolIndexes.hurtIndex, TilesHandler.TilePlacement.Bottom, hurtTilesBottom);
+		tilesHandler.addTileType(PoolIndexes.hurtIndex, TilesHandler.TilePlacement.InnerBottom, hurtTiles);
+		tilesHandler.addTileType(PoolIndexes.hurtIndex, TilesHandler.TilePlacement.Floating, hurtTiles);
+		tilesHandler.addTileType(PoolIndexes.hurtIndex, TilesHandler.TilePlacement.BottomLeft, hurtTilesBottom);
+		tilesHandler.addTileType(PoolIndexes.hurtIndex, TilesHandler.TilePlacement.BottomRight, hurtTilesBottom);
+		tilesHandler.addTileType(PoolIndexes.hurtIndex, TilesHandler.TilePlacement.TopLeft, hurtTilesLeft);
+		tilesHandler.addTileType(PoolIndexes.hurtIndex, TilesHandler.TilePlacement.TopRight, hurtTilesRight);
+		tilesHandler.addTileType(PoolIndexes.hurtIndex, TilesHandler.TilePlacement.PillarUp, hurtTiles);
+		tilesHandler.addTileType(PoolIndexes.hurtIndex, TilesHandler.TilePlacement.PillarInner, hurtTiles);
+		tilesHandler.addTileType(PoolIndexes.hurtIndex, TilesHandler.TilePlacement.PillarBottom, hurtTilesBottom);
 		
 	}
 

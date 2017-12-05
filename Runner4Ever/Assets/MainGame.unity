@@ -1371,7 +1371,6 @@ MonoBehaviour:
     type: 2}
   startCheckpoint: {fileID: 1910446770601744, guid: 2d18858aed07e9b48acdbc546512c9a0,
     type: 2}
-  hurtTiles: {fileID: 1009289609533882, guid: 56d93fb92eb769e45ad0ac75c279ec47, type: 2}
   bumper: {fileID: 1663558137876950, guid: 5ec9260b0f3120c4c9c3630317a9b568, type: 2}
   jumper: {fileID: 1663558137876950, guid: 74af0166c45e80d42a52838c2c3710d3, type: 2}
   objectTiles: {fileID: 1944584314784754, guid: f2da7414b4e839e478df0f3ccb127d5c,
@@ -1486,6 +1485,14 @@ MonoBehaviour:
   - {fileID: 1669612837865542, guid: 02f8b6c2f878c6349896ca904cb71909, type: 2}
   topLeftTiles:
   - {fileID: 1368278270706680, guid: 97f80e799f66d3a449126d882d529445, type: 2}
+  hurtTiles:
+  - {fileID: 1009289609533882, guid: 56d93fb92eb769e45ad0ac75c279ec47, type: 2}
+  hurtTilesLeft:
+  - {fileID: 1723664622080274, guid: 1bf2ef8cec76620438b693100792801e, type: 2}
+  hurtTilesRight:
+  - {fileID: 1956214246045708, guid: 2edca39cd5c2dad4d80988cd4f919cdd, type: 2}
+  hurtTilesBottom:
+  - {fileID: 1799264272268472, guid: ab5c276a9a94c53489fd1ce2a309ff48, type: 2}
   topWaterTiles:
   - {fileID: 1514937430499528, guid: beed8e712df78ba41a3dc828837808b7, type: 2}
   - {fileID: 1685971538788648, guid: 374274587e1172e40992348da06dfb9f, type: 2}
