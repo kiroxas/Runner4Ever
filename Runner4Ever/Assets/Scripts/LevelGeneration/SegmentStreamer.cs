@@ -292,7 +292,7 @@ public class SegmentStreamer : MonoBehaviour
 		deep[PoolIndexes.standOnIndex] = Deepness.calculateDeepness(new List<int>{PoolIndexes.standOnIndex}, level, xTotalLevel, yTotalLevel);
 		deep[PoolIndexes.inverseEarthIndex] = Deepness.calculateDeepness(new List<int>{PoolIndexes.earthIndex, PoolIndexes.inverseEarthIndex}, level, xTotalLevel, yTotalLevel);
 		deep[PoolIndexes.disapearingIndex] = Deepness.calculateDeepness(new List<int>{PoolIndexes.disapearingIndex}, level, xTotalLevel, yTotalLevel);
-		deep[PoolIndexes.hurtIndex] = Deepness.calculateDeepness(new List<int>{PoolIndexes.earthIndex, PoolIndexes.hurtIndex}, level, xTotalLevel, yTotalLevel);
+		deep[PoolIndexes.hurtIndex] = Deepness.calculateDeepness(new List<int>{PoolIndexes.earthIndex, PoolIndexes.inverseEarthIndex, PoolIndexes.hurtIndex}, level, xTotalLevel, yTotalLevel);
 
 		return deep;
 	}

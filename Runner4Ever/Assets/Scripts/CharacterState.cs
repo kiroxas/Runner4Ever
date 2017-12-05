@@ -139,65 +139,53 @@ public class CharacterState : MonoBehaviour
 		handleCollided();
 	}
 
-	public float boundsXOffset = 0.02f;
+	public float boundsXOffset = 0.04f;
 
-	public bool isThisColliding(Vector2 rayDirection, ref float distance)
+	private void drawRaycast(RaycastHit2D raycast, Vector2 rayDirectionNorm, float distance, Vector2 origin)
 	{
-		distance += boundsXOffset;
-		
-		Vector2 rayDirectionNorm = rayDirection.normalized;
-		Vector2 topLeft = new Vector2(myCollider.bounds.min.x + boundsXOffset, myCollider.bounds.max.y);
-		Vector2 topRight = new Vector2(myCollider.bounds.max.x - boundsXOffset, myCollider.bounds.max.y);
-		Vector2 bottomRight = new Vector2(myCollider.bounds.max.x - boundsXOffset, myCollider.bounds.min.y);
-		Vector2 bottomLeft = new Vector2(myCollider.bounds.min.x + boundsXOffset, myCollider.bounds.min.y);
+		Debug.DrawRay(origin, rayDirectionNorm * distance, raycast ? Color.blue : Color.green);
+		if(raycast)
+		{
+			UnityUtils.drawGizmoSquare(raycast.collider.bounds.min,raycast.collider.bounds.max, Color.red);
+		}
+	}
 
+	private bool isThisOneColliding(Vector2 rayDirectionNorm, ref float distance, Vector2 origin, LayerMask mask)
+	{
 		Physics2D.queriesHitTriggers = false;
-		var raycastHitTL = Physics2D.Raycast(topLeft, rayDirectionNorm, distance, PlatformMask);
-		var raycastHitTR = Physics2D.Raycast(topRight, rayDirectionNorm, distance, PlatformMask);
-		var raycastHitBR = Physics2D.Raycast(bottomRight, rayDirectionNorm, distance, PlatformMask);
-		var raycastHitBL = Physics2D.Raycast(bottomLeft, rayDirectionNorm, distance, PlatformMask);
-		var raycastHitC = Physics2D.Raycast(myCollider.bounds.center, rayDirectionNorm, distance, PlatformMask);
+		var raycastHit = Physics2D.Raycast(origin, rayDirectionNorm, distance, mask);
 		Physics2D.queriesHitTriggers = true;
 
-		var effector2DTL = raycastHitTL.collider ? raycastHitTL.collider.GetComponent<PlatformEffector2D>() : null;
-		var effector2DTR = raycastHitTR.collider ? raycastHitTR.collider.GetComponent<PlatformEffector2D>() : null;
-		var effector2DBR = raycastHitBR.collider ? raycastHitBR.collider.GetComponent<PlatformEffector2D>() : null;
-		var effector2DBL = raycastHitBL.collider ? raycastHitBL.collider.GetComponent<PlatformEffector2D>() : null;
-		var effector2DC = raycastHitC.collider ? raycastHitC.collider.GetComponent<PlatformEffector2D>() : null;
+		var effector2D = raycastHit.collider ? raycastHit.collider.GetComponent<PlatformEffector2D>() : null;
 
-		Debug.DrawRay(topLeft, rayDirectionNorm * distance, Color.green);
-		Debug.DrawRay(topRight, rayDirectionNorm * distance, Color.green);
-		Debug.DrawRay(bottomRight, rayDirectionNorm * distance, Color.green);
-		Debug.DrawRay(bottomLeft, rayDirectionNorm * distance, Color.green);
-		Debug.DrawRay(myCollider.bounds.center, rayDirectionNorm * distance, Color.green);
+		drawRaycast(raycastHit, rayDirectionNorm, distance, origin);
 
-		if(raycastHitTL && raycastHitTL.collider.isTrigger == false && rayDirection.y > 0 && (effector2DTL == null || effector2DTL.useOneWay == false))
+		if(raycastHit && (effector2D == null || effector2D.useOneWay == false))
 		{
-			distance = Mathf.Min(distance, Vector2.Distance(topLeft, raycastHitTL.point));
+			distance = Mathf.Min(distance, Vector2.Distance(origin, raycastHit.point));
+			distance -= 0.01f;
 		}
 
-		if(raycastHitTR && raycastHitTR.collider.isTrigger == false && rayDirection.y > 0 && (effector2DTR == null || effector2DTR.useOneWay == false))
-		{
-			distance = Mathf.Min(distance, Vector2.Distance(topRight, raycastHitTR.point));
-		}
+		return raycastHit;
+	}
 
-		if(raycastHitBL && raycastHitBL.collider.isTrigger == false && rayDirection.y < 0 && (effector2DBL == null || effector2DBL.useOneWay == false))
-		{
-			distance = Mathf.Min(distance, Vector2.Distance(bottomLeft, raycastHitBL.point));
-		}
+	public bool isThisColliding(Vector2 rayDirection, ref float distance)
+	{	
+		Vector2 rayDirectionNorm = rayDirection.normalized;
+		Vector2 topLeft = new Vector2(myCollider.bounds.min.x + boundsXOffset, myCollider.bounds.max.y - boundsXOffset);
+		Vector2 topRight = new Vector2(myCollider.bounds.max.x - boundsXOffset, myCollider.bounds.max.y - boundsXOffset);
+		Vector2 bottomRight = new Vector2(myCollider.bounds.max.x - boundsXOffset, myCollider.bounds.min.y + boundsXOffset);
+		Vector2 bottomLeft = new Vector2(myCollider.bounds.min.x + boundsXOffset, myCollider.bounds.min.y + boundsXOffset);
 
-		if(raycastHitBR && raycastHitBR.collider.isTrigger == false && rayDirection.y < 0 && (effector2DBR == null || effector2DBR.useOneWay == false))
-		{
-			distance = Mathf.Min(distance, Vector2.Distance(bottomRight, raycastHitBR.point));
-		}
+		bool colliding = false;
 
-		if(raycastHitC && raycastHitC.collider.isTrigger == false && (effector2DC == null || effector2DC.useOneWay == false))
-		{
-			distance = Mathf.Min(distance, Vector2.Distance(myCollider.bounds.center, raycastHitC.point));
-		}
+		colliding |= isThisOneColliding(rayDirectionNorm, ref distance, topLeft, PlatformMask);
+		colliding |= isThisOneColliding(rayDirectionNorm, ref distance, topRight, PlatformMask);
+		colliding |= isThisOneColliding(rayDirectionNorm, ref distance, bottomRight, PlatformMask);
+		colliding |= isThisOneColliding(rayDirectionNorm, ref distance, bottomLeft, PlatformMask);
+		colliding |= isThisOneColliding(rayDirectionNorm, ref distance, myCollider.bounds.center, PlatformMask);
 		
-		
-		return raycastHitTL || raycastHitTR || raycastHitBL || raycastHitBR || raycastHitC;
+		return colliding;
 	}
 
 	private void addCollider(Collider2D col, Vector3 hitpoint)

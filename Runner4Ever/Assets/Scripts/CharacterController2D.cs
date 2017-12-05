@@ -267,7 +267,7 @@ public class CharacterController2D : NetworkBehaviour
 		stopSlidingThisFrame = false;
 		if(updateActionTimer(ref dashIn))
 		{
-			float upDistance = yColliderSize / 2.0f;
+			float upDistance = yColliderSize / 2.0f + state.groundedCastDistance;
 			if(collidingAbove() || state.isThisColliding(Vector2.up, ref upDistance)) // if still colliding at end of slide, keep sliding
 			{
 				dashIn = dashTime / 2.0f;
@@ -420,7 +420,8 @@ public class CharacterController2D : NetworkBehaviour
 
 		if(state.isThisColliding(off, ref magnitude))
 		{
-			offset = Vector3.ClampMagnitude(offset, magnitude);
+			offset = offset.normalized * magnitude;
+			Debug.DrawRay(transform.position, offset, Color.magenta);
 		}
 
 		return offset;

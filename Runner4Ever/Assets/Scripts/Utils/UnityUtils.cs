@@ -59,6 +59,17 @@ public class UnityUtils
 		return b.size;
 	}
 
+	static public void drawGizmoSquare(Vector3 bottomLeft, Vector3 topRight, Color color)
+	{
+		Vector2 topLeft = new Vector2(bottomLeft.x, topRight.y);
+		Vector2 bottomRight = new Vector2(topRight.x, bottomLeft.y);
+
+		Debug.DrawLine(bottomLeft, topLeft, color);
+		Debug.DrawLine(topLeft, topRight, color);
+		Debug.DrawLine(topRight, bottomRight, color);
+		Debug.DrawLine(bottomLeft, bottomRight, color);
+	}
+
 	static public void drawGizmoSquare(Vector3 bottomLeft, Vector3 bottomRight, Vector3 topRight, Vector3 topLeft, Color color)
 	{
 		Debug.DrawLine(bottomLeft, topLeft, color);
