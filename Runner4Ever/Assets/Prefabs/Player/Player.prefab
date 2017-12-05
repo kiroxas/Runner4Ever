@@ -292,9 +292,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b9e7b2e48e6456459a93b4862c1c84a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  yRightColDetDelta: 0.15
-  groundedCastDistance: 0.2
-  rcCastDistance: 0.2
+  yRightColDetDelta: 0.1
+  groundedCastDistance: 0.1
+  rcCastDistance: 0.25
   groundedRayCasts: 8
   rightCollisionRayCasts: 16
   PlatformMask:

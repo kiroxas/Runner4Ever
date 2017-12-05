@@ -120,7 +120,7 @@ public class CharacterState : MonoBehaviour
 
 		rb = GetComponent<Rigidbody2D>();
 		myCollider = GetComponent<Collider2D>();
-		//transform = GetComponent<Transform>();
+		
 		innerState.isGrounded = false;
 		innerState.isCollidingRight = false;
 		innerState.isCollidingLeft = false;
@@ -239,7 +239,9 @@ public class CharacterState : MonoBehaviour
 		{
 			Vector2 rayVector = new Vector2(myCollider.bounds.min.x + xGroundedOffset + i * step, myCollider.bounds.min.y);
 			var raycastHit = Physics2D.Raycast(rayVector, rayDirection, groundedCastDistance, PlatformMask);
-			Debug.DrawRay(rayVector, rayDirection * groundedCastDistance, Color.green);
+
+			drawRaycast(raycastHit, rayDirection, groundedCastDistance, rayVector);
+
 			if (checkRaycast(raycastHit, myCollider))
 			{
 				innerState.isGrounded = true;
@@ -272,7 +274,9 @@ public class CharacterState : MonoBehaviour
 		{
 			Vector2 rayVector = new Vector2(myCollider.bounds.min.x + xGroundedOffset + i * step, myCollider.bounds.max.y);
 			var raycastHit = Physics2D.Raycast(rayVector, rayDirection, groundedCastDistance, PlatformMask);
-			Debug.DrawRay(rayVector, rayDirection * groundedCastDistance, Color.green);
+
+			drawRaycast(raycastHit, rayDirection, groundedCastDistance, rayVector);
+
 			if(checkRaycast(raycastHit, myCollider))
 			{
 				innerState.isCollidingAbove = true;
@@ -432,7 +436,9 @@ public class CharacterState : MonoBehaviour
 
 			Vector2 rayVector = new Vector2(leftX , y);
 			var raycastHit = Physics2D.Raycast(rayVector, rayDirection, rcCastDistance, PlatformMask);
-			Debug.DrawRay(rayVector, rayDirection * rcCastDistance, Color.red);
+
+			drawRaycast(raycastHit, rayDirection, rcCastDistance, rayVector);
+
 			if(checkRaycast(raycastHit, myCollider))
 			{
 				innerState.isCollidingLeft = true;
@@ -462,7 +468,9 @@ public class CharacterState : MonoBehaviour
 
 			Vector2 rayVector = new Vector2(rightX ,y);
 			var raycastHit = Physics2D.Raycast(rayVector, rayDirection, rcCastDistance, PlatformMask);
-			Debug.DrawRay(rayVector, rayDirection * rcCastDistance, Color.black);
+
+			drawRaycast(raycastHit, rayDirection, rcCastDistance, rayVector);
+			
 			if(checkRaycast(raycastHit, myCollider))
 			{
 				innerState.isCollidingRight = true;

@@ -152,4 +152,15 @@ public class UnityUtils
 		Debug.LogError("Could not find SegmentStreamer");
 		return null;
 	}
+
+	static public void bounce(GameObject g, float firstDelta, float secondDelta, float time)
+    {
+        Vector3 scaleOriginal = g.transform.localScale;
+
+        float step = time / 3.0f;
+
+        LeanTween.scale( g, new Vector3(scaleOriginal.x + firstDelta, scaleOriginal.y + firstDelta, 1.0f), step).setEase(LeanTweenType.easeOutExpo);
+        Run.After(step, ()=>{ LeanTween.scale( g, new Vector3(scaleOriginal.x + secondDelta, scaleOriginal.x + secondDelta, 1.0f), step).setEase(LeanTweenType.easeOutExpo);});
+        Run.After(2 * step, ()=>{ LeanTween.scale( g, scaleOriginal, step).setEase(LeanTweenType.easeOutExpo);});
+    }
 }

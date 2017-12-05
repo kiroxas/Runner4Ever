@@ -36,14 +36,18 @@ public class InversePlayerVelocity : MonoBehaviour {
         return (r >= 0 && r <= 1) && (s >= 0 && s <= 1);
     }
 
+    
+
 	void OnCollisionEnterCustom(RaycastCollision other) 
 	{
         var state = other.other.GetComponent<CharacterController2D>();
-        if(state != null && other.other.gameObject.tag == "Player")
+        if(state != null && other.other.gameObject.tag == GameConstants.playerTag)
         {
         	var collider = GetComponent<Collider2D>();
 
             UnityUtils.CollisionDirection direction = UnityUtils.getCollisionDirection(collider.bounds, other.point);
+
+            UnityUtils.bounce(gameObject, 0.15f, -0.1f, 0.25f);
 
         	if(direction == UnityUtils.CollisionDirection.Above) 
         	{
