@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: b447aa063b6ee0b439156c6d30cb462c
-timeCreated: 1508658697
+timeCreated: 1512459215
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
@@ -13,6 +13,23 @@ TextureImporter:
     21300012: big_forest_tree
     21300014: log_forest
     21300016: small_forest_tree
+    21300018: assets_bg_0
+    21300020: assets_bg_1
+    21300022: assets_bg_2
+    21300024: assets_bg_4
+    21300026: assets_bg_6
+    21300028: assets_bg_7
+    21300030: assets_bg_8
+    21300032: assets_bg_9
+    21300034: assets_bg_10
+    21300036: assets_bg_11
+    21300038: assets_bg_12
+    21300040: assets_bg_13
+    21300042: assets_bg_14
+    21300044: assets_bg_15
+    21300046: assets_bg_16
+    21300048: assets_bg_17
+    21300050: assets_bg_18
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -98,10 +115,10 @@ TextureImporter:
       name: small_plant_forest
       rect:
         serializedVersion: 2
-        x: 83
-        y: 1853
-        width: 124
-        height: 117
+        x: 6
+        y: 1849
+        width: 275
+        height: 153
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -111,8 +128,8 @@ TextureImporter:
       name: small_forest_rock
       rect:
         serializedVersion: 2
-        x: 441
-        y: 1584
+        x: 472
+        y: 1569
         width: 454
         height: 392
       alignment: 6
@@ -124,8 +141,8 @@ TextureImporter:
       name: smallest_forest_tree
       rect:
         serializedVersion: 2
-        x: 964
-        y: 1500
+        x: 974
+        y: 1495
         width: 274
         height: 528
       alignment: 6
@@ -134,24 +151,11 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: assets_bg_3
-      rect:
-        serializedVersion: 2
-        x: 42
-        y: 1667
-        width: 10
-        height: 19
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
       name: small_bush_forest
       rect:
         serializedVersion: 2
-        x: 59
-        y: 1628
+        x: 83
+        y: 1607
         width: 278
         height: 169
       alignment: 6
@@ -160,26 +164,13 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: assets_bg_5
-      rect:
-        serializedVersion: 2
-        x: 42
-        y: 1645
-        width: 12
-        height: 21
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
       name: big_forest_tree
       rect:
         serializedVersion: 2
         x: 19
-        y: 14
-        width: 1146
-        height: 1386
+        y: 13
+        width: 1180
+        height: 1422
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -189,8 +180,8 @@ TextureImporter:
       name: log_forest
       rect:
         serializedVersion: 2
-        x: 1672
-        y: 910
+        x: 1696
+        y: 893
         width: 275
         height: 529
       alignment: 6
@@ -202,10 +193,153 @@ TextureImporter:
       name: small_forest_tree
       rect:
         serializedVersion: 2
-        x: 1349
-        y: 16
+        x: 1370
+        y: 0
         width: 671
         height: 789
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: assets_bg_1
+      rect:
+        serializedVersion: 2
+        x: 1279
+        y: 1787
+        width: 302
+        height: 240
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: assets_bg_2
+      rect:
+        serializedVersion: 2
+        x: 1604
+        y: 1786
+        width: 408
+        height: 243
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: assets_bg_8
+      rect:
+        serializedVersion: 2
+        x: 1620
+        y: 1684
+        width: 132
+        height: 92
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: assets_bg_9
+      rect:
+        serializedVersion: 2
+        x: 1787
+        y: 1480
+        width: 220
+        height: 256
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: assets_bg_11
+      rect:
+        serializedVersion: 2
+        x: 1304
+        y: 1547
+        width: 282
+        height: 124
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: assets_bg_12
+      rect:
+        serializedVersion: 2
+        x: 1623
+        y: 1557
+        width: 122
+        height: 110
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: assets_bg_13
+      rect:
+        serializedVersion: 2
+        x: 1223
+        y: 1201
+        width: 181
+        height: 194
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: assets_bg_14
+      rect:
+        serializedVersion: 2
+        x: 1455
+        y: 1200
+        width: 221
+        height: 256
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: assets_bg_15
+      rect:
+        serializedVersion: 2
+        x: 1290
+        y: 866
+        width: 358
+        height: 286
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: assets_bg_0
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 1782
+        width: 114
+        height: 71
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: assets_bg_3
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 1894
+        width: 137
+        height: 122
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
