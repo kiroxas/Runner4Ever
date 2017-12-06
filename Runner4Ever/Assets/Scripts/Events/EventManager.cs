@@ -30,7 +30,8 @@ public class EventManager : MonoBehaviour
     public GameConstants.NetworkOrdersDashEvent networkOrdersDashEvent { get; private set;}
     public GameConstants.AllClientsConnectedEvent allClientsConnectedEvent { get; private set;}
     public GameConstants.InitPlayerEvent initPlayerEvent { get; private set;}
-    
+    public GameConstants.StopAnimationsEvent stopAnimationsEvent { get; private set;}
+    public GameConstants.PlayAnimationsEvent playAnimationsEvent { get; private set;}
 
 
     // Triggers
@@ -96,6 +97,8 @@ public class EventManager : MonoBehaviour
             allClientsConnectedEvent = new GameConstants.AllClientsConnectedEvent();
             triggerDoorEvent = new GameConstants.TriggerDoorEvent();
             initPlayerEvent = new GameConstants.InitPlayerEvent();
+            stopAnimationsEvent = new GameConstants.StopAnimationsEvent();
+            playAnimationsEvent = new GameConstants.PlayAnimationsEvent();
         }
     }
 

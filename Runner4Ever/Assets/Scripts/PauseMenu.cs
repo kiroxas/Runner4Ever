@@ -25,12 +25,14 @@ public class PauseMenu : MonoBehaviour
     {
     	gameObject.SetActive(true);
         EventManager.TriggerEvent(EventManager.get().pausePlayerEvent, new GameConstants.PausePlayerArgument());
+        EventManager.TriggerEvent(EventManager.get().stopAnimationsEvent, new GameConstants.StopAnimationsArgument());
     }
 
     public void close()
     {
     	gameObject.SetActive(false);
         EventManager.TriggerEvent(EventManager.get().unPausePlayerEvent, new GameConstants.UnPausePlayerArgument());
+        EventManager.TriggerEvent(EventManager.get().playAnimationsEvent, new GameConstants.PlayAnimationsArgument());
     }
 
      public void reloadCheckpoint()

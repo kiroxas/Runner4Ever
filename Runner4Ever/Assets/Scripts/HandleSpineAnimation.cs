@@ -30,6 +30,8 @@ public class HandleSpineAnimation : MonoBehaviour
         EventManager.StartListening (EventManager.get().hitFinalCheckpointEvent, lastCheckpointHit);
         EventManager.StartListening (EventManager.get().playerDeadEvent, playerIsDead);
         EventManager.StartListening (EventManager.get().initPlayerEvent, playerInit);
+        EventManager.StartListening (EventManager.get().stopAnimationsEvent, stopAnim);
+        EventManager.StartListening (EventManager.get().playAnimationsEvent, playAnim);
     }
 
     void OnDisable ()
@@ -37,6 +39,8 @@ public class HandleSpineAnimation : MonoBehaviour
         EventManager.StopListening (EventManager.get().hitFinalCheckpointEvent, lastCheckpointHit);
         EventManager.StopListening (EventManager.get().playerDeadEvent, playerIsDead);
         EventManager.StopListening (EventManager.get().initPlayerEvent, playerInit);
+        EventManager.StopListening (EventManager.get().stopAnimationsEvent, stopAnim);
+        EventManager.StopListening (EventManager.get().playAnimationsEvent, playAnim);
     }
 
 	public void Awake()
@@ -59,6 +63,26 @@ public class HandleSpineAnimation : MonoBehaviour
     {
         animator.SetBool(initHash, true);
         animator.SetBool(deadHash, false);
+    }
+
+    private void stopAnim(GameConstants.StopAnimationsArgument arg)
+    {
+    	stop();
+    }
+
+    private void playAnim(GameConstants.PlayAnimationsArgument arg)
+    {
+    	play();
+    }
+
+    private void stop()
+    {
+    	animator.speed = 0;
+    }
+
+    private void play()
+    {
+    	animator.speed = 1;
     }
 
 	public void LateUpdate()

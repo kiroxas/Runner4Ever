@@ -248,6 +248,12 @@ public class GameConstants
 	public class QuitMainGameArgument
 	{}
 
+	public class StopAnimationsArgument
+	{}
+
+	public class PlayAnimationsArgument
+	{}
+
 	// Events
 	public class PlayerSpawnEvent : UnityEvent<PlayerSpawnArgument>
 	{}
@@ -323,4 +329,12 @@ public class GameConstants
 
 	public class InitPlayerEvent : UnityEvent<InitPlayerArgument>
 	{}
+
+	public class StopAnimationsEvent : UnityEvent<StopAnimationsArgument>
+	{}
+
+	public class PlayAnimationsEvent : UnityEvent<PlayAnimationsArgument>
+	{}
+
+	
 }
