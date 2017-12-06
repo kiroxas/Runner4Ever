@@ -181,6 +181,7 @@ public class CharacterState : MonoBehaviour
 	{	
 		Vector2 rayDirectionNorm = rayDirection.normalized;
 		float halfSize =  (myCollider.bounds.size.x / 2.0f);
+		float halfYSize =  (myCollider.bounds.size.y / 2.0f);
 
 		Vector2 topLeft = new Vector2(myCollider.bounds.min.x , myCollider.bounds.max.y );
 		Vector2 topMiddle = new Vector2(myCollider.bounds.max.x - halfSize , myCollider.bounds.max.y );
@@ -188,6 +189,8 @@ public class CharacterState : MonoBehaviour
 		Vector2 bottomRight = new Vector2(myCollider.bounds.max.x , myCollider.bounds.min.y );
 		Vector2 bottomLeft = new Vector2(myCollider.bounds.min.x , myCollider.bounds.min.y );
 		Vector2 bottomCenter = new Vector2(myCollider.bounds.min.x  + halfSize, myCollider.bounds.min.y );
+		Vector2 middleLeft = new Vector2(myCollider.bounds.min.x , myCollider.bounds.max.y - halfYSize);
+		Vector2 middleRight = new Vector2(myCollider.bounds.max.x , myCollider.bounds.max.y - halfYSize);
 
 		bool colliding = false;
 
@@ -197,6 +200,8 @@ public class CharacterState : MonoBehaviour
 		colliding |= isThisOneColliding(rayDirectionNorm, ref distance, bottomRight, PlatformMask);
 		colliding |= isThisOneColliding(rayDirectionNorm, ref distance, bottomLeft, PlatformMask);
 		colliding |= isThisOneColliding(rayDirectionNorm, ref distance, bottomCenter, PlatformMask);
+		colliding |= isThisOneColliding(rayDirectionNorm, ref distance, middleLeft, PlatformMask);
+		colliding |= isThisOneColliding(rayDirectionNorm, ref distance, middleRight, PlatformMask);
 		
 		return colliding;
 	}
@@ -428,6 +433,13 @@ public class CharacterState : MonoBehaviour
 		colliderHitLastFrame = new List<ColliderInstances>(colliderHitThisFrame);
 	}
 
+	private float getWallThreshold()
+	{
+		float margin = myCollider.bounds.size.y * wallStickingPercent;
+		float threshold = myCollider.bounds.max.y - margin;
+
+		return threshold;
+	}
 
 	public bool updateLeftCollision()
 	{
@@ -438,7 +450,7 @@ public class CharacterState : MonoBehaviour
 		Vector2 rayDirection = Vector2.left;
 		float leftX = Mathf.Min(myCollider.bounds.max.x , myCollider.bounds.min.x);
 
-		float threshold = myCollider.bounds.min.y + (myCollider.bounds.size.y * wallStickingPercent);
+		float threshold = getWallThreshold();
 
 		for(int i = 0; i < rightCollisionRayCasts; ++i)
 		{
@@ -469,7 +481,7 @@ public class CharacterState : MonoBehaviour
 		Vector2 rayDirection = Vector2.right;
 		float rightX = Mathf.Max(myCollider.bounds.max.x , myCollider.bounds.min.x);
 
-		float threshold = myCollider.bounds.min.y + (myCollider.bounds.size.y * wallStickingPercent);
+		float threshold = getWallThreshold();
 
 		for(int i = 0; i < rightCollisionRayCasts; ++i)
 		{
