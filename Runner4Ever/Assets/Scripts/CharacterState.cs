@@ -172,18 +172,23 @@ public class CharacterState : MonoBehaviour
 	public bool isThisColliding(Vector2 rayDirection, ref float distance)
 	{	
 		Vector2 rayDirectionNorm = rayDirection.normalized;
-		Vector2 topLeft = new Vector2(myCollider.bounds.min.x + boundsXOffset, myCollider.bounds.max.y - boundsXOffset);
-		Vector2 topRight = new Vector2(myCollider.bounds.max.x - boundsXOffset, myCollider.bounds.max.y - boundsXOffset);
-		Vector2 bottomRight = new Vector2(myCollider.bounds.max.x - boundsXOffset, myCollider.bounds.min.y + boundsXOffset);
-		Vector2 bottomLeft = new Vector2(myCollider.bounds.min.x + boundsXOffset, myCollider.bounds.min.y + boundsXOffset);
+		float halfSize =  (myCollider.bounds.size.x / 2.0f);
+
+		Vector2 topLeft = new Vector2(myCollider.bounds.min.x , myCollider.bounds.max.y );
+		Vector2 topMiddle = new Vector2(myCollider.bounds.max.x - halfSize , myCollider.bounds.max.y );
+		Vector2 topRight = new Vector2(myCollider.bounds.max.x , myCollider.bounds.max.y );
+		Vector2 bottomRight = new Vector2(myCollider.bounds.max.x , myCollider.bounds.min.y );
+		Vector2 bottomLeft = new Vector2(myCollider.bounds.min.x , myCollider.bounds.min.y );
+		Vector2 bottomCenter = new Vector2(myCollider.bounds.min.x  + halfSize, myCollider.bounds.min.y );
 
 		bool colliding = false;
 
 		colliding |= isThisOneColliding(rayDirectionNorm, ref distance, topLeft, PlatformMask);
+		colliding |= isThisOneColliding(rayDirectionNorm, ref distance, topMiddle, PlatformMask);
 		colliding |= isThisOneColliding(rayDirectionNorm, ref distance, topRight, PlatformMask);
 		colliding |= isThisOneColliding(rayDirectionNorm, ref distance, bottomRight, PlatformMask);
 		colliding |= isThisOneColliding(rayDirectionNorm, ref distance, bottomLeft, PlatformMask);
-		colliding |= isThisOneColliding(rayDirectionNorm, ref distance, myCollider.bounds.center, PlatformMask);
+		colliding |= isThisOneColliding(rayDirectionNorm, ref distance, bottomCenter, PlatformMask);
 		
 		return colliding;
 	}

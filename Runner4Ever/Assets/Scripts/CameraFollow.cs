@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraFollow : MonoBehaviour {
+public class CameraFollow : MonoBehaviour 
+{
 
 	public Transform target;
 	public Vector3 offset;
@@ -10,6 +11,7 @@ public class CameraFollow : MonoBehaviour {
 	public float panicLinePercent = 0.2f;
 
 	private Bounds containingBox;
+	private Bounds containingBoxBack;
 	private Vector3 upLeft, downRight;
 	private Camera cam;
 	private bool followUntilGround = false;

@@ -270,7 +270,7 @@ public class CharacterController2D : NetworkBehaviour
 			float upDistance = yColliderSize / 2.0f + state.groundedCastDistance;
 			if(collidingAbove() || state.isThisColliding(Vector2.up, ref upDistance)) // if still colliding at end of slide, keep sliding
 			{
-				dashIn = dashTime / 2.0f;
+				dashIn = dashTime / 4.0f;
 			}
 			else
 			{
