@@ -538,8 +538,8 @@ public class SegmentStreamer : MonoBehaviour
 		segments = new List<Segment>();
 		statePool = new PoolCollection();
 
-		statePool.addPool(objectTiles, PoolIndexes.objectIndex, PoolIndexes.mediumPoolingStrategy);
-		statePool.addPool(enemies, PoolIndexes.enemiesIndex, PoolIndexes.mediumPoolingStrategy);
+		statePool.addPool(objectTiles, PoolIndexes.objectIndex, PoolIndexes.smallPoolingStrategy);
+		statePool.addPool(enemies, PoolIndexes.enemiesIndex, PoolIndexes.smallPoolingStrategy);
 		statePool.addPool(instancePlayer, PoolIndexes.playerIndex , PoolIndexes.uniquePoolingStrategy);
 		statePool.addPool(checkpoint, PoolIndexes.checkpointIndex, PoolIndexes.smallPoolingStrategy);
 		statePool.addPool(escalator, PoolIndexes.escalatorIndex, PoolIndexes.smallPoolingStrategy);
@@ -547,7 +547,7 @@ public class SegmentStreamer : MonoBehaviour
 		statePool.addPool(killMovingTile, PoolIndexes.killMovingIndex, PoolIndexes.smallPoolingStrategy);
 		statePool.addPool(bumper, PoolIndexes.bumperIndex, PoolIndexes.smallPoolingStrategy);
 		statePool.addPool(jumper, PoolIndexes.jumperIndex, PoolIndexes.smallPoolingStrategy);
-		statePool.addPool(finalCheckpoint, PoolIndexes.finalCheckpointIndex, PoolIndexes.smallPoolingStrategy);
+		statePool.addPool(finalCheckpoint, PoolIndexes.finalCheckpointIndex, PoolIndexes.uniquePoolingStrategy);
 		statePool.addPool(stopTile, PoolIndexes.stopTileIndex, PoolIndexes.smallPoolingStrategy);
 		statePool.addPool(accelerateTile, PoolIndexes.accelerateTileIndex, PoolIndexes.smallPoolingStrategy);
 		statePool.addPool(decelerateTile, PoolIndexes.decelerateTileIndex, PoolIndexes.smallPoolingStrategy);

@@ -7,7 +7,7 @@ using System.Linq;
 public class PoolIndexes
 {
 	public static int uniquePoolingStrategy = 1;
-	public static int smallPoolingStrategy = 10;
+	public static int smallPoolingStrategy = 5;
 	public static int mediumPoolingStrategy = 50;
 	public static int bigPoolingStrategy = 250;
 

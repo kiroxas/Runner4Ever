@@ -330,21 +330,16 @@ public class CharacterController2D : NetworkBehaviour
 			offset = jumpCollec.getNext();
 			offset.x = xMoveForward;
 
-			if(collidingForward()) // if colliding, move only on Y
-			{
-				offset.x = 0;
-
-				if(offset.y <= 0) 
+			if(collidingForward() && offset.y <= 0) // if colliding, move only on Y
+			{		
+				offset.y = 0;
+				if((WallJumpStrategy)wallJumpStrat.Peek() == WallJumpStrategy.Normal)
 				{
-					offset.y = 0;
-					if((WallJumpStrategy)wallJumpStrat.Peek() == WallJumpStrategy.Normal)
-					{
-						jumpCollec.endJump();
-					}
-					else
-					{
-						jumpCollec.reset();
-					}
+					jumpCollec.endJump();
+				}
+				else
+				{
+					jumpCollec.reset();
 				}
 			}
 
@@ -583,7 +578,7 @@ public class CharacterController2D : NetworkBehaviour
 	{
 		if(canJump())
 		{	
-			if((JumpDirectionOnWallOrEdge)jumpWallStack.Peek() == JumpDirectionOnWallOrEdge.Inverse && (grabingEdge() || wallSticking()))
+			if((JumpDirectionOnWallOrEdge)jumpWallStack.Peek() == JumpDirectionOnWallOrEdge.Inverse && (!grounded() && (grabingEdge() || wallSticking())))
 			{
 				changeDirection();
 			}
@@ -722,7 +717,12 @@ public class CharacterController2D : NetworkBehaviour
 
 	public bool collidingForward()
 	{
-		return currentVelocity >= 0 && state.isCollidingRight || currentVelocity <= 0 && state.isCollidingLeft;
+		return collidingForward(currentVelocity);
+	}
+
+	public bool collidingForward(float xVelocity)
+	{
+		return xVelocity >= 0 && state.isCollidingRight || xVelocity <= 0 && state.isCollidingLeft;
 	}
 
 	public bool collidingRight()
@@ -998,14 +998,14 @@ public class CharacterController2D : NetworkBehaviour
 
 	void OnDrawGizmosSelected()
 	{
-		if(jumpDefinition != null)
+		/*if(jumpDefinition != null)
 		{
 			Gizmos.color = Color.blue;
 			jumpDefinition.OnDrawGizmosSelected();
 			Gizmos.color = Color.green;
 
 			doubleJumpDefinition.OnDrawGizmosSelected(jumpDefinition.getHighestPoint() + jumpDefinition.getDebugPosition());
-		}
+		}*/
 	}
 
 }

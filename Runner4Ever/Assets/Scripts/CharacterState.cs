@@ -127,6 +127,14 @@ public class CharacterState : MonoBehaviour
 		innerState.isGrabingEdge = false;
 	}
 
+	void OnDrawGizmosSelected()
+	{
+		Gizmos.color = Color.yellow;
+        Gizmos.DrawSphere(myCollider.bounds.min, 0.1f);
+        Gizmos.color = Color.black;
+        Gizmos.DrawSphere(myCollider.bounds.max, 0.1f);
+	}
+
 	public void updateState()
 	{
 		colliderHitThisFrame.Clear();
@@ -136,7 +144,7 @@ public class CharacterState : MonoBehaviour
 		updateRightCollision();
 		updateLeftCollision();
 		updateEdgeGrabing();
-		handleCollided();
+		handleCollided();	
 	}
 
 	public float boundsXOffset = 0.04f;
@@ -234,7 +242,6 @@ public class CharacterState : MonoBehaviour
 
 	public bool updateGrounded()
 	{
-		Collider2D myCollider = GetComponent<Collider2D>();
 		float step = (float)(myCollider.bounds.size.x - (2 * xGroundedOffset)) / (float)groundedRayCasts;
 		innerState.isGrounded = false;
 
@@ -269,7 +276,6 @@ public class CharacterState : MonoBehaviour
 
 	public bool updateAbove()
 	{
-		Collider2D myCollider = GetComponent<Collider2D>();
 		float step = (float)(myCollider.bounds.size.x - (2 * xGroundedOffset))/ (float)groundedRayCasts;
 		innerState.isCollidingAbove = false;
 
@@ -425,7 +431,6 @@ public class CharacterState : MonoBehaviour
 
 	public bool updateLeftCollision()
 	{
-		Collider2D myCollider = GetComponent<Collider2D>();
 		float step = (float)myCollider.bounds.size.y / (float)rightCollisionRayCasts;
 		innerState.isCollidingLeft = false;
 		innerState.isWallstickingLeft = false;
@@ -457,7 +462,6 @@ public class CharacterState : MonoBehaviour
 
 	public bool updateRightCollision()
 	{
-		Collider2D myCollider = GetComponent<Collider2D>();
 		float step = (float)myCollider.bounds.size.y / (float)rightCollisionRayCasts;
 		innerState.isCollidingRight = false;
 		innerState.isWallstickingRight = false;

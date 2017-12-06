@@ -41,6 +41,7 @@ public class PauseMenu : MonoBehaviour
         CharacterController2D player = (CharacterController2D)UnityEngine.Object.FindObjectOfType(typeof(CharacterController2D));
         GameObject pl = player ? player.gameObject : null; 
         EventManager.TriggerEvent(EventManager.get().playerDeadEvent, new GameConstants.PlayerDeadArgument(pl));
+        EventManager.TriggerEvent(EventManager.get().playAnimationsEvent, new GameConstants.PlayAnimationsArgument());
     }
 
     public void closeGame()
