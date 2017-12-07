@@ -24,6 +24,7 @@ public class HandleSpineAnimation : MonoBehaviour
 	private int finishHash = Animator.StringToHash("finished");
 	private int deadHash = Animator.StringToHash("isDead");
 	private int initHash = Animator.StringToHash("init");
+	private int wallStratHash = Animator.StringToHash("wallStrat");
 
 	void OnEnable ()
     {
@@ -98,6 +99,8 @@ public class HandleSpineAnimation : MonoBehaviour
 		animator.SetBool(slidingHash, controller.isSliding());
 		animator.SetBool(stopSlidingHash, controller.endSlide());
 		animator.SetBool(initHash, false);
+
+		animator.SetInteger(wallStratHash, controller.wallStrat() == CharacterController2D.WallJumpStrategy.Normal ? 0 : 1);
 	}
 
 	public void playEndAnimation()

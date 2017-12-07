@@ -650,6 +650,11 @@ public class CharacterController2D : NetworkBehaviour
 
 	/* ------------------------------------------------------ Function to inquiry the state -------------------------------------------------------*/
 
+	public WallJumpStrategy wallStrat()
+	{
+		return wallJumpStrat.Peek();
+	}
+
 	public bool isSliding()
 	{
 		return dashIn > 0.0f;

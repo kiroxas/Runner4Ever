@@ -272,7 +272,7 @@ MonoBehaviour:
   runDir: 0
   xSpeedBySecond: 7
   gravityFactor: 14
-  momenutmHangWalljumpTime: 0.3
+  momenutmHangWalljumpTime: 0.5
   timeHanging: 0
   accelerationSmooth: 7
   gravitySmooth: 8
@@ -296,10 +296,10 @@ MonoBehaviour:
   groundedCastDistance: 0.05
   rcCastDistance: 0.05
   groundedRayCasts: 16
-  rightCollisionRayCasts: 32
+  rightCollisionRayCasts: 24
   PlatformMask:
     serializedVersion: 2
-    m_Bits: 8192
+    m_Bits: 73728
   xGroundedOffset: 0.01
   wallStickingPercent: 0.2
   edgeStrategy: 3
