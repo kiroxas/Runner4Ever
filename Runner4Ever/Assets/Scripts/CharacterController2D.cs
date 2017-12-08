@@ -356,6 +356,9 @@ public class CharacterController2D : NetworkBehaviour
 		applyOutsideForce(ref offset);
 		offset = adjustOffsetCheckingCollision(offset);
 
+		if(offset.y != 0)
+			Debug.Log("After adjustement " + offset.y ) ;
+
 		frameXVelocity = offset.x;
 		frameYVelocity = offset.y;
 
@@ -392,6 +395,7 @@ public class CharacterController2D : NetworkBehaviour
 		if(outsideForce.magnitude != 0.0f)
 		{
 			float yForce = offset.y < 0.0f ? outsideForce.y : outsideForce.y + offset.y;
+			Debug.Log("Apply force "  + outsideForce + " " + offset.y + " " + yForce) ;
 			offset = new Vector3(offset.x + outsideForce.x, yForce, 0.0f);
 			outsideForce = Vector2.zero;
 		}

@@ -168,6 +168,12 @@ public class CharacterState : MonoBehaviour
 
 		drawRaycast(raycastHit, rayDirectionNorm, distance, origin);
 
+		if(raycastHit.point == origin) // we're inside a collider here
+		{
+			Debug.Log("Collisions inside a collider :s");
+			return false;
+		}
+
 		if(raycastHit && (effector2D == null || effector2D.useOneWay == false))
 		{
 			distance = Mathf.Min(distance, Vector2.Distance(origin, raycastHit.point));
@@ -452,7 +458,7 @@ public class CharacterState : MonoBehaviour
 
 		float threshold = getWallThreshold();
 
-		for(int i = 0; i < rightCollisionRayCasts; ++i)
+		for(int i = 0; i <= rightCollisionRayCasts; ++i)
 		{
 			float y = myCollider.bounds.min.y + yRightColDetDelta + i * step;
 
@@ -483,7 +489,7 @@ public class CharacterState : MonoBehaviour
 
 		float threshold = getWallThreshold();
 
-		for(int i = 0; i < rightCollisionRayCasts; ++i)
+		for(int i = 0; i <= rightCollisionRayCasts; ++i)
 		{
 			float y = myCollider.bounds.min.y + yRightColDetDelta + i * step;
 
