@@ -31,6 +31,8 @@ public class PlayerData
 
 	public float masterVolume = float.MinValue, musicVolume = float.MinValue, masterSFXVolume = float.MinValue;
 
+    public List<string> miniGames = new List<string>();
+
     // This will allow us to add data even after production, and so keep all existing save STILL valid. See loading & saving for how it work.
     // Note in a real production it would probably reset that to 1 before release (as all dev save don't have to be compatible w/ final product)
     // Then would increment again with every subsequent patches. We kept it to its dev value here for teaching purpose. 
@@ -38,6 +40,16 @@ public class PlayerData
 
     // version 2, Added language
     public LocalizationUtils.Languages lang;
+
+    public void addMiniGame(string name)
+    {
+        miniGames.Add(name);
+    }
+
+    public bool hasUnlockMiniGame(string name)
+    {
+        return miniGames.Contains(name);
+    }
 
     public void AddCharacter(string name)
     {

@@ -11,3 +11,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/MainGame.unity
     guid: d21fcc686fa8cf04fa82bc67ae563fac
+  - enabled: 1
+    path: Assets/AdventureTextual.unity
+    guid: d0d4485db3802984eab7298a4d61db48

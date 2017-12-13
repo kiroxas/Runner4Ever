@@ -94,6 +94,11 @@ public class GameFlow : MonoBehaviour
         LoadLevel("MainMenu");
     }
 
+    public void LoadMiniGame()
+    {
+        LoadLevel("AdventureTextual");
+    }
+
     public void Update()
     {
         PlayerData.instance.UpdateMissions(TrackingManager.get());

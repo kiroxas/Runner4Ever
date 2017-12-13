@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>Temp\bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_5_6_1;UNITY_5_6;UNITY_5;UNITY_ANALYTICS;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_RUNTIME_NAVMESH_BUILDING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;INCLUDE_DYNAMIC_GI;INCLUDE_GI;PLATFORM_SUPPORTS_MONO;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_SCRIPTING_NEW_CSHARP_COMPILER;ENABLE_VIDEO;UNITY_ANDROID;ENABLE_SUBSTANCE;UNITY_ANDROID_API;ENABLE_EGL;ENABLE_NETWORK;ENABLE_RUNTIME_GI;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;PLATFORM_SUPPORTS_ADS_ID;UNITY_CAN_SHOW_SPLASH_SCREEN;ENABLE_VR;ENABLE_UNITYADS_RUNTIME;UNITY_UNITYADS_API;ENABLE_MONO;NET_2_0_SUBSET;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE;UNITY_PRO_LICENSE;UNITY_HAS_GOOGLEVR</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_5_6_3;UNITY_5_6;UNITY_5;UNITY_ANALYTICS;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_RUNTIME_NAVMESH_BUILDING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;INCLUDE_DYNAMIC_GI;INCLUDE_GI;PLATFORM_SUPPORTS_MONO;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_SCRIPTING_NEW_CSHARP_COMPILER;ENABLE_VIDEO;UNITY_ANDROID;ENABLE_SUBSTANCE;UNITY_ANDROID_API;ENABLE_EGL;ENABLE_NETWORK;ENABLE_RUNTIME_GI;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;PLATFORM_SUPPORTS_ADS_ID;UNITY_CAN_SHOW_SPLASH_SCREEN;ENABLE_VR;ENABLE_UNITYADS_RUNTIME;UNITY_UNITYADS_API;ENABLE_MONO;NET_2_0_SUBSET;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE;UNITY_PRO_LICENSE;UNITY_HAS_GOOGLEVR</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
@@ -46,6 +46,36 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Plugins\Ink\Example\Scripts\BasicInkExample.cs" />
+     <Compile Include="Assets\Plugins\Ink\InkRuntime\CallStack.cs" />
+     <Compile Include="Assets\Plugins\Ink\InkRuntime\Choice.cs" />
+     <Compile Include="Assets\Plugins\Ink\InkRuntime\ChoicePoint.cs" />
+     <Compile Include="Assets\Plugins\Ink\InkRuntime\Container.cs" />
+     <Compile Include="Assets\Plugins\Ink\InkRuntime\ControlCommand.cs" />
+     <Compile Include="Assets\Plugins\Ink\InkRuntime\DebugMetadata.cs" />
+     <Compile Include="Assets\Plugins\Ink\InkRuntime\Divert.cs" />
+     <Compile Include="Assets\Plugins\Ink\InkRuntime\Glue.cs" />
+     <Compile Include="Assets\Plugins\Ink\InkRuntime\INamedContent.cs" />
+     <Compile Include="Assets\Plugins\Ink\InkRuntime\InkList.cs" />
+     <Compile Include="Assets\Plugins\Ink\InkRuntime\JsonSerialisation.cs" />
+     <Compile Include="Assets\Plugins\Ink\InkRuntime\ListDefinition.cs" />
+     <Compile Include="Assets\Plugins\Ink\InkRuntime\ListDefinitionsOrigin.cs" />
+     <Compile Include="Assets\Plugins\Ink\InkRuntime\NativeFunctionCall.cs" />
+     <Compile Include="Assets\Plugins\Ink\InkRuntime\Object.cs" />
+     <Compile Include="Assets\Plugins\Ink\InkRuntime\Path.cs" />
+     <Compile Include="Assets\Plugins\Ink\InkRuntime\Profiler.cs" />
+     <Compile Include="Assets\Plugins\Ink\InkRuntime\PushPop.cs" />
+     <Compile Include="Assets\Plugins\Ink\InkRuntime\SimpleJson.cs" />
+     <Compile Include="Assets\Plugins\Ink\InkRuntime\Story.cs" />
+     <Compile Include="Assets\Plugins\Ink\InkRuntime\StoryException.cs" />
+     <Compile Include="Assets\Plugins\Ink\InkRuntime\StoryState.cs" />
+     <Compile Include="Assets\Plugins\Ink\InkRuntime\StringJoinExtension.cs" />
+     <Compile Include="Assets\Plugins\Ink\InkRuntime\Tag.cs" />
+     <Compile Include="Assets\Plugins\Ink\InkRuntime\Value.cs" />
+     <Compile Include="Assets\Plugins\Ink\InkRuntime\VariableAssignment.cs" />
+     <Compile Include="Assets\Plugins\Ink\InkRuntime\VariableReference.cs" />
+     <Compile Include="Assets\Plugins\Ink\InkRuntime\VariablesState.cs" />
+     <Compile Include="Assets\Plugins\Ink\InkRuntime\Void.cs" />
      <Compile Include="Assets\Plugins\LeanTween\LTDescr.cs" />
      <Compile Include="Assets\Plugins\LeanTween\LTDescrOptional.cs" />
      <Compile Include="Assets\Plugins\LeanTween\LTSeq.cs" />
@@ -53,9 +83,11 @@
      <Compile Include="Assets\Plugins\LeanTween\LeanTest.cs" />
      <Compile Include="Assets\Plugins\LeanTween\LeanTween.cs" />
      <None Include="Assets\spine-unity\Assets\spine-unity\Editor\Resources\SpineAssetDatabaseMarker.txt" />
+     <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
      <None Include="Assets\LeanTouch\Examples\Fonts\OFL.txt" />
      <None Include="Assets\spine-unity\Assets\Examples\Spine\Eyes\eyes.atlas.txt" />
      <None Include="Assets\spine-unity\Assets\spine-unity\Shaders\Utility\HiddenPass.shader" />
+     <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonBasic.shader" />
      <None Include="Assets\spine-unity\Assets\spine-unity\Modules\Shaders\Spine-Skeleton-Fill.shader" />
      <None Include="Assets\Resources\LevelGeneration\level_test_03.txt" />
      <None Include="Assets\Resources\LevelGeneration\multiTest1.txt" />
@@ -71,11 +103,15 @@
      <None Include="Assets\spine-unity\Assets\spine-unity\Modules\Shaders\Sprite\SpritePixelLighting.cginc" />
      <None Include="Assets\spine-unity\Assets\spine-unity\Modules\Shaders\Sprite\SpriteLighting.cginc" />
      <None Include="Assets\spine-unity\Assets\Examples\Spine\spineboy-pro\spineboy.atlas.txt" />
+     <None Include="Assets\Kino\Glitch\Shader\AnalogGlitch.shader" />
      <None Include="Assets\spine-unity\Assets\Examples\Spine\Gauge\Gauge.atlas.txt" />
      <None Include="Assets\LeanTween\Examples\Archived\2dUnlitWithFade.shader" />
      <None Include="Assets\spine-unity\Assets\spine-unity\Modules\SkeletonGraphic\Shaders\Spine-SkeletonGraphic-TintBlack.shader" />
+     <None Include="Assets\Standard Assets\Effects\TessellationShaders\Shaders\BumpedSpecularSmooth.shader" />
+     <None Include="Assets\Standard Assets\Effects\Projectors\Guidelines.txt" />
      <None Include="Assets\StreamingAssets\build_info.txt" />
      <None Include="Assets\spine-unity\Assets\Examples\Spine\FootSoldier\FS_White.atlas.txt" />
+     <None Include="Assets\Kino\Glitch\Shader\DigitalGlitch.shader" />
      <None Include="Assets\spine-unity\Assets\spine-unity\Modules\Shaders\Sprite\ShaderShared.cginc" />
      <None Include="Assets\Resources\LevelGeneration\level_2_Wael.txt" />
      <None Include="Assets\Resources\LevelGeneration\level_4_Wael.txt" />
@@ -85,6 +121,7 @@
      <None Include="Assets\spine-unity\Assets\Examples\Spine\Hero\hero-mesh.atlas.txt" />
      <None Include="Assets\spine-unity\Assets\Examples\Spine\Dragon\license.txt" />
      <None Include="Assets\spine-unity\Assets\Examples\Spine\Hero\license.txt" />
+     <None Include="Assets\Standard Assets\Effects\ImageEffects\Readme.txt" />
      <None Include="Assets\Resources\LevelGeneration\one.txt" />
      <None Include="Assets\LeanTween\ReadMe.txt" />
      <None Include="Assets\spine-unity\Assets\Examples\Spine\Goblins\goblins.atlas.txt" />
@@ -99,6 +136,7 @@
      <None Include="Assets\spine-unity\Assets\spine-unity\Modules\Shaders\Sprite\SpriteUnlit.cginc" />
      <None Include="Assets\spine-unity\Assets\spine-unity\Modules\Shaders\Sprite\CGIncludes\SpriteUnlit.cginc" />
      <None Include="Assets\spine-unity\Assets\Examples\Spine\FootSoldier\license.txt" />
+     <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonBasicOutline.shader" />
      <None Include="Assets\spine-unity\Assets\spine-unity\version.txt" />
      <None Include="Assets\Resources\LevelGeneration\doors.txt" />
      <None Include="Assets\spine-unity\Assets\spine-unity\Modules\Shaders\Sprite\SpritesPixelLit.shader" />
@@ -112,9 +150,12 @@
      <None Include="Assets\spine-unity\Assets\spine-unity\Modules\Ghost\Shaders\Spine-Special-Skeleton-Ghost.shader" />
      <None Include="Assets\Resources\LevelGeneration\walljump.txt" />
      <None Include="Assets\Resources\LevelGeneration\levelList.txt" />
+     <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonLitOutline.shader" />
+     <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonLit.shader" />
      <None Include="Assets\Resources\LevelGeneration\three.txt" />
      <None Include="Assets\spine-unity\Assets\spine-unity\Modules\Shaders\Sprite\CGIncludes\SpriteVertexLighting.cginc" />
      <None Include="Assets\Resources\LevelGeneration\tutorialStage_03_Wael.txt" />
+     <None Include="Assets\Standard Assets\Effects\Projectors\Shaders\ProjectorLight.shader" />
      <None Include="Assets\spine-unity\Assets\Examples\Spine\Dragon\dragon.atlas.txt" />
      <None Include="Assets\Resources\Localization\jp.txt" />
      <None Include="Assets\Resources\LevelGeneration\level_3_Wael.txt" />
@@ -127,6 +168,7 @@
      <None Include="Assets\Resources\LevelGeneration\accelTest.txt" />
      <None Include="Assets\Resources\LevelGeneration\level_test_02.txt" />
      <None Include="Assets\LeanTween\License.txt" />
+     <None Include="Assets\Standard Assets\Effects\Projectors\Shaders\ProjectorMultiply.shader" />
      <None Include="Assets\Resources\LevelGeneration\five.txt" />
      <None Include="Assets\spine-unity\Assets\spine-unity\Modules\Shaders\Sprite\CameraNormalsTexture.shader" />
      <None Include="Assets\Resources\LevelGeneration\MultiPlayer_01_Wael.txt" />
@@ -139,13 +181,18 @@
      <None Include="Assets\spine-unity\Assets\spine-unity\Modules\Shaders\Sprite\CameraDepthTexture.shader" />
      <None Include="Assets\spine-unity\Assets\spine-unity\Modules\SlotBlendModes\Spine-Skeleton-PMA-Multiply.shader" />
      <None Include="Assets\Resources\LevelGeneration\tutorialStage_02_Wael.txt" />
+     <None Include="Assets\Standard Assets\Effects\TessellationShaders\Shaders\BumpedSpecularDisplacement.shader" />
      <None Include="Assets\spine-unity\Assets\spine-unity\Modules\Shaders\Sprite\CGIncludes\ShaderMaths.cginc" />
      <None Include="Assets\spine-unity\Assets\spine-unity\Modules\SkeletonRenderSeparator\SkeletonRenderSeparator.txt" />
      <None Include="Assets\spine-unity\Assets\spine-unity\Modules\Shaders\Sprite\SpriteDepthNormalsTexture.shader" />
      <None Include="Assets\Resources\LevelGeneration\tutorialStage_01_Wael.txt" />
      <None Include="Assets\spine-unity\Assets\spine-unity\Shaders\Spine-SkeletonLit.shader" />
      <None Include="Assets\spine-unity\Assets\spine-unity\Modules\Shaders\Sprite\CGIncludes\SpriteSpecular.cginc" />
+     <None Include="Assets\Plugins\Ink\Resources\InkDefaultTemplate.txt" />
      <None Include="Assets\spine-unity\Assets\Examples\Spine\FootSoldier\Equipment\Equipment.atlas.txt" />
+ <Reference Include="Facebook.Unity.Settings">
+ <HintPath>C:/Users/mouto_000/Documents/Projects/Runner4Ever/Runner4Ever/Library/FacebookSDK/Facebook.Unity.Settings.dll</HintPath>
+ </Reference>
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
@@ -156,7 +203,7 @@
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/TestRunner/UnityEngine.TestRunner.dll</HintPath>
  </Reference>
  <Reference Include="nunit.framework">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/TestRunner/nunit.framework.dll</HintPath>
+ <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/TestRunner/net35/unity-custom/nunit.framework.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.Analytics">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
