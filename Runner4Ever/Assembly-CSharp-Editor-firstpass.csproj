@@ -61,13 +61,20 @@
      <Compile Include="Assets\Plugins\Ink\Editor\Ink Settings\InkSettingsEditor.cs" />
      <Compile Include="Assets\Plugins\Ink\Editor\Player Window\InkPlayerWindow.cs" />
      <Compile Include="Assets\Plugins\Ink\Editor\Tools\InkEditorUtils.cs" />
+     <Compile Include="Assets\Plugins\Kino\Glitch\Editor\AnalogGlitchEditor.cs" />
+     <Compile Include="Assets\Plugins\Kino\Glitch\Editor\DigitalGlitchEditor.cs" />
+     <Compile Include="Assets\Plugins\LeanTouch\Editor\LeanSelectable_Editor.cs" />
+     <Compile Include="Assets\Plugins\LeanTouch\Editor\LeanTouch_Editor.cs" />
+     <Compile Include="Assets\Plugins\UITween\Editor\EditorUITween.cs" />
+     <Compile Include="Assets\Plugins\Unity-Logs-Viewer\Reporter\Editor\ReporterEditor.cs" />
      <None Include="Assets\spine-unity\Assets\spine-unity\Editor\Resources\SpineAssetDatabaseMarker.txt" />
      <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
-     <None Include="Assets\LeanTouch\Examples\Fonts\OFL.txt" />
+     <None Include="Assets\Plugins\LeanTouch\Examples\Fonts\OFL.txt" />
      <None Include="Assets\spine-unity\Assets\Examples\Spine\Eyes\eyes.atlas.txt" />
      <None Include="Assets\spine-unity\Assets\spine-unity\Shaders\Utility\HiddenPass.shader" />
      <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonBasic.shader" />
      <None Include="Assets\spine-unity\Assets\spine-unity\Modules\Shaders\Spine-Skeleton-Fill.shader" />
+     <None Include="Assets\Plugins\SpriteGlow\SpriteOutline.shader" />
      <None Include="Assets\Resources\LevelGeneration\level_test_03.txt" />
      <None Include="Assets\Resources\LevelGeneration\multiTest1.txt" />
      <None Include="Assets\spine-unity\Assets\spine-unity\Modules\Shaders\Sprite\CGIncludes\SpritePixelLighting.cginc" />
@@ -82,7 +89,7 @@
      <None Include="Assets\spine-unity\Assets\spine-unity\Modules\Shaders\Sprite\SpritePixelLighting.cginc" />
      <None Include="Assets\spine-unity\Assets\spine-unity\Modules\Shaders\Sprite\SpriteLighting.cginc" />
      <None Include="Assets\spine-unity\Assets\Examples\Spine\spineboy-pro\spineboy.atlas.txt" />
-     <None Include="Assets\Kino\Glitch\Shader\AnalogGlitch.shader" />
+     <None Include="Assets\Plugins\Kino\Glitch\Shader\AnalogGlitch.shader" />
      <None Include="Assets\spine-unity\Assets\Examples\Spine\Gauge\Gauge.atlas.txt" />
      <None Include="Assets\LeanTween\Examples\Archived\2dUnlitWithFade.shader" />
      <None Include="Assets\spine-unity\Assets\spine-unity\Modules\SkeletonGraphic\Shaders\Spine-SkeletonGraphic-TintBlack.shader" />
@@ -90,7 +97,7 @@
      <None Include="Assets\Standard Assets\Effects\Projectors\Guidelines.txt" />
      <None Include="Assets\StreamingAssets\build_info.txt" />
      <None Include="Assets\spine-unity\Assets\Examples\Spine\FootSoldier\FS_White.atlas.txt" />
-     <None Include="Assets\Kino\Glitch\Shader\DigitalGlitch.shader" />
+     <None Include="Assets\Plugins\Kino\Glitch\Shader\DigitalGlitch.shader" />
      <None Include="Assets\spine-unity\Assets\spine-unity\Modules\Shaders\Sprite\ShaderShared.cginc" />
      <None Include="Assets\Resources\LevelGeneration\level_2_Wael.txt" />
      <None Include="Assets\Resources\LevelGeneration\level_4_Wael.txt" />
@@ -104,10 +111,10 @@
      <None Include="Assets\Resources\LevelGeneration\one.txt" />
      <None Include="Assets\LeanTween\ReadMe.txt" />
      <None Include="Assets\spine-unity\Assets\Examples\Spine\Goblins\goblins.atlas.txt" />
-     <None Include="Assets\LeanTouch\Examples\Shaders\Skybox.shader" />
+     <None Include="Assets\Plugins\LeanTouch\Examples\Shaders\Skybox.shader" />
      <None Include="Assets\spine-unity\Assets\Examples\Spine\Strechyman\stretchyman-diffuse-pma.atlas.txt" />
      <None Include="Assets\Standard Assets\Character\SpineData\human_hero.atlas.txt" />
-     <None Include="Assets\LeanTouch\Examples\Shaders\Smooth.shader" />
+     <None Include="Assets\Plugins\LeanTouch\Examples\Shaders\Smooth.shader" />
      <None Include="Assets\spine-unity\Assets\Examples\Spine\Raptor\raptor.atlas.txt" />
      <None Include="Assets\spine-unity\Assets\spine-unity\Modules\Shaders\Sprite\CGIncludes\SpriteLighting.cginc" />
      <None Include="Assets\spine-unity\Assets\spine-unity\Modules\SlotBlendModes\Spine-Skeleton-PMA-Screen.shader" />
@@ -237,9 +244,6 @@
  </Reference>
  <Reference Include="UnityEditor.Facebook.Extensions">
  <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/Facebook/UnityEditor.Facebook.Extensions.dll</HintPath>
- </Reference>
- <Reference Include="ConsoleE">
- <HintPath>C:/Users/mouto_000/Documents/Projects/Runner4Ever/Runner4Ever/Assets/ConsoleE/Editor/ConsoleE.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>
