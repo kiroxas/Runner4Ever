@@ -11,10 +11,11 @@ public class CameraFollow : MonoBehaviour
 	public float panicLinePercent = 0.2f;
 
 	private Bounds containingBox;
-	private Bounds containingBoxBack;
-	private Vector3 upLeft, downRight;
+	public Bounds containingBoxBack;
 	private Camera cam;
 	private bool followUntilGround = false;
+
+	private float zValue = -10;
 
 
 	void OnEnable()
@@ -31,6 +32,9 @@ public class CameraFollow : MonoBehaviour
 
     private bool doWeNeedToUpdateY(float y)
     {
+    	if(target == null)
+    		return false;
+
     	var charc = target.GetComponent<CharacterController2D>();
 
     	if(charc == null) // not a player, we follow
@@ -62,31 +66,32 @@ public class CameraFollow : MonoBehaviour
     	return ground;
     }
 
+    private void getXAndY(ref float x, ref float y, bool updateY = true)
+    {
+    	float orthSize =  cam.orthographicSize;
+		var cameraHalfWidth = orthSize * ((float)Screen.width / Screen.height);
+
+    	if(updateY && doWeNeedToUpdateY(y))
+		{
+			y = Mathf.Lerp(transform.position.y, y, Time.deltaTime * smoothing.y);
+		}
+
+		x = Mathf.Clamp(x, containingBox.min.x + cameraHalfWidth, containingBox.max.x - cameraHalfWidth);
+		y = Mathf.Clamp(y, containingBox.min.y + orthSize, containingBox.max.y - orthSize);
+
+		x =  Mathf.Lerp(x, transform.position.x, Time.deltaTime * smoothing.x);
+    }
+
 	public void LateUpdate()
 	{
 		if(target != null)
 		{
-			float orthSize =  GetComponent<Camera>().orthographicSize;
-			var cameraHalfWidth = orthSize * ((float)Screen.width / Screen.height);
-			//float y = Mathf.Lerp(transform.position.y, target.position.y + offset.y, Time.deltaTime * smoothing.y);
-			float y = target.position.y + offset.y;
-			if(doWeNeedToUpdateY(y))
-			{
-				y = Mathf.Lerp(transform.position.y, y, Time.deltaTime * smoothing.y);
-			}
-			else
-			{
-				y = transform.position.y;
-			}
-
 			float x = target.position.x + offset.x;
+			float y = target.position.y + offset.y;
 
-			x = Mathf.Clamp(x, containingBox.min.x + cameraHalfWidth, containingBox.max.x - cameraHalfWidth);
-			y = Mathf.Clamp(y, containingBox.min.y + orthSize, containingBox.max.y - orthSize);
+			getXAndY(ref x, ref y);
 
-			x =  Mathf.Lerp(x, transform.position.x, Time.deltaTime * smoothing.x);
-
-			transform.position = new Vector3(x, y, -10) ;
+			transform.position = new Vector3(x, y, zValue) ;
 		}
 	}
 
@@ -98,9 +103,33 @@ public class CameraFollow : MonoBehaviour
 		}
 	}
 
+	public void initBackBox()
+	{
+		GameObject farCamObj = GameObject.FindGameObjectWithTag("FarCamera");
+		if(farCamObj == null)
+			return;
+
+		Camera farCam = farCamObj.GetComponent<Camera>();
+		if(farCam == null)
+		{
+			Debug.LogError("The object with tag FarCamera should have a camera");
+			return;
+		}
+
+		Vector3 camPlace = getBottomLeftOnGamePlane(cam);
+		Vector3 farCamPlace = getBottomLeftOnGamePlane(farCam);
+
+		Vector3 difference = camPlace - farCamPlace;
+		
+		Vector3 size = new Vector3(containingBox.size.x + 2 * difference.x , containingBox.size.y + 2 * difference.y, 0);
+
+		containingBoxBack = new Bounds(containingBox.center, size);
+	}
+
 	public void init(GameConstants.LevelInitialisedArgument arg)
 	{
 		var lg = FindObjectOfType<SegmentStreamer>();
+		cam = GetComponent<Camera>();
 
 		if(lg == null)
 		{
@@ -112,20 +141,19 @@ public class CameraFollow : MonoBehaviour
 			containingBox = lg.containingBox;
 		}
 
-		upLeft = new Vector3(containingBox.min.x, containingBox.max.y);
-		downRight = new Vector3(containingBox.max.x, containingBox.min.y);
+		initBackBox();
 	}
 
 	// Use this for initialization
 	void Start () 
-	{
-		cam = GetComponent<Camera>();
+	{	
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-		UnityUtils.drawGizmoSquare(containingBox.min, downRight, containingBox.max, upLeft, Color.blue);
+		UnityUtils.drawGizmoSquare(containingBox.min,  containingBox.max, Color.blue);
+		UnityUtils.drawGizmoSquare(containingBoxBack.min, containingBoxBack.max, Color.green);	
 	}
 
 	private void getPanicLines(out float min, out float max)
@@ -140,6 +168,22 @@ public class CameraFollow : MonoBehaviour
 		max = maxY - panicHeight;
 	}
 
+	Vector3 getBottomLeftOnGamePlane(Camera cam)
+	{
+		  // create logical plane perpendicular to Y and at (0,0,0):
+   		var plane = new Plane(Vector3.forward, new Vector3(0,0,0));
+   		float distance;
+
+   		var ray = cam.ViewportPointToRay(new Vector3(0,0,0));
+   		 // bottom left ray
+   		if (plane.Raycast(ray, out distance))
+   		{
+    	    return ray.GetPoint( distance);
+   		}
+
+   		return Vector3.zero;
+	}
+
 	void OnDrawGizmosSelected()
 	{
 		float min, max;
@@ -147,5 +191,17 @@ public class CameraFollow : MonoBehaviour
 		getPanicLines(out min, out max);
 		Debug.DrawLine(new Vector3(containingBox.min.x, min, 0), new Vector3(containingBox.max.x, min, 0), Color.red);
 		Debug.DrawLine(new Vector3(containingBox.min.x, max, 0), new Vector3(containingBox.max.x, max, 0), Color.blue);
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawSphere(getBottomLeftOnGamePlane(cam), 0.5F); 
+
+        GameObject farCamObj = GameObject.FindGameObjectWithTag("FarCamera");
+		if(farCamObj == null)
+			return;
+
+		Camera farCam = farCamObj.GetComponent<Camera>();
+		
+       	Gizmos.color = Color.blue;
+       	Gizmos.DrawSphere(getBottomLeftOnGamePlane(farCam), 0.5F); 
 	}
 }

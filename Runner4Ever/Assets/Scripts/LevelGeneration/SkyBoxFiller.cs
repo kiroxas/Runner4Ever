@@ -10,6 +10,7 @@ public class SkyBoxFiller : MonoBehaviour
     //private Bounds containingBox;
     private Vector2 skySize;
     private PoolCollection skies = new PoolCollection();
+    private Vector3 beginPos;
 
     private List<GameObject> skiesRendered = new List<GameObject>();
     int skyIndex = 0;
@@ -24,22 +25,39 @@ public class SkyBoxFiller : MonoBehaviour
         EventManager.StopListening (EventManager.get().segmentsUpdatedEvent, enableSky);
     }
 
+    private Vector3 segmentToPosition(Vector2 segPos)
+	{
+		return new Vector2(beginPos.x + segPos.x * skySize.x, beginPos.y + segPos.y * skySize.y);
+	}
+
+    private Vector2 getPositionToSegment(Vector3 worldPosition)
+	{
+		Vector3 position = worldPosition;
+
+		float xSegmentSize = skySize.x;
+		int xGridIndex = (int)Mathf.Floor((position.x - beginPos.x) / xSegmentSize);
+
+		float ySegmentSize = skySize.y;
+		int yGridIndex = (int)Mathf.Floor((position.y - beginPos.y) / ySegmentSize);
+
+		return new Vector2(xGridIndex, yGridIndex);
+	}
+
     void enableSky(GameConstants.SegmentsUpdatedArgument arg)
     {
+    	beginPos = FindObjectOfType<CameraFollow>().containingBoxBack.min;
         HashSet<Vector2> skiesNeeded = new HashSet<Vector2>();
 
         foreach(var seg in arg.segments)
         {
-            // containing 
-           int xGridMin = (int)(seg.minBound.x / skySize.x);
-           int yGridMin = (int)(seg.minBound.y / skySize.y);
+           Vector2 gridMin = getPositionToSegment(seg.minBound);
+           Vector2 gridMax = getPositionToSegment(seg.maxBound);
 
-           int xGridMax = (int)(seg.maxBound.x / skySize.x);
-           int yGridMax = (int)(seg.maxBound.y / skySize.y);
+           Debug.Log(gridMin + " to " + gridMax);
 
-           for(int x = xGridMin; x <= xGridMax; ++x)
+           for(int x = (int)gridMin.x; x <= (int)gridMax.x; ++x)
            {
-               for(int y = yGridMin; y <= yGridMax; ++y)
+               for(int y = (int)gridMin.y; y <= (int)gridMax.y; ++y)
                {
                     Vector2 place = new Vector2(x,y);
 
@@ -57,8 +75,8 @@ public class SkyBoxFiller : MonoBehaviour
 
         foreach(GameObject g in skiesRendered)
         {
-            Vector2 pos = g.GetComponent<Transform>().position;
-            Vector2 gridPos = new Vector2(pos.x / skySize.x, pos.y / skySize.y);
+            Vector3 pos = g.GetComponent<Transform>().position;
+            Vector2 gridPos = getPositionToSegment(pos);
 
             if(skiesNeeded.Contains(gridPos) == false)
             {
@@ -80,15 +98,14 @@ public class SkyBoxFiller : MonoBehaviour
 
         foreach(Vector2 g in skiesNeeded)
         {
-            Vector2 position = new Vector2(g.x * skySize.x, g.y * skySize.y);
-            skiesRendered.Add(skies.getFromPool(skyIndex, position));
+            skiesRendered.Add(skies.getFromPool(skyIndex, segmentToPosition(g)));
         }
     }
 
     void Awake()
     {
         skySize = skybox.GetComponent<SpriteRenderer>().bounds.size;
-        skies.addPool(skybox, 0,  PoolIndexes.smallPoolingStrategy);   
+        skies.addPool(skybox, 0,  PoolIndexes.smallPoolingStrategy);
     }
 
     void Start()

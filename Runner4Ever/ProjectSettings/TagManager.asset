@@ -9,6 +9,7 @@ TagManager:
   - CheckPoint
   - InversePlatform
   - Multi
+  - FarCamera
   layers:
   - Default
   - TransparentFX
