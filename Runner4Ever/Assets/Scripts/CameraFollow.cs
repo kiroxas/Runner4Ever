@@ -8,7 +8,8 @@ public class CameraFollow : MonoBehaviour
 	public Transform target;
 	public Vector3 offset;
 	public Vector2 smoothing;
-	public float panicLinePercent = 0.2f;
+	public float panicLineDownPercent = 0.15f;
+	public float panicLineUpPercent = 0.1f;
 
 	private Bounds containingBox;
 	public Bounds containingBoxBack;
@@ -66,14 +67,18 @@ public class CameraFollow : MonoBehaviour
     	return ground;
     }
 
-    private void getXAndY(ref float x, ref float y, bool updateY = true)
+    private void getXAndY(ref float x, ref float y)
     {
     	float orthSize =  cam.orthographicSize;
 		var cameraHalfWidth = orthSize * ((float)Screen.width / Screen.height);
 
-    	if(updateY && doWeNeedToUpdateY(y))
+    	if(doWeNeedToUpdateY(y))
 		{
 			y = Mathf.Lerp(transform.position.y, y, Time.deltaTime * smoothing.y);
+		}
+		else
+		{
+			y = transform.position.y;
 		}
 
 		x = Mathf.Clamp(x, containingBox.min.x + cameraHalfWidth, containingBox.max.x - cameraHalfWidth);
@@ -162,10 +167,11 @@ public class CameraFollow : MonoBehaviour
 		float maxY = cam.ViewportToWorldPoint(new Vector3(0,1,0)).y;
 
 		float height = maxY - minY;
-		float panicHeight = height * panicLinePercent;
+		float panicHeightDown = height * panicLineDownPercent;
+		float panicHeightUp = height * panicLineUpPercent;
 
-		min = minY + panicHeight;
-		max = maxY - panicHeight;
+		min = minY + panicHeightDown;
+		max = maxY - panicHeightUp;
 	}
 
 	Vector3 getBottomLeftOnGamePlane(Camera cam)

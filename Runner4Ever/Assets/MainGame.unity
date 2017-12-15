@@ -928,7 +928,10 @@ MonoBehaviour:
   target: {fileID: 313034446}
   offset: {x: 6.15, y: 2.117, z: 0}
   smoothing: {x: 1, y: 4}
-  panicLinePercent: 0.2
+  panicLinePercent: 0.15
+  containingBoxBack:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
 --- !u!114 &1030094418
 MonoBehaviour:
   m_ObjectHideFlags: 0

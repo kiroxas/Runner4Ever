@@ -53,8 +53,6 @@ public class SkyBoxFiller : MonoBehaviour
            Vector2 gridMin = getPositionToSegment(seg.minBound);
            Vector2 gridMax = getPositionToSegment(seg.maxBound);
 
-           Debug.Log(gridMin + " to " + gridMax);
-
            for(int x = (int)gridMin.x; x <= (int)gridMax.x; ++x)
            {
                for(int y = (int)gridMin.y; y <= (int)gridMax.y; ++y)
