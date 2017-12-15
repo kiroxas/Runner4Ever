@@ -239,13 +239,13 @@ MonoBehaviour:
         tangentMode: 0
       - serializedVersion: 2
         time: 0.12
-        value: 1.8619177
+        value: 2.2790704
         inSlope: 6.6321254
         outSlope: 6.6321254
         tangentMode: 0
       - serializedVersion: 2
         time: 0.22507283
-        value: 1.8619177
+        value: 2.2790704
         inSlope: -6.55748
         outSlope: -6.55748
         tangentMode: 0
@@ -270,7 +270,7 @@ MonoBehaviour:
   maxHealth: 10
   state: {fileID: 0}
   runDir: 0
-  xSpeedBySecond: 7
+  xSpeedBySecond: 8
   gravityFactor: 14
   momenutmHangWalljumpTime: 0.5
   timeHanging: 0
