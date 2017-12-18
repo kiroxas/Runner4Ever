@@ -75,7 +75,22 @@ public class LevelFlow : MonoBehaviour
 
     void respawn(GameObject player)
     {   
-        player.GetComponent<CharacterController2D>().respawn(lastHitCheckpoint.GetComponent<Transform>().position.x, lastHitCheckpoint.GetComponent<Transform>().position.y);
+        if(player == null)
+        {
+            Debug.LogError("The player is null");
+        }
+        Vector2 pos;
+
+        if(lastHitCheckpoint == null)
+        {
+            pos = UnityUtils.getSpawningLocations()[0];
+        }
+        else
+        {
+            pos = new Vector2(lastHitCheckpoint.GetComponent<Transform>().position.x, lastHitCheckpoint.GetComponent<Transform>().position.y);
+        }
+
+        player.GetComponent<CharacterController2D>().respawn(pos.x, pos.y);
     }
 
 

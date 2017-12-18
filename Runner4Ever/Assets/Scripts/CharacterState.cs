@@ -45,7 +45,7 @@ public class CharacterState : MonoBehaviour
 	private Collider2D myCollider;
 	//private Transform transform;
 
-	public InnerState innerState;
+	public InnerState innerState = new InnerState();
 
 	public bool isGrounded { get{ return innerState.isGrounded;} }
 	public bool isCollidingAbove {  get{ return innerState.isCollidingAbove;} }
@@ -170,11 +170,11 @@ public class CharacterState : MonoBehaviour
 
 		if(raycastHit.point == origin) // we're inside a collider here
 		{
-			Debug.Log("Collisions inside a collider :s");
+			//Debug.Log("Collisions inside a collider :s");
 			return false;
 		}
 
-		if(raycastHit && (effector2D == null || effector2D.useOneWay == false))
+		if(raycastHit && raycastHit.collider != myCollider && (effector2D == null || effector2D.useOneWay == false))
 		{
 			distance = Mathf.Min(distance, Vector2.Distance(origin, raycastHit.point));
 			distance -= 0.01f;
@@ -228,7 +228,7 @@ public class CharacterState : MonoBehaviour
 
 	private bool checkRaycast( RaycastHit2D raycastHit, Collider2D myCollider)
 	{
-		if (raycastHit)
+		if (raycastHit && raycastHit.collider != myCollider)
 		{
 			var effector2D = raycastHit.collider.GetComponent<PlatformEffector2D>();
 			if(effector2D != null)

@@ -43,6 +43,11 @@ public class ItsAlmostAStack<T, Index>
     	indexes.Clear();
     }
 
+    public bool empty()
+    {
+    	return items.Count == 0;
+    }
+
     public void Remove(Index itemAtPosition)
     {
     	int ind = indexes.IndexOf(itemAtPosition);
@@ -652,6 +657,9 @@ public class CharacterController2D : NetworkBehaviour
 
 	public WallJumpStrategy wallStrat()
 	{
+		if(wallJumpStrat == null || wallJumpStrat.empty())
+			return WallJumpStrategy.Normal;
+
 		return wallJumpStrat.Peek();
 	}
 
