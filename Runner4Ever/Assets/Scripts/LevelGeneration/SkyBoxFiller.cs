@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class SkyBoxFiller : MonoBehaviour 
 {
     public GameObject skybox;
+    public GameObject sky;
 
     //private Bounds containingBox;
     private Vector2 skySize;
@@ -13,7 +14,8 @@ public class SkyBoxFiller : MonoBehaviour
     private Vector3 beginPos;
 
     private List<GameObject> skiesRendered = new List<GameObject>();
-    int skyIndex = 0;
+    int earthIndex = 0;
+    int skyIndex = 1;
 
     void OnEnable()
     {
@@ -89,21 +91,28 @@ public class SkyBoxFiller : MonoBehaviour
         foreach(GameObject g in toRemove)
         {
             skiesRendered.Remove(g);
-            skies.free(g, skyIndex);
+            Vector3 pos = g.GetComponent<Transform>().position;
+            Vector2 gridPos = getPositionToSegment(pos);
+
+            int index = gridPos.y == 0 ? earthIndex : skyIndex;
+
+            skies.free(g, index);
         }
 
         // Now let's instantiate the one we need
 
         foreach(Vector2 g in skiesNeeded)
         {
-            skiesRendered.Add(skies.getFromPool(skyIndex, segmentToPosition(g)));
+        	int index = g.y == 0 ? earthIndex : skyIndex;
+            skiesRendered.Add(skies.getFromPool(index, segmentToPosition(g)));
         }
     }
 
     void Awake()
     {
         skySize = skybox.GetComponent<SpriteRenderer>().bounds.size;
-        skies.addPool(skybox, 0,  PoolIndexes.smallPoolingStrategy);
+        skies.addPool(skybox, earthIndex,  PoolIndexes.smallPoolingStrategy);
+        skies.addPool(sky, skyIndex,  PoolIndexes.smallPoolingStrategy);
     }
 
     void Start()

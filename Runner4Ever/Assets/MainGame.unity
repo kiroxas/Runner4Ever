@@ -928,7 +928,8 @@ MonoBehaviour:
   target: {fileID: 313034446}
   offset: {x: 6.15, y: 2.117, z: 0}
   smoothing: {x: 1, y: 4}
-  panicLinePercent: 0.15
+  panicLineDownPercent: 0.15
+  panicLineUpPercent: 0.1
   containingBoxBack:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
@@ -1586,7 +1587,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30ec08e2a33c8a64c85d629d23958d7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skybox: {fileID: 1720270212679504, guid: 83d9ae457facd3240a4bf212f1e433a5, type: 2}
+  skybox: {fileID: 1632903240833662, guid: afc84b5662b909243a662bcfae658442, type: 2}
+  sky: {fileID: 1862336067617526, guid: 5b5e5c75c3879064d94397f9e6739c0e, type: 2}
 --- !u!1 &1462869841
 GameObject:
   m_ObjectHideFlags: 0
@@ -2245,7 +2247,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 1, g: 1, b: 1, a: 0}
+  m_BackGroundColor: {r: 0.45882353, g: 0.9137255, b: 0.8666667, a: 1}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
