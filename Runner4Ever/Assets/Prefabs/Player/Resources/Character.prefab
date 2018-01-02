@@ -78,7 +78,7 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
+    pivot: {x: 0.5, y: 0.01}
     oldSize: {x: 1.1, y: 1.28}
     newSize: {x: 1.1, y: 1.28}
     adaptiveTilingThreshold: 0.5
@@ -127,7 +127,6 @@ MonoBehaviour:
   firstJumpInAirEnabled: 1
   maxHealth: 10
   state: {fileID: 0}
-  animator: {fileID: 0}
   runDir: 2
   xSpeedBySecond: 0.1
   gravityFactor: 0.2
@@ -139,6 +138,7 @@ MonoBehaviour:
   dashTime: 1
   nullifyGravityOnDash: 0
   networkGame: 0
+  myId: 0
 --- !u!212 &212536247343230906
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -179,3 +179,4 @@ SpriteRenderer:
   m_Size: {x: 1.1, y: 1.28}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1

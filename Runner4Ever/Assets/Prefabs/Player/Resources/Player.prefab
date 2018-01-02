@@ -24,9 +24,9 @@ GameObject:
   - component: {fileID: 114127664279025252}
   - component: {fileID: 114008227527293576}
   - component: {fileID: 114784205110030870}
-  - component: {fileID: 114539647677301414}
   - component: {fileID: 114327388902528708}
-  - component: {fileID: 114508020546757644}
+  - component: {fileID: 114370478746788196}
+  - component: {fileID: 114683697974006804}
   m_Layer: 14
   m_Name: Player
   m_TagString: Player
@@ -47,6 +47,8 @@ GameObject:
   - component: {fileID: 114149289805009284}
   - component: {fileID: 95764043296706682}
   - component: {fileID: 114214594095132278}
+  - component: {fileID: 114048132458237740}
+  - component: {fileID: 114567665540912042}
   m_Layer: 14
   m_Name: Display
   m_TagString: Untagged
@@ -281,6 +283,32 @@ MonoBehaviour:
   nullifyGravityOnDash: 0
   networkGame: 0
   myId: 0
+--- !u!114 &114048132458237740
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1616311822899102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ownerId: 0
+  group: 0
+  OwnerShipWasTransfered: 0
+  prefixBackup: -1
+  synchronization: 3
+  onSerializeTransformOption: 3
+  onSerializeRigidBodyOption: 2
+  ownershipTransfer: 0
+  ObservedComponents:
+  - {fileID: 114567665540912042}
+  ObservedComponentsFoldoutOpen: 1
+  viewIdField: 0
+  instantiationId: -1
+  currentMasterID: -1
+  isRuntimeInstantiated: 0
 --- !u!114 &114127664279025252
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -356,7 +384,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12a7d96f28030784d9740df50ea5ce28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114508020546757644
+--- !u!114 &114370478746788196
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -364,20 +392,89 @@ MonoBehaviour:
   m_GameObject: {fileID: 1091320906491702}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TransformSyncMode: 1
-  m_SendInterval: 1
-  m_SyncRotationAxis: 3
-  m_RotationSyncCompression: 2
-  m_SyncSpin: 0
-  m_MovementTheshold: 0.001
-  m_VelocityThreshold: 0.0001
-  m_SnapThreshold: 5
-  m_InterpolateRotation: 1
-  m_InterpolateMovement: 1
---- !u!114 &114539647677301414
+  ownerId: 0
+  group: 0
+  OwnerShipWasTransfered: 0
+  prefixBackup: -1
+  synchronization: 3
+  onSerializeTransformOption: 3
+  onSerializeRigidBodyOption: 2
+  ownershipTransfer: 0
+  ObservedComponents:
+  - {fileID: 114683697974006804}
+  ObservedComponentsFoldoutOpen: 1
+  viewIdField: 0
+  instantiationId: -1
+  currentMasterID: -1
+  isRuntimeInstantiated: 0
+--- !u!114 &114567665540912042
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1616311822899102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLayerWeightsInspector: 0
+  ShowParameterInspector: 1
+  m_SynchronizeParameters:
+  - Type: 4
+    SynchronizeType: 1
+    Name: isJumping
+  - Type: 4
+    SynchronizeType: 1
+    Name: finished
+  - Type: 4
+    SynchronizeType: 1
+    Name: isRunning
+  - Type: 4
+    SynchronizeType: 1
+    Name: doubleJump
+  - Type: 4
+    SynchronizeType: 1
+    Name: isDescending
+  - Type: 4
+    SynchronizeType: 1
+    Name: isAscending
+  - Type: 4
+    SynchronizeType: 1
+    Name: isGrounded
+  - Type: 4
+    SynchronizeType: 1
+    Name: isWallSticking
+  - Type: 4
+    SynchronizeType: 1
+    Name: isCollidingForward
+  - Type: 4
+    SynchronizeType: 1
+    Name: isSliding
+  - Type: 4
+    SynchronizeType: 1
+    Name: stopSliding
+  - Type: 4
+    SynchronizeType: 1
+    Name: init
+  - Type: 4
+    SynchronizeType: 1
+    Name: isDead
+  - Type: 4
+    SynchronizeType: 1
+    Name: hit
+  - Type: 3
+    SynchronizeType: 1
+    Name: wallStrat
+  m_SynchronizeLayers:
+  - SynchronizeType: 0
+    LayerIndex: 0
+  - SynchronizeType: 0
+    LayerIndex: 1
+--- !u!114 &114683697974006804
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -385,30 +482,63 @@ MonoBehaviour:
   m_GameObject: {fileID: 1091320906491702}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 252
-    i1: 221
-    i2: 21
-    i3: 23
-    i4: 144
-    i5: 211
-    i6: 212
-    i7: 84
-    i8: 26
-    i9: 60
-    i10: 79
-    i11: 163
-    i12: 64
-    i13: 212
-    i14: 83
-    i15: 94
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 1
+  m_PositionModel:
+    SynchronizeEnabled: 1
+    TeleportEnabled: 1
+    TeleportIfDistanceGreaterThan: 3
+    InterpolateOption: 2
+    InterpolateMoveTowardsSpeed: 1
+    InterpolateLerpSpeed: 1
+    InterpolateMoveTowardsAcceleration: 2
+    InterpolateMoveTowardsDeceleration: 2
+    InterpolateSpeedCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: -1
+        value: 0
+        inSlope: 0
+        outSlope: Infinity
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 1
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 4
+        value: 4
+        inSlope: 1
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    ExtrapolateOption: 0
+    ExtrapolateSpeed: 1
+    ExtrapolateIncludingRoundTripTime: 1
+    ExtrapolateNumberOfStoredPositions: 1
+    DrawErrorGizmo: 1
+  m_RotationModel:
+    SynchronizeEnabled: 0
+    InterpolateOption: 1
+    InterpolateRotateTowardsSpeed: 180
+    InterpolateLerpSpeed: 5
+  m_ScaleModel:
+    SynchronizeEnabled: 1
+    InterpolateOption: 0
+    InterpolateMoveTowardsSpeed: 1
+    InterpolateLerpSpeed: 0
 --- !u!114 &114784205110030870
 MonoBehaviour:
   m_ObjectHideFlags: 1

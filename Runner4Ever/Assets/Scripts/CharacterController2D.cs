@@ -800,7 +800,7 @@ public class CharacterController2D : MonoBehaviour
 
 	public bool amILocalPlayer()
 	{
-        return photonView.isMine;
+        return photonView == null ? true : photonView.isMine;
 	}
 
 	/* ------------------------------------------------------ Function about the direction of the character -------------------------------------------------------*/

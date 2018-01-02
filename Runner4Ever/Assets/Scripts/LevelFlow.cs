@@ -11,7 +11,6 @@ public class LevelFlow : MonoBehaviour
 {
     private GameObject lastHitCheckpoint;
     public GameObject networkManagerPrefab;
-    public GameObject networkClientPrefab;
 
     private bool isNetworkGame = false;
     private List<Run> launched = new List<Run>();
@@ -69,7 +68,6 @@ public class LevelFlow : MonoBehaviour
        if(isNetworkGame) // network related stuff to initialised
        {
            Instantiate(networkManagerPrefab);
-           Instantiate(networkClientPrefab);
        }
     }
 
