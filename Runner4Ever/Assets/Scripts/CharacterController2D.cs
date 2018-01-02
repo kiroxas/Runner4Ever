@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using Lean.Touch;
 using System;
 
-
 public class ItsAlmostAStack<T, Index>
 {
     private List<T> items = new List<T>();
@@ -67,7 +66,7 @@ public class ItsAlmostAStack<T, Index>
 /*
 	Central class for controlling a character, handles actions and flow 
 */
-public class CharacterController2D : NetworkBehaviour
+public class CharacterController2D : MonoBehaviour
 {
 
 	//--------------------------------------- Enum declarations ---------------------------------------
@@ -179,6 +178,8 @@ public class CharacterController2D : NetworkBehaviour
 
 	public bool networkGame = false;
 	public uint myId = 0;
+
+    private PhotonView photonView;
 	/* ------------------------------------------------------ Monobehaviour Functions -------------------------------------------------------*/
 
 	public void Awake()
@@ -236,8 +237,8 @@ public class CharacterController2D : NetworkBehaviour
 
 		if(networkGame)
 		{
-			myId = GetComponent<NetworkIdentity>().netId.Value;
-		}
+            photonView = GetComponent<PhotonView>();
+        }
 
 		reinit();
 	}
@@ -588,14 +589,7 @@ public class CharacterController2D : NetworkBehaviour
 				changeDirection();
 			}
 
-			if(networkGame)
-			{
-				SendJumpNetMessage();
-			}
-			else
-			{
-				actualJump();
-			}
+			actualJump();
 		}
 		else
 		{
@@ -643,14 +637,7 @@ public class CharacterController2D : NetworkBehaviour
 
 	public void dash()
 	{	
-		if(networkGame)
-		{
-			SendDashNetMessage();
-		}
-		else
-		{
-			actualDash();
-		}
+		actualDash();
 	}
 
 	/* ------------------------------------------------------ Function to inquiry the state -------------------------------------------------------*/
@@ -813,7 +800,7 @@ public class CharacterController2D : NetworkBehaviour
 
 	public bool amILocalPlayer()
 	{
-		return networkGame ? isLocalPlayer : true;
+        return photonView.isMine;
 	}
 
 	/* ------------------------------------------------------ Function about the direction of the character -------------------------------------------------------*/
@@ -918,7 +905,7 @@ public class CharacterController2D : NetworkBehaviour
     																									     transform.position.y));
 	}
 
-	public override void OnStartLocalPlayer()
+	public void OnStartLocalPlayer()
 	{
 		sendSpawn();
 	}
@@ -941,16 +928,6 @@ public class CharacterController2D : NetworkBehaviour
     	return myId;
     }
 
-    public void SendJumpNetMessage()
-    {
-    	EventManager.TriggerEvent(EventManager.get().networkJumpEvent, new GameConstants.NetworkJumpArgument(getMyId(), transform.position));
-    }
-
-     public void SendDashNetMessage()
-    {
-    	EventManager.TriggerEvent(EventManager.get().networkDashEvent, new GameConstants.NetworkDashArgument(getMyId(), transform.position));
-    }
-     
     private void unpausePlayers(GameConstants.UnPauseAllPlayerArgument arg)
     {
     	EventManager.TriggerEvent(EventManager.get().unPausePlayerEvent, new GameConstants.UnPausePlayerArgument());
@@ -985,16 +962,12 @@ public class CharacterController2D : NetworkBehaviour
     void OnEnable()
     {
         EventManager.StartListening(EventManager.get().unPauseAllPlayerEvent, unpausePlayers);
-        EventManager.StartListening(EventManager.get().networkOrdersJumpEvent, netOrderedToJump);
-        EventManager.StartListening(EventManager.get().networkOrdersDashEvent, netOrderedToDash);
         EventManager.StartListening(EventManager.get().hitFinalCheckpointEvent, hitFinalCheckpoint);
     }
 
     void OnDisable ()
     {
         EventManager.StopListening(EventManager.get().unPauseAllPlayerEvent, unpausePlayers);
-        EventManager.StopListening(EventManager.get().networkOrdersJumpEvent, netOrderedToJump);
-        EventManager.StopListening(EventManager.get().networkOrdersDashEvent, netOrderedToDash);
         EventManager.StopListening(EventManager.get().hitFinalCheckpointEvent, hitFinalCheckpoint);
     }
 
