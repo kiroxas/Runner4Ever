@@ -78,7 +78,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1577d98dec08b204b838a055fa0d5b02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 10
+  damage: 1
 --- !u!212 &212953764224475616
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -119,3 +119,4 @@ SpriteRenderer:
   m_Size: {x: 0.62, y: 0.6}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1

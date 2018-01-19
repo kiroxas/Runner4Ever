@@ -32,6 +32,7 @@ public class EventManager : MonoBehaviour
     public GameConstants.InitPlayerEvent initPlayerEvent { get; private set;}
     public GameConstants.StopAnimationsEvent stopAnimationsEvent { get; private set;}
     public GameConstants.PlayAnimationsEvent playAnimationsEvent { get; private set;}
+    public GameConstants.HealthRemainingEvent healthRemainingEvent { get; private set;}
 
 
     // Triggers
@@ -99,6 +100,7 @@ public class EventManager : MonoBehaviour
             initPlayerEvent = new GameConstants.InitPlayerEvent();
             stopAnimationsEvent = new GameConstants.StopAnimationsEvent();
             playAnimationsEvent = new GameConstants.PlayAnimationsEvent();
+            healthRemainingEvent = new GameConstants.HealthRemainingEvent();
         }
     }
 

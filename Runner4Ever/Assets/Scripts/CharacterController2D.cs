@@ -122,8 +122,8 @@ public class CharacterController2D : MonoBehaviour
 	private bool wasJumpingLastFrame = false;
 
 	// ---------------------------------------- Health Related
-	public int maxHealth = 10;
-	private int health = 10;
+	public int maxHealth = 5;
+	private int health = 5;
 
 	// ---------------------------------------- Other Components
 	public CharacterState state; // State about if we hit ground/walls
@@ -460,6 +460,10 @@ public class CharacterController2D : MonoBehaviour
 	public void doDamage(int damage)
 	{
 		health -= damage;
+		if(health < 0)
+			health = 0;
+			
+		EventManager.TriggerEvent(EventManager.get().healthRemainingEvent, new GameConstants.HealthRemainingArgument(health, maxHealth));
 
 		if(isDead())
 		{
@@ -879,6 +883,7 @@ public class CharacterController2D : MonoBehaviour
 		CancelInvoke(); // cancel all invokes
 
 		EventManager.TriggerEvent(EventManager.get().initPlayerEvent, new GameConstants.InitPlayerArgument());
+		EventManager.TriggerEvent(EventManager.get().healthRemainingEvent, new GameConstants.HealthRemainingArgument(maxHealth, maxHealth));
 	}
 
 	public bool flipped()

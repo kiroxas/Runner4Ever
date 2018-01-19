@@ -267,7 +267,7 @@ MonoBehaviour:
   timeBetweenJumps: 0.05
   jumpBufferTime: 0.2
   firstJumpInAirEnabled: 0
-  maxHealth: 10
+  maxHealth: 5
   state: {fileID: 0}
   runDir: 0
   xSpeedBySecond: 8

@@ -93,11 +93,16 @@ public class LevelFlow : MonoBehaviour
         player.GetComponent<CharacterController2D>().respawn(pos.x, pos.y);
     }
 
+    bool respawning = false;
 
     void playerIsDead(GameConstants.PlayerDeadArgument arg)
     {
         GameObject player = arg.player;
-        launched.Add(Run.After(2.5f, ()=>{ respawn(player);}));
+        if(!respawning)
+        {
+            respawning = true;
+            launched.Add(Run.After(2.5f, ()=>{ respawn(player); respawning = false;}));
+        }
     }
 
     void checkpointHit(GameConstants.HitCheckpointArgument arg)

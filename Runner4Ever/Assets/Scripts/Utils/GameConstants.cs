@@ -227,6 +227,18 @@ public class GameConstants
 		}
 	}
 
+	public class HealthRemainingArgument
+	{
+		public int health;
+		public int maxHealth;
+
+		public HealthRemainingArgument(int h, int mH) 
+		{
+			health = h;
+			maxHealth = mH;
+		}
+	}
+
 	public class InitPlayerArgument
 	{}
 
@@ -335,6 +347,11 @@ public class GameConstants
 
 	public class PlayAnimationsEvent : UnityEvent<PlayAnimationsArgument>
 	{}
+
+	public class HealthRemainingEvent : UnityEvent<HealthRemainingArgument>
+	{}
+
+	
 
 	
 }

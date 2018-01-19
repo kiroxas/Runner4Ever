@@ -115,6 +115,7 @@
      <Compile Include="Assets\Scripts\LevelGeneration\TilesHandler.cs" />
      <Compile Include="Assets\Scripts\LevelSelectionMode.cs" />
      <Compile Include="Assets\Scripts\LevelSelectionUI.cs" />
+     <Compile Include="Assets\Scripts\LifeViewer.cs" />
      <Compile Include="Assets\Scripts\Localization\LanguagesButton.cs" />
      <Compile Include="Assets\Scripts\Localization\LocalizationData.cs" />
      <Compile Include="Assets\Scripts\Localization\LocalizationManager.cs" />
